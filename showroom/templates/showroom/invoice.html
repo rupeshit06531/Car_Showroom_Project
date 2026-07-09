@@ -1,0 +1,63 @@
+{% extends "showroom/base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h2>Car Showroom Invoice</h2>
+
+        </div>
+
+        <div class="card-body">
+
+            <h4>Invoice No : {{ sale.invoice_number }}</h4>
+
+            <hr>
+
+            <h5>Customer Details</h5>
+
+            <p><strong>Name:</strong> {{ sale.customer.name }}</p>
+
+            <p><strong>Mobile:</strong> {{ sale.customer.mobile }}</p>
+
+            <p><strong>Email:</strong> {{ sale.customer.email }}</p>
+
+            <p><strong>Address:</strong> {{ sale.customer.address }}</p>
+
+            <hr>
+
+            <h5>Car Details</h5>
+
+            <p><strong>Car:</strong> {{ sale.car.car_name }}</p>
+
+            <p><strong>Company:</strong> {{ sale.car.company }}</p>
+
+            <p><strong>Model:</strong> {{ sale.car.model }}</p>
+
+            <p><strong>Color:</strong> {{ sale.car.color }}</p>
+
+            <hr>
+
+            <h4>Total Amount : ₹ {{ sale.sale_price }}</h4>
+
+            <p><strong>Date:</strong> {{ sale.sale_date }}</p>
+
+            <button onclick="window.print()" class="btn btn-success">
+                Print Invoice
+            </button>
+
+            <a href="/sales/" class="btn btn-secondary">
+                Back
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

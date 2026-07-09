@@ -1,0 +1,79 @@
+{% extends "showroom/base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Employee List</h2>
+
+        <a href="/add-employee/" class="btn btn-primary">
+            Add Employee
+        </a>
+    </div>
+
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+            <tr>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>Designation</th>
+                <th>Salary</th>
+                <th>Joining Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for employee in employees %}
+
+        <tr>
+
+            <td>
+                {% if employee.photo %}
+                    <img src="{{ employee.photo.url }}" width="70" height="70">
+                {% else %}
+                    No Photo
+                {% endif %}
+            </td>
+
+            <td>{{ employee.name }}</td>
+            <td>{{ employee.mobile }}</td>
+            <td>{{ employee.email }}</td>
+            <td>{{ employee.designation }}</td>
+            <td>₹ {{ employee.salary }}</td>
+            <td>{{ employee.joining_date }}</td>
+
+            <td>
+                <a href="/edit-employee/{{ employee.id }}/" class="btn btn-warning btn-sm">
+                    Edit
+                </a>
+
+                <a href="/delete-employee/{{ employee.id }}/" class="btn btn-danger btn-sm">
+                    Delete
+                </a>
+            </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+            <td colspan="8" class="text-center">
+                No Employee Found
+            </td>
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

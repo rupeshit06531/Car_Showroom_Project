@@ -4,23 +4,23 @@
 
 <div class="card shadow">
 
-    <div class="card-header bg-primary text-white">
-        <h3>Add New Car</h3>
+    <div class="card-header bg-success text-white">
+        <h3>Add Customer</h3>
     </div>
 
     <div class="card-body">
 
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST">
 
             {% csrf_token %}
 
             {{ form.as_p }}
 
             <button type="submit" class="btn btn-success">
-                Save Car
+                Save Customer
             </button>
 
-            <a href="/" class="btn btn-secondary">
+            <a href="/customers/" class="btn btn-secondary">
                 Cancel
             </a>
 

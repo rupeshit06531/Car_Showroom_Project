@@ -2,74 +2,365 @@
 
 {% block content %}
 
-<h1 class="text-primary">
-    Available Cars
+<h1 class="text-primary mb-4">
+    🚗 Available Cars
 </h1>
+
+<!-- Dashboard Cards -->
+<div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body text-center">
+                <h3>{{ total_cars }}</h3>
+                <h5>Total Cars</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body text-center">
+                <h3>{{ total_customers }}</h3>
+                <h5>Total Customers</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark shadow">
+            <div class="card-body text-center">
+                <h3>{{ total_sales }}</h3>
+                <h5>Total Sales</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card bg-danger text-white shadow">
+            <div class="card-body text-center">
+                <h3>₹ {{ total_revenue }}</h3>
+                <h5>Total Revenue</h5>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Stock Dashboard -->
+<div class="row mb-4">
+
+    <div class="col-md-6">
+        <div class="card bg-info text-white shadow">
+            <div class="card-body text-center">
+                <h3>{{ total_stock }}</h3>
+                <h5>Total Stock</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card bg-dark text-white shadow">
+            <div class="card-body text-center">
+                <h3>{{ low_stock }}</h3>
+                <h5>Low Stock Cars</h5>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Extra Dashboard -->
+<div class="row mb-4">
+
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body text-center">
+                <h3>{{ total_companies }}</h3>
+                <h5>Total Companies</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body text-center">
+                <h3>₹ {{ total_value }}</h3>
+                <h5>Total Car Value</h5>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Search -->
+<form method="GET" class="row g-2 mb-4">
+
+    <div class="col-md-3">
+
+        <input
+            type="text"
+            name="q"
+            class="form-control"
+            placeholder="Search">
+
+    </div>
+
+    <div class="col-md-2">
+
+        <select
+            name="company"
+            class="form-select">
+
+            <option value="">
+                Company
+            </option>
+
+            {% for company in companies %}
+
+            <option value="{{ company }}">
+
+                {{ company }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="col-md-2">
+
+        <select
+            name="fuel"
+            class="form-select">
+
+            <option value="">
+                Fuel
+            </option>
+
+            {% for fuel in fuel_types %}
+
+            <option value="{{ fuel }}">
+
+                {{ fuel }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="col-md-2">
+
+        <select
+            name="price"
+            class="form-select">
+
+            <option value="">
+                Price
+
+            </option>
+
+            <option value="1">
+
+                Below 5 Lakh
+
+            </option>
+
+            <option value="2">
+
+                5-10 Lakh
+
+            </option>
+
+            <option value="3">
+
+                Above 10 Lakh
+
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="col-md-2">
+
+        <select
+            name="stock"
+            class="form-select">
+
+            <option value="">
+                Stock
+
+            </option>
+
+            <option value="available">
+
+                Available
+
+            </option>
+
+            <option value="out">
+
+                Out of Stock
+
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="col-md-1">
+
+        <button
+            class="btn btn-primary w-100">
+
+            Go
+
+        </button>
+
+    </div>
+
+</form>
+
+    <div class="col-md-8">
+        <input
+            type="text"
+            name="q"
+            class="form-control"
+            placeholder="Search by Car Name, Company or Model"
+            value="{{ request.GET.q }}">
+    </div>
+
+    <div class="col-md-2">
+        <button class="btn btn-primary w-100">
+            Search
+        </button>
+    </div>
+
+    <div class="col-md-2">
+        <a href="/" class="btn btn-secondary w-100">
+            Reset
+        </a>
+    </div>
+
+</form>
 
 <a href="/add-car/" class="btn btn-success mb-3">
     + Add New Car
 </a>
 
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
 
-<thead class="table-dark">
+    <thead class="table-dark">
 
-<tr>
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Model</th>
+            <th>Color</th>
+            <th>Fuel</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Action</th>
+        </tr>
 
-<th>Name</th>
-<th>Company</th>
-<th>Model</th>
-<th>Color</th>
-<th>Fuel</th>
-<th>Price</th>
-<th>Action</th>
+    </thead>
 
-</tr>
+    <tbody>
 
-</thead>
+    {% for car in cars %}
 
-<tbody>
+        <tr>
 
-{% for car in cars %}
+            <td>
 
-<tr>
+                {% if car.image %}
+                    <img src="{{ car.image.url }}"
+                         width="120"
+                         height="80"
+                         class="rounded">
+                {% else %}
+                    No Image
+                {% endif %}
 
-<td>{{ car.car_name }}</td>
+            </td>
 
-<td>{{ car.company }}</td>
+            <td>{{ car.car_name }}</td>
 
-<td>{{ car.model }}</td>
+            <td>{{ car.company }}</td>
 
-<td>{{ car.color }}</td>
+            <td>{{ car.model }}</td>
 
-<td>{{ car.fuel_type }}</td>
+            <td>{{ car.color }}</td>
 
-<td>₹ {{ car.price }}</td>
+            <td>{{ car.fuel_type }}</td>
 
-<td>
+            <td>₹ {{ car.price }}</td>
 
-<a href="/edit-car/{{ car.id }}/"
-class="btn btn-warning btn-sm">
+            <td>
 
-Edit
+                {% if car.stock == 0 %}
 
-</a>
+                    <span class="badge bg-danger">
+                        Out of Stock
+                    </span>
 
-</td>
+                {% elif car.stock <= 2 %}
 
-</tr>
+                    <span class="badge bg-warning text-dark">
+                        {{ car.stock }}
+                    </span>
 
-{% empty %}
+                {% else %}
 
-<tr>
-    <td colspan="7" class="text-center">
-        No Cars Available
-    </td>
-</tr>
+                    <span class="badge bg-success">
+                        {{ car.stock }}
+                    </span>
 
-{% endfor %}
+                {% endif %}
 
-</tbody>
+            </td>
+
+            <td>
+
+                <a href="/car/{{ car.id }}/"
+                   class="btn btn-info btn-sm">
+                    View
+                </a>
+
+                <a href="/edit-car/{{ car.id }}/"
+                   class="btn btn-warning btn-sm">
+                    Edit
+                </a>
+
+                <a href="/delete-car/{{ car.id }}/"
+                   class="btn btn-danger btn-sm">
+                    Delete
+                </a>
+
+            </td>
+
+        </tr>
+
+    {% empty %}
+
+        <tr>
+
+            <td colspan="9" class="text-center">
+                No Cars Available
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
 
 </table>
 

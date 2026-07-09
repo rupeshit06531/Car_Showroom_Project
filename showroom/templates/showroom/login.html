@@ -1,0 +1,33 @@
+{% extends "showroom/base.html" %}
+
+{% block content %}
+
+<div class="container mt-5" style="max-width:500px;">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white">
+            <h3>Login</h3>
+        </div>
+
+        <div class="card-body">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button class="btn btn-primary w-100">
+                    Login
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

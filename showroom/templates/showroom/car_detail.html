@@ -1,0 +1,67 @@
+{% extends "showroom/base.html" %}
+
+{% block content %}
+
+<div class="card shadow">
+
+    <div class="card-header bg-info text-white">
+        <h3>Car Details</h3>
+    </div>
+
+    <div class="card-body">
+
+        {% if car.image %}
+            <img src="{{ car.image.url }}" width="300" class="img-thumbnail mb-3">
+        {% endif %}
+
+        <table class="table table-bordered">
+
+            <tr>
+                <th>Car Name</th>
+                <td>{{ car.car_name }}</td>
+            </tr>
+
+            <tr>
+                <th>Company</th>
+                <td>{{ car.company }}</td>
+            </tr>
+
+            <tr>
+                <th>Model</th>
+                <td>{{ car.model }}</td>
+            </tr>
+
+            <tr>
+                <th>Color</th>
+                <td>{{ car.color }}</td>
+            </tr>
+
+            <tr>
+                <th>Fuel Type</th>
+                <td>{{ car.fuel_type }}</td>
+            </tr>
+
+            <tr>
+                <th>Price</th>
+                <td>₹ {{ car.price }}</td>
+            </tr>
+
+        </table>
+
+        <a href="/edit-car/{{ car.id }}/" class="btn btn-warning">
+            Edit
+        </a>
+
+        <a href="/delete-car/{{ car.id }}/" class="btn btn-danger">
+            Delete
+        </a>
+
+        <a href="/" class="btn btn-secondary">
+            Back
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

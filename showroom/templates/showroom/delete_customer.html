@@ -1,0 +1,35 @@
+{% extends "showroom/base.html" %}
+
+{% block content %}
+
+<div class="card shadow">
+
+    <div class="card-header bg-danger text-white">
+        <h3>Delete Customer</h3>
+    </div>
+
+    <div class="card-body">
+
+        <p>
+            Are you sure you want to delete
+            <strong>{{ customer.name }}</strong>?
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <button type="submit" class="btn btn-danger">
+                Yes, Delete
+            </button>
+
+            <a href="/customers/" class="btn btn-secondary">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
