@@ -91,167 +91,188 @@
         </div>
     </div>
 
+    <div class="card shadow mb-4">
+
+        <div class="card-header bg-primary text-white">
+             <h4>📊 Monthly Sales Analytics</h4>
+       </div>
+
+        <div class="card-body">
+
+             <canvas id="salesChart"></canvas>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow mb-4">
+
+    <div class="card-header bg-success text-white">
+        <h4>💰 Monthly Revenue Analytics</h4>
+    </div>
+
+    <div class="card-body">
+
+        <canvas id="revenueChart"></canvas>
+
+    </div>
+
+</div>
+
+<div class="card shadow mb-4">
+
+    <div class="card-header bg-warning">
+        <h4>🚗 Company-wise Sales</h4>
+    </div>
+
+    <div class="card-body">
+
+        <canvas id="companyChart"></canvas>
+
+    </div>
+
+</div>
+
+<div class="card shadow mb-4">
+
+    <div class="card-header bg-dark text-white">
+        <h4>🏆 Top Selling Cars</h4>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-striped">
+
+            <thead>
+                <tr>
+                    <th>Car Name</th>
+                    <th>Total Sold</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for car in top_cars %}
+
+                <tr>
+                    <td>{{ car.car__car_name }}</td>
+                    <td>{{ car.total_sold }}</td>
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="2" class="text-center">
+                        No Sales Available
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
 </div>
 
 <!-- Search -->
 <form method="GET" class="row g-2 mb-4">
 
     <div class="col-md-3">
-
         <input
             type="text"
             name="q"
             class="form-control"
-            placeholder="Search">
-
-    </div>
-
-    <div class="col-md-2">
-
-        <select
-            name="company"
-            class="form-select">
-
-            <option value="">
-                Company
-            </option>
-
-            {% for company in companies %}
-
-            <option value="{{ company }}">
-
-                {{ company }}
-
-            </option>
-
-            {% endfor %}
-
-        </select>
-
-    </div>
-
-    <div class="col-md-2">
-
-        <select
-            name="fuel"
-            class="form-select">
-
-            <option value="">
-                Fuel
-            </option>
-
-            {% for fuel in fuel_types %}
-
-            <option value="{{ fuel }}">
-
-                {{ fuel }}
-
-            </option>
-
-            {% endfor %}
-
-        </select>
-
-    </div>
-
-    <div class="col-md-2">
-
-        <select
-            name="price"
-            class="form-select">
-
-            <option value="">
-                Price
-
-            </option>
-
-            <option value="1">
-
-                Below 5 Lakh
-
-            </option>
-
-            <option value="2">
-
-                5-10 Lakh
-
-            </option>
-
-            <option value="3">
-
-                Above 10 Lakh
-
-            </option>
-
-        </select>
-
-    </div>
-
-    <div class="col-md-2">
-
-        <select
-            name="stock"
-            class="form-select">
-
-            <option value="">
-                Stock
-
-            </option>
-
-            <option value="available">
-
-                Available
-
-            </option>
-
-            <option value="out">
-
-                Out of Stock
-
-            </option>
-
-        </select>
-
-    </div>
-
-    <div class="col-md-1">
-
-        <button
-            class="btn btn-primary w-100">
-
-            Go
-
-        </button>
-
-    </div>
-
-</form>
-
-    <div class="col-md-8">
-        <input
-            type="text"
-            name="q"
-            class="form-control"
-            placeholder="Search by Car Name, Company or Model"
+            placeholder="Search"
             value="{{ request.GET.q }}">
     </div>
 
     <div class="col-md-2">
-        <button class="btn btn-primary w-100">
-            Search
-        </button>
+        <select name="company" class="form-select">
+
+            <option value="">Company</option>
+
+            {% for company in companies %}
+
+            <option value="{{ company }}"
+                {% if request.GET.company == company %}
+                selected
+                {% endif %}>
+                {{ company }}
+            </option>
+
+            {% endfor %}
+
+        </select>
     </div>
 
     <div class="col-md-2">
-        <a href="/" class="btn btn-secondary w-100">
-            Reset
-        </a>
+        <select name="fuel" class="form-select">
+
+            <option value="">Fuel</option>
+
+            {% for fuel in fuel_types %}
+
+            <option value="{{ fuel }}"
+                {% if request.GET.fuel == fuel %}
+                selected
+                {% endif %}>
+                {{ fuel }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <select name="price" class="form-select">
+
+            <option value="">Price</option>
+
+            <option value="1">Below 5 Lakh</option>
+            <option value="2">5-10 Lakh</option>
+            <option value="3">Above 10 Lakh</option>
+
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <select name="stock" class="form-select">
+
+            <option value="">Stock</option>
+
+            <option value="available">Available</option>
+            <option value="out">Out of Stock</option>
+
+        </select>
+    </div>
+
+    <div class="col-md-1">
+        <button class="btn btn-primary w-100">
+            Go
+        </button>
     </div>
 
 </form>
 
+<a href="/" class="btn btn-secondary mb-3">
+    Reset Search
+</a>
+
+{% if perms.showroom.add_car %}
 <a href="/add-car/" class="btn btn-success mb-3">
     + Add New Car
+</a>
+{% endif %}
+
+<a href="{% url 'export_cars_excel' %}"
+   class="btn btn-success mb-3">
+    📊 Export Excel
 </a>
 
 <table class="table table-bordered table-hover">
@@ -259,6 +280,7 @@
     <thead class="table-dark">
 
         <tr>
+
             <th>Image</th>
             <th>Name</th>
             <th>Company</th>
@@ -268,60 +290,61 @@
             <th>Price</th>
             <th>Stock</th>
             <th>Action</th>
+
         </tr>
 
     </thead>
 
     <tbody>
 
-    {% for car in cars %}
+        {% for car in cars %}
 
         <tr>
 
             <td>
 
                 {% if car.image %}
-                    <img src="{{ car.image.url }}"
-                         width="120"
-                         height="80"
-                         class="rounded">
+
+                <img
+                    src="{{ car.image.url }}"
+                    width="120"
+                    height="80"
+                    class="rounded">
+
                 {% else %}
-                    No Image
+
+                No Image
+
                 {% endif %}
 
             </td>
 
             <td>{{ car.car_name }}</td>
-
             <td>{{ car.company }}</td>
-
             <td>{{ car.model }}</td>
-
             <td>{{ car.color }}</td>
-
             <td>{{ car.fuel_type }}</td>
-
             <td>₹ {{ car.price }}</td>
 
             <td>
 
                 {% if car.stock == 0 %}
 
-                    <span class="badge bg-danger">
-                        Out of Stock
-                    </span>
+                <span class="badge bg-danger">
+                    Out of Stock
+                </span>
 
                 {% elif car.stock <= 2 %}
 
-                    <span class="badge bg-warning text-dark">
-                        {{ car.stock }}
-                    </span>
+                <span class="badge bg-warning text-dark">
+                    {{ car.stock }}
+                </span>
 
                 {% else %}
 
-                    <span class="badge bg-success">
-                        {{ car.stock }}
-                    </span>
+                <span class="badge bg-success">
+                    {{ car.stock }}
+                </span>
 
                 {% endif %}
 
@@ -330,25 +353,28 @@
             <td>
 
                 <a href="/car/{{ car.id }}/"
-                   class="btn btn-info btn-sm">
+                    class="btn btn-info btn-sm">
                     View
                 </a>
 
-                <a href="/edit-car/{{ car.id }}/"
-                   class="btn btn-warning btn-sm">
-                    Edit
-                </a>
+                {% if perms.showroom.change_car %}
+<a href="/edit-car/{{ car.id }}/"
+   class="btn btn-warning btn-sm">
+    Edit
+</a>
+{% endif %}
 
-                <a href="/delete-car/{{ car.id }}/"
-                   class="btn btn-danger btn-sm">
-                    Delete
-                </a>
-
+                {% if perms.showroom.delete_car %}
+<a href="/delete-car/{{ car.id }}/"
+   class="btn btn-danger btn-sm">
+    Delete
+</a>
+{% endif %}
             </td>
 
         </tr>
 
-    {% empty %}
+        {% empty %}
 
         <tr>
 
@@ -358,10 +384,122 @@
 
         </tr>
 
-    {% endfor %}
+        {% endfor %}
 
     </tbody>
 
 </table>
+
+<script>
+
+const ctx = document.getElementById('salesChart');
+
+new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: {{ months|safe }},
+
+        datasets: [{
+
+            label: 'Monthly Sales',
+
+            data: {{ sales_count|safe }},
+
+            borderWidth: 1
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true
+
+            }
+
+        }
+
+    }
+
+});
+
+const revenueCtx = document.getElementById('revenueChart');
+
+new Chart(revenueCtx, {
+
+    type: 'line',
+
+    data: {
+
+        labels: {{ months|safe }},
+
+        datasets: [{
+
+            label: 'Monthly Revenue',
+
+            data: {{ revenue|safe }},
+
+            borderWidth: 3,
+
+            fill: false
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true
+
+            }
+
+        }
+
+    }
+
+});
+
+const companyCtx = document.getElementById('companyChart');
+
+new Chart(companyCtx, {
+
+    type: 'pie',
+
+    data: {
+
+        labels: {{ company_names|safe }},
+
+        datasets: [{
+
+            data: {{ company_sales|safe }}
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true
+
+    }
+
+});
+
+</script>
 
 {% endblock %}

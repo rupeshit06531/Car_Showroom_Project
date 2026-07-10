@@ -1,10 +1,22 @@
+from django.core import paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q, Sum
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-
 from .models import Car, Customer, Sale, Employee
 from .forms import CarForm, CustomerForm, SaleForm, EmployeeForm
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from django.contrib import messages
+from openpyxl import Workbook
+from openpyxl.styles import Font
+from django.core.paginator import Paginator
+from django.db.models import Count
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 
 # =========================
@@ -22,6 +34,7 @@ def home(request):
 
     cars = Car.objects.all()
 
+    # Search
     if query:
         cars = cars.filter(
             Q(car_name__icontains=query) |
@@ -29,12 +42,15 @@ def home(request):
             Q(model__icontains=query)
         )
 
+    # Company Filter
     if company:
         cars = cars.filter(company=company)
 
+    # Fuel Filter
     if fuel:
         cars = cars.filter(fuel_type=fuel)
 
+    # Price Filter
     if price == "1":
         cars = cars.filter(price__lt=500000)
 
@@ -47,18 +63,29 @@ def home(request):
     elif price == "3":
         cars = cars.filter(price__gt=1000000)
 
+    # Stock Filter
     if stock == "available":
         cars = cars.filter(stock__gt=0)
 
     elif stock == "out":
         cars = cars.filter(stock=0)
 
-    # Dashboard Data
+# ==========================
+# Pagination
+# ==========================
+
+    paginator = Paginator(cars, 10)   # 10 cars per page
+    page_number = request.GET.get("page")
+    cars = paginator.get_page(page_number)
+
+    # Dashboard Cards
     total_cars = Car.objects.count()
     total_customers = Customer.objects.count()
     total_sales = Sale.objects.count()
 
-    total_companies = Car.objects.values("company").distinct().count()
+    total_companies = Car.objects.values(
+        "company"
+    ).distinct().count()
 
     total_value = Car.objects.aggregate(
         Sum("price")
@@ -86,28 +113,140 @@ def home(request):
         flat=True
     ).distinct()
 
-    context = {
+    # Monthly Sales Chart
+    months = []
+    sales_count = []
+
+    current_month = timezone.now().month
+    current_year = timezone.now().year
+
+    for i in range(11, -1, -1):
+
+        month = current_month - i
+        year = current_year
+
+        if month <= 0:
+            month += 12
+            year -= 1
+
+        count = Sale.objects.filter(
+            sale_date__year=year,
+            sale_date__month=month
+        ).count()
+
+        months.append(f"{month}/{year}")
+        sales_count.append(count)
+
+    revenue = []
+
+    for i in range(11, -1, -1):
+
+      month = current_month - i
+      year = current_year
+
+    if month <= 0:
+         month += 12
+         year -= 1
+
+    total = Sale.objects.filter(
+        sale_date__year=year,
+        sale_date__month=month
+    ).aggregate(
+        Sum("sale_price")
+    )["sale_price__sum"] or 0
+
+    revenue.append(total)
+
+
+
+    # ==========================
+    # Company Wise Sales
+    # ==========================
+
+    company_names = []
+    company_sales = []
+
+    companies_data = Car.objects.values_list(
+        "company",
+        flat=True
+    ).distinct()
+
+    for company in companies_data:
+
+        count = Sale.objects.filter(
+            car__company=company
+        ).count()
+
+        company_names.append(company)
+        company_sales.append(count)
+
+ # ==========================
+# Top Selling Cars
+# ==========================
+
+    top_cars = (
+    Sale.objects
+    .values("car__car_name")
+    .annotate(total_sold=Count("id"))
+    .order_by("-total_sold")[:5]
+    )
+
+
+
+    return render(request, "showroom/home.html", {
         "cars": cars,
         "total_cars": total_cars,
         "total_customers": total_customers,
         "total_sales": total_sales,
+        "total_companies": total_companies,
+        "total_value": total_value,
         "total_revenue": total_revenue,
         "total_stock": total_stock,
         "low_stock": low_stock,
-        "total_companies": total_companies,
-        "total_value": total_value,
         "companies": companies,
         "fuel_types": fuel_types,
-    }
+        "months": months,
+        "sales_count": sales_count,
+        "revenue": revenue,
+        "company_names": company_names,
+        "company_sales": company_sales,
+        "top_cars": top_cars,
 
-    return render(request, "showroom/home.html", context)
+    })
+# ==========================
+# Monthly Sales Chart Data
+# ==========================
 
+    months = []
+    sales_count = []
+
+    current_month = timezone.now().month
+    current_year = timezone.now().year
+
+    for i in range(11, -1, -1):
+
+        month = current_month - i
+        year = current_year
+
+        if month <= 0:
+            month += 12
+            year -= 1
+
+        count = Sale.objects.filter(
+            sale_date__year=year,
+            sale_date__month=month
+        ).count()
+
+        months.append(f"{month}/{year}")
+        sales_count.append(count)
+
+    
 # =========================
 # ADD CAR
 # =========================
 
 @login_required
-@staff_member_required
+@permission_required('showroom.add_car', raise_exception=True)
 def add_car(request):
 
     if request.method == "POST":
@@ -115,15 +254,16 @@ def add_car(request):
         form = CarForm(request.POST, request.FILES)
 
         if form.is_valid():
-            form.save()
-            return redirect("/")
+           form.save()
+           messages.success(request, "Car added successfully.")
+           return redirect("/")
 
     else:
-        form = CarForm()
+         form = CarForm()
 
-    return render(request, "showroom/add_car.html", {
-        "form": form
-    })
+         return render(request, "showroom/add_car.html", {
+           "form": form
+     })
 
 
 # =========================
@@ -131,7 +271,7 @@ def add_car(request):
 # =========================
 
 @login_required
-@staff_member_required
+@permission_required('showroom.change_car', raise_exception=True)
 def edit_car(request, id):
 
     car = get_object_or_404(Car, id=id)
@@ -145,8 +285,9 @@ def edit_car(request, id):
         )
 
         if form.is_valid():
-            form.save()
-            return redirect("/")
+           form.save()
+           messages.success(request, "Car updated successfully.")
+           return redirect("/")
 
     else:
 
@@ -162,18 +303,68 @@ def edit_car(request, id):
 # =========================
 
 @login_required
-@staff_member_required
+@permission_required('showroom.delete_car', raise_exception=True)
 def delete_car(request, id):
 
     car = get_object_or_404(Car, id=id)
 
     if request.method == "POST":
         car.delete()
+        messages.success(request, "Car deleted successfully.")
         return redirect("/")
 
     return render(request, "showroom/delete_car.html", {
         "car": car
     })
+
+
+@login_required
+def export_cars_excel(request):
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Cars"
+
+    headers = [
+        "ID",
+        "Car Name",
+        "Company",
+        "Model",
+        "Color",
+        "Fuel",
+        "Price",
+        "Stock",
+    ]
+
+    for col_num, header in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.value = header
+        cell.font = Font(bold=True)
+
+    cars = Car.objects.all()
+
+    for car in cars:
+        ws.append([
+            car.id,
+            car.car_name,
+            car.company,
+            car.model,
+            car.color,
+            car.fuel_type,
+            car.price,
+            car.stock,
+        ])
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+    response["Content-Disposition"] = 'attachment; filename="cars.xlsx"'
+
+    wb.save(response)
+
+    return response
+
 
 
 # =========================
@@ -324,6 +515,45 @@ def invoice(request, id):
     return render(request, "showroom/invoice.html", {
         "sale": sale
     })
+
+@login_required
+def download_invoice(request, id):
+
+    sale = get_object_or_404(Sale, id=id)
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="Invoice_{sale.invoice_number}.pdf"'
+
+    doc = SimpleDocTemplate(response)
+    styles = getSampleStyleSheet()
+
+    elements = []
+
+    elements.append(Paragraph("<b>CAR SHOWROOM MANAGEMENT SYSTEM</b>", styles["Title"]))
+    elements.append(Paragraph("Invoice", styles["Heading2"]))
+
+    data = [
+        ["Invoice No", sale.invoice_number],
+        ["Customer", sale.customer.name],
+        ["Car", sale.car.car_name],
+        ["Company", sale.car.company],
+        ["Sale Price", f"₹ {sale.sale_price}"],
+        ["Sale Date", str(sale.sale_date)],
+    ]
+
+    table = Table(data, colWidths=[150, 250])
+
+    table.setStyle(TableStyle([
+        ("GRID", (0,0), (-1,-1), 1, colors.black),
+        ("BACKGROUND", (0,0), (0,-1), colors.lightgrey),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 8),
+    ]))
+
+    elements.append(table)
+
+    doc.build(elements)
+
+    return response
 
 
 # =========================
