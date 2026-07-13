@@ -1,56 +1,150 @@
 # 🚗 Car Showroom Management System
 
-## 📖 About Project
+A full-featured **Car Showroom Management System** built with **Django**. This project helps manage cars, customers, employees, suppliers, purchases, sales, invoices, reports, and business analytics through a professional dashboard.
 
-Car Showroom Management System is a Django-based web application that helps manage car inventory, customers, employees, suppliers, purchases, and sales. It also provides analytics, invoices, reports, and dashboard charts.
-
----
-
-## ✨ Features
-
-- 🔐 User Authentication (Login/Logout)
-- 🚗 Car Management
-- 👥 Customer Management
-- 👨‍💼 Employee Management
-- 🏢 Supplier Management
-- 📦 Purchase Management
-- 💰 Sales Management
-- 📄 Invoice Generation
-- 📥 PDF Invoice Download
-- 📊 Sales Analytics Dashboard
-- 📈 Monthly Sales Chart
-- 💵 Revenue Chart
-- 🏆 Top Selling Cars
-- 📦 Stock Management
-- 📉 Low Stock Alert
-- 📤 Export Cars to Excel
-- 📥 Import Cars from Excel
-- 📧 Email Invoice
-- 📑 Sales Report PDF
-- 💹 Profit Dashboard
+![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
+![Django](https://img.shields.io/badge/Django-5.x-green?logo=django)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple?logo=bootstrap)
+![License](https://img.shields.io/badge/License-MIT-orange)
 
 ---
 
-## 🛠️ Technologies Used
+# 🌐 Live Demo
 
-- Python
-- Django
-- SQLite
-- Bootstrap 5
-- HTML
-- CSS
-- JavaScript
-- Chart.js
-- ReportLab
-- OpenPyXL
-- Gunicorn
-- WhiteNoise
+🔗 **Live Project:** https://car-showroom-project-ikhe.onrender.com
 
 ---
 
-## 📂 Project Structure
+# 📸 Screenshots
 
-```text
+## 🔐 Login Page
+
+![Login](screenshots/login.png)
+
+---
+
+## 📊 Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+---
+
+## 🚗 Car Management
+
+![Cars](screenshots/cars.png)
+
+---
+
+## 👥 Customer Management
+
+![Customers](screenshots/customers.png)
+
+---
+
+## 💰 Sales Management
+
+![Sales](screenshots/sales.png)
+
+---
+
+## 📄 Invoice
+
+![Invoice](screenshots/invoice.png)
+
+---
+
+## 📈 Analytics Dashboard
+
+![Analytics](screenshots/analytics.png)
+
+---
+
+# ✨ Features
+
+## 🔐 Authentication
+- Login & Logout
+- Role Based Access Control
+- Permission Management
+
+## 🚗 Car Management
+- Add / Edit / Delete Cars
+- Car Images
+- Search & Filter
+- Stock Management
+- Low Stock Alert
+
+## 👥 Customer Management
+- Add / Edit / Delete Customers
+- Customer Purchase History
+
+## 👨‍💼 Employee Management
+- Employee CRUD
+- Best Sales Employee
+- Employee Dashboard
+
+## 🏢 Supplier Management
+- Supplier CRUD
+
+## 📦 Purchase Management
+- Purchase Entry
+- Auto Stock Increase
+- Purchase History
+
+## 💰 Sales Management
+- Sales Entry
+- Auto Invoice Number
+- Auto Stock Reduction
+- Sales Report
+
+## 📄 Invoice System
+- Invoice Generation
+- PDF Invoice Download
+- Email Invoice
+
+## 📊 Dashboard Analytics
+- Total Cars
+- Total Customers
+- Total Sales
+- Revenue
+- Purchase Cost
+- Net Profit
+- Monthly Sales Chart
+- Revenue Chart
+- Company-wise Sales
+- Top Selling Cars
+- Recent Sales
+
+## 📑 Reports
+- PDF Sales Report
+- Excel Export
+- Excel Import
+
+---
+
+# 🛠 Tech Stack
+
+| Technology | Used |
+|------------|------|
+| Python | ✅ |
+| Django | ✅ |
+| SQLite | ✅ |
+| Bootstrap 5 | ✅ |
+| HTML5 | ✅ |
+| CSS3 | ✅ |
+| JavaScript | ✅ |
+| Chart.js | ✅ |
+| ReportLab | ✅ |
+| OpenPyXL | ✅ |
+| Gunicorn | ✅ |
+| WhiteNoise | ✅ |
+| Git | ✅ |
+| GitHub | ✅ |
+
+---
+
+# 📂 Project Structure
+
+```
 Car_Showroom_Project/
 │
 ├── accounts/
@@ -59,6 +153,7 @@ Car_Showroom_Project/
 ├── templates/
 ├── media/
 ├── static/
+├── screenshots/
 ├── manage.py
 ├── requirements.txt
 ├── build.sh
@@ -67,40 +162,86 @@ Car_Showroom_Project/
 
 ---
 
-## 🚀 Installation
+# ⚙️ Installation
+
+## Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/Car_Showroom_Project.git
+git clone https://github.com/rupeshit06531/Car_Showroom_Project.git
+```
 
-cd Car_Showroom_Project
+## Go to Project
 
+```bash
+cd car-showroom-management-system
+```
+
+## Create Virtual Environment
+
+```bash
 python -m venv venv
+```
 
+## Activate Environment
+
+### Windows
+
+```bash
 venv\Scripts\activate
+```
 
+### Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
+## Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
+## Apply Migrations
+
+```bash
 python manage.py migrate
+```
 
+## Run Development Server
+
+```bash
 python manage.py runserver
 ```
 
 ---
 
-## 📸 Screenshots
+# 📊 Dashboard Modules
 
-- Login Page
-- Dashboard
-- Car Management
-- Sales Report
-- Invoice
-- Analytics Dashboard
-
-(Add screenshots after deployment.)
+- 🚗 Car Management
+- 👥 Customer Management
+- 👨‍💼 Employee Management
+- 🏢 Supplier Management
+- 📦 Purchase Management
+- 💰 Sales Management
+- 📄 Invoice System
+- 📊 Analytics Dashboard
 
 ---
 
-## 👨‍💻 Developer
+# 🚀 Future Improvements
+
+- PostgreSQL
+- Django REST Framework API
+- Docker Support
+- Cloudinary Image Storage
+- SMS Notifications
+- Responsive Admin Dashboard
+- Multi-Branch Management
+
+---
+
+# 👨‍💻 Developer
 
 **Rupesh Mahto**
 
@@ -118,12 +259,24 @@ python manage.py runserver
 
 ---
 
-## ⭐ Project Status
+# 🤝 Contributing
 
-✅ Completed
+Contributions are welcome!
+
+1. Fork the repository
+2. Create a new branch
+3. Commit your changes
+4. Push the branch
+5. Open a Pull Request
 
 ---
 
-## 📜 License
+# ⭐ Support
 
-This project is for learning and portfolio purposes.
+If you like this project, please ⭐ the repository.
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
