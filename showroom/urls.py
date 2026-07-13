@@ -51,11 +51,9 @@ urlpatterns = [
      path("edit-supplier/<int:id>/", views.edit_supplier, name="edit_supplier"),
      path("delete-supplier/<int:id>/", views.delete_supplier, name="delete_supplier"),
 
-     path(
-    "customer-history/<int:id>/",
-    views.customer_history,
-    name="customer_history"
-),
+     path("customer-history/<int:id>/", views.customer_history, name="customer_history"),
+     path("import-cars/", views.import_cars, name="import_cars"),
+
 
 ]
 if settings.DEBUG:
