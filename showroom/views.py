@@ -1,11 +1,19 @@
 from django.core import paginator
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Count
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import Car, Customer, Sale, Employee
-from .forms import CarForm, CustomerForm, SaleForm, EmployeeForm
+from .models import Car, Customer, Sale, Employee, Supplier, Purchase
+from .forms import (
+    CarForm,
+    CustomerForm,
+    SaleForm,
+    EmployeeForm,
+    SupplierForm,
+    PurchaseForm,
+    ExcelUploadForm,
+)
 from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib import colors
@@ -17,6 +25,16 @@ from django.core.paginator import Paginator
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.admin.views.decorators import staff_member_required
+
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from django.core.paginator import Paginator
+from django.core.mail import send_mail
+from django.conf import settings
+import openpyxl
+
+
+
 
 
 # =========================
@@ -95,6 +113,14 @@ def home(request):
         Sum("sale_price")
     )["sale_price__sum"] or 0
 
+    # Total Purchase Cost
+    total_purchase = Purchase.objects.aggregate(
+        Sum("purchase_price")
+    )["purchase_price__sum"] or 0
+
+# Net Profit
+    net_profit = total_revenue - total_purchase
+
     total_stock = Car.objects.aggregate(
         Sum("stock")
     )["stock__sum"] or 0
@@ -102,6 +128,22 @@ def home(request):
     low_stock = Car.objects.filter(
         stock__lte=2
     ).count()
+
+
+# Today's Dashboard
+    today = timezone.now().date()
+    
+
+    today_sales = Sale.objects.filter(
+        sale_date=today
+    ).count()
+
+    today_revenue = Sale.objects.filter(
+        sale_date=today
+    ).aggregate(
+        Sum("sale_price")
+    )["sale_price__sum"] or 0
+
 
     companies = Car.objects.values_list(
         "company",
@@ -138,15 +180,15 @@ def home(request):
         sales_count.append(count)
 
     revenue = []
-
+ 
     for i in range(11, -1, -1):
 
-      month = current_month - i
-      year = current_year
+       month = current_month - i
+       year = current_year
 
     if month <= 0:
-         month += 12
-         year -= 1
+        month += 12
+        year -= 1
 
     total = Sale.objects.filter(
         sale_date__year=year,
@@ -191,7 +233,12 @@ def home(request):
     .order_by("-total_sold")[:5]
     )
 
-
+    best_employee = (
+    Sale.objects.values("employee__name")
+    .annotate(total_sales=Count("id"))
+    .order_by("-total_sales")
+    .first()
+)
 
     return render(request, "showroom/home.html", {
         "cars": cars,
@@ -201,8 +248,14 @@ def home(request):
         "total_companies": total_companies,
         "total_value": total_value,
         "total_revenue": total_revenue,
+        "total_purchase": total_purchase,
+        "net_profit": net_profit,
         "total_stock": total_stock,
         "low_stock": low_stock,
+
+        "today_sales": today_sales,
+        "today_revenue": today_revenue,
+
         "companies": companies,
         "fuel_types": fuel_types,
         "months": months,
@@ -211,34 +264,10 @@ def home(request):
         "company_names": company_names,
         "company_sales": company_sales,
         "top_cars": top_cars,
+        "best_employee": best_employee,
+        "recent_sales": recent_sales,
 
     })
-# ==========================
-# Monthly Sales Chart Data
-# ==========================
-
-    months = []
-    sales_count = []
-
-    current_month = timezone.now().month
-    current_year = timezone.now().year
-
-    for i in range(11, -1, -1):
-
-        month = current_month - i
-        year = current_year
-
-        if month <= 0:
-            month += 12
-            year -= 1
-
-        count = Sale.objects.filter(
-            sale_date__year=year,
-            sale_date__month=month
-        ).count()
-
-        months.append(f"{month}/{year}")
-        sales_count.append(count)
 
     
 # =========================
@@ -472,13 +501,40 @@ def sale_list(request):
 
     sales = Sale.objects.select_related(
         "customer",
-        "car"
-    ).all()
+        "car",
+        "employee"
+    ).all().order_by("-sale_date")
+
+    query = request.GET.get("q")
+    employee = request.GET.get("employee")
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+
+    if query:
+        sales = sales.filter(
+            Q(invoice_number__icontains=query) |
+            Q(customer__name__icontains=query) |
+            Q(car__car_name__icontains=query)
+        )
+
+    if employee:
+        sales = sales.filter(employee__id=employee)
+
+    if start_date and end_date:
+        sales = sales.filter(
+            sale_date__range=[start_date, end_date]
+        )
+
+    employees = Employee.objects.all()
+
+    paginator = Paginator(sales, 10)
+    page_number = request.GET.get("page")
+    sales = paginator.get_page(page_number)
 
     return render(request, "showroom/sale_list.html", {
-        "sales": sales
+        "sales": sales,
+        "employees": employees,
     })
-
 
 # =========================
 # ADD SALE
@@ -492,8 +548,34 @@ def add_sale(request):
         form = SaleForm(request.POST)
 
         if form.is_valid():
-            form.save()
-            return redirect("/sales/")
+
+          sale = form.save()
+
+    # Send Email
+    if sale.customer.email:
+
+        send_mail(
+            subject="Car Purchase Invoice",
+            message=f"""
+            Hello {sale.customer.name},
+
+            Thank you for purchasing {sale.car.car_name}.
+
+            Invoice Number: {sale.invoice_number}
+
+            Amount: ₹{sale.sale_price}
+
+            Purchase Date: {sale.sale_date}
+
+            Thank you for choosing our showroom.
+            """,
+
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[sale.customer.email],
+            fail_silently=True,
+        )
+
+        return redirect("sale_list")
 
     else:
         form = SaleForm()
@@ -644,3 +726,363 @@ def delete_employee(request, id):
     return render(request, "showroom/delete_employee.html", {
         "employee": employee
     })
+
+@login_required
+def invoice_pdf(request, sale_id):
+
+    sale = get_object_or_404(Sale, id=sale_id)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Invoice_{sale.invoice_number}.pdf"'
+
+    p = canvas.Canvas(response)
+
+    p.setFont("Helvetica-Bold", 18)
+    p.drawString(180, 800, "CAR SHOWROOM INVOICE")
+
+    p.setFont("Helvetica", 12)
+
+    y = 760
+
+    p.drawString(50, y, f"Invoice No : {sale.invoice_number}")
+    y -= 25
+
+    p.drawString(50, y, f"Date : {sale.sale_date}")
+    y -= 25
+
+    p.drawString(50, y, f"Customer : {sale.customer.name}")
+    y -= 25
+
+    p.drawString(50, y, f"Car : {sale.car.car_name}")
+    y -= 25
+
+    p.drawString(50, y, f"Company : {sale.car.company}")
+    y -= 25
+
+    p.drawString(50, y, f"Model : {sale.car.model}")
+    y -= 25
+
+    p.drawString(50, y, f"Price : Rs. {sale.selling_price}")
+    y -= 40
+
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(50, y, "Thank You For Your Purchase!")
+
+    p.showPage()
+    p.save()
+
+    return response
+
+@login_required
+def sales_report(request):
+
+    sales = Sale.objects.all().order_by("-sale_date")
+
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+
+    if start_date and end_date:
+        sales = sales.filter(
+            sale_date__range=[start_date, end_date]
+        )
+
+    total_revenue = sales.aggregate(
+        Sum("sale_price")
+    )["sale_price__sum"] or 0
+
+    return render(request, "showroom/sales_report.html", {
+        "sales": sales,
+        "total_revenue": total_revenue,
+        "start_date": start_date,
+        "end_date": end_date,
+    })
+
+@login_required
+def sales_report_pdf(request):
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'attachment; filename="sales_report.pdf"'
+
+    doc = SimpleDocTemplate(response)
+
+    styles = getSampleStyleSheet()
+    elements = []
+
+    # Heading
+    elements.append(Paragraph("<b>Car Showroom Sales Report</b>", styles["Title"]))
+
+    # Table Data
+    data = [["Invoice", "Customer", "Car", "Employee", "Price"]]
+
+    sales = Sale.objects.all().order_by("-sale_date")
+
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+
+    if start_date and end_date:
+         sales = sales.filter(
+        sale_date__range=[start_date, end_date]
+    )
+
+    total_revenue = 0
+
+    for sale in sales:
+
+        data.append([
+            sale.invoice_number,
+            sale.customer.name,
+            sale.car.car_name,
+            sale.employee.name if sale.employee else "-",
+            f"₹ {sale.sale_price}"
+        ])
+
+        total_revenue += sale.sale_price
+
+    table = Table(data)
+
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+
+        ("GRID", (0, 0), (-1, -1), 1, colors.black),
+
+        ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+
+        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+
+        ("BOTTOMPADDING", (0, 0), (-1, 0), 10),
+    ]))
+
+    elements.append(table)
+
+    elements.append(
+        Paragraph(
+            f"<br/><b>Total Revenue : ₹ {total_revenue}</b>",
+            styles["Heading2"]
+        )
+    )
+
+    doc.build(elements)
+
+    return response
+
+@login_required
+def supplier_list(request):
+
+    suppliers = Supplier.objects.all().order_by("name")
+
+    return render(
+        request,
+        "showroom/supplier_list.html",
+        {
+            "suppliers": suppliers
+        }
+    )
+
+@login_required
+def add_supplier(request):
+
+    if request.method == "POST":
+
+        form = SupplierForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("supplier_list")
+
+    else:
+        form = SupplierForm()
+
+    return render(
+        request,
+        "showroom/add_supplier.html",
+        {
+            "form": form
+        }
+    )
+
+
+@login_required
+def edit_supplier(request, id):
+
+    supplier = get_object_or_404(Supplier, id=id)
+
+    if request.method == "POST":
+        form = SupplierForm(request.POST, instance=supplier)
+
+        if form.is_valid():
+            form.save()
+            return redirect("supplier_list")
+
+    else:
+        form = SupplierForm(instance=supplier)
+
+    return render(
+        request,
+        "showroom/add_supplier.html",
+        {
+            "form": form
+        }
+    )
+
+@login_required
+def delete_supplier(request, id):
+
+    supplier = get_object_or_404(Supplier, id=id)
+
+    supplier.delete()
+
+    return redirect("supplier_list")
+
+@login_required
+def purchase_list(request):
+
+    purchases = Purchase.objects.select_related(
+        "supplier",
+        "car"
+    ).order_by("-purchase_date")
+
+    return render(
+        request,
+        "showroom/purchase_list.html",
+        {
+            "purchases": purchases
+        }
+    )
+
+
+@login_required
+def add_purchase(request):
+
+    if request.method == "POST":
+
+        form = PurchaseForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("purchase_list")
+
+    else:
+        form = PurchaseForm()
+
+    return render(
+        request,
+        "showroom/add_purchase.html",
+        {
+            "form": form
+        }
+    )
+
+@login_required
+def edit_purchase(request, id):
+
+    purchase = get_object_or_404(Purchase, id=id)
+
+    old_quantity = purchase.quantity
+
+    if request.method == "POST":
+
+        form = PurchaseForm(request.POST, instance=purchase)
+
+        if form.is_valid():
+
+            purchase = form.save(commit=False)
+
+            difference = purchase.quantity - old_quantity
+
+            purchase.car.stock += difference
+            purchase.car.save()
+
+            purchase.save()
+
+            return redirect("purchase_list")
+
+    else:
+        form = PurchaseForm(instance=purchase)
+
+    return render(request, "showroom/add_purchase.html", {
+        "form": form
+    })
+
+@login_required
+def delete_purchase(request, id):
+
+    purchase = get_object_or_404(Purchase, id=id)
+
+    purchase.car.stock -= purchase.quantity
+    purchase.car.save()
+
+    purchase.delete()
+
+    return redirect("purchase_list")
+
+@login_required
+def customer_history(request, id):
+
+    customer = get_object_or_404(Customer, id=id)
+
+    sales = Sale.objects.select_related(
+        "car",
+        "employee"
+    ).filter(customer=customer)
+
+    total_amount = sales.aggregate(
+        Sum("sale_price")
+    )["sale_price__sum"] or 0
+
+    return render(
+        request,
+        "showroom/customer_history.html",
+        {
+            "customer": customer,
+            "sales": sales,
+            "total_amount": total_amount,
+        }
+    )
+
+
+@login_required
+def import_cars(request):
+
+    if request.method == "POST":
+
+        form = ExcelUploadForm(request.POST, request.FILES)
+
+        if form.is_valid():
+
+            excel_file = request.FILES["excel_file"]
+
+            workbook = openpyxl.load_workbook(excel_file)
+
+            sheet = workbook.active
+
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+
+                Car.objects.create(
+                    car_name=row[0],
+                    company=row[1],
+                    model=row[2],
+                    color=row[3],
+                    fuel_type=row[4],
+                    price=row[5],
+                    stock=row[6],
+                )
+
+            messages.success(
+                request,
+                "Cars imported successfully!"
+            )
+
+            return redirect("home")
+
+    else:
+
+        form = ExcelUploadForm()
+
+    return render(
+        request,
+        "showroom/import_cars.html",
+        {
+            "form": form
+        }
+    )

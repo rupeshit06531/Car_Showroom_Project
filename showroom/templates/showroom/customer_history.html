@@ -1,0 +1,73 @@
+{% extends "showroom/base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">
+    👤 Purchase History - {{ customer.name }}
+</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+
+        <h5>Customer Details</h5>
+
+        <p><strong>Name:</strong> {{ customer.name }}</p>
+        <p><strong>Mobile:</strong> {{ customer.mobile }}</p>
+        <p><strong>Email:</strong> {{ customer.email }}</p>
+
+        <h4 class="text-success">
+            Total Purchase Amount : ₹ {{ total_amount }}
+        </h4>
+
+    </div>
+</div>
+
+<table class="table table-bordered table-hover">
+
+    <thead class="table-dark">
+
+        <tr>
+
+            <th>Invoice</th>
+            <th>Car</th>
+            <th>Employee</th>
+            <th>Sale Price</th>
+            <th>Date</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for sale in sales %}
+
+        <tr>
+
+            <td>{{ sale.invoice_number }}</td>
+            <td>{{ sale.car.car_name }}</td>
+            <td>{{ sale.employee.name }}</td>
+            <td>₹ {{ sale.sale_price }}</td>
+            <td>{{ sale.sale_date }}</td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+            <td colspan="5" class="text-center">
+                No Purchase History
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+<a href="{% url 'customer_list' %}" class="btn btn-secondary">
+    Back
+</a>
+
+{% endblock %}

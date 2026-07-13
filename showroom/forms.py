@@ -1,5 +1,5 @@
 from django import forms
-from .models import Car, Customer, Sale, Employee
+from .models import Car, Customer, Sale, Employee, Supplier, Purchase
 
 class CarForm(forms.ModelForm):
     class Meta:
@@ -21,3 +21,18 @@ class EmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee
         fields = "__all__"
+
+class SupplierForm(forms.ModelForm):
+
+    class Meta:
+        model = Supplier
+        fields = "__all__"
+
+class PurchaseForm(forms.ModelForm):
+
+    class Meta:
+        model = Purchase
+        fields = "__all__"
+
+class ExcelUploadForm(forms.Form):
+    excel_file = forms.FileField()

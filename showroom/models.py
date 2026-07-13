@@ -35,6 +35,9 @@ class Sale(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
 
+    employee = models.ForeignKey("Employee", on_delete=models.CASCADE, null=True, blank=True)
+
+
     sale_price = models.DecimalField(
         max_digits=12,
         decimal_places=2,
@@ -90,3 +93,50 @@ class Employee(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Supplier(models.Model):
+
+    name = models.CharField(max_length=100)
+    company = models.CharField(max_length=100)
+    mobile = models.CharField(max_length=15)
+    email = models.EmailField(blank=True)
+    address = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+
+class Purchase(models.Model):
+
+    supplier = models.ForeignKey(
+        Supplier,
+        on_delete=models.CASCADE
+    )
+
+    car = models.ForeignKey(
+        Car,
+        on_delete=models.CASCADE
+    )
+
+    quantity = models.PositiveIntegerField()
+
+    purchase_price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2
+    )
+
+    purchase_date = models.DateField(
+        default=timezone.now
+    )
+
+    def save(self, *args, **kwargs):
+
+        # Increase Stock only when creating a new purchase
+        if self.pk is None:
+            self.car.stock += self.quantity
+            self.car.save()
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.car.car_name} ({self.quantity})"

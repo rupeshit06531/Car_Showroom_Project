@@ -9,6 +9,28 @@
 <!-- Dashboard Cards -->
 <div class="row mb-4">
 
+
+
+    <div class="col-md-6">
+        <div class="card bg-secondary text-white shadow">
+            <div class="card-body text-center">
+                <h3>{{ today_sales }}</h3>
+                <h5>Today's Sales</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card bg-dark text-white shadow">
+            <div class="card-body text-center">
+                <h3>₹ {{ today_revenue }}</h3>
+                <h5>Today's Revenue</h5>
+            </div>
+        </div>
+    </div>
+
+
+
     <div class="col-md-3">
         <div class="card bg-primary text-white shadow">
             <div class="card-body text-center">
@@ -44,6 +66,26 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-3">
+    <div class="card bg-secondary text-white shadow">
+        <div class="card-body text-center">
+            <h3>₹ {{ total_purchase }}</h3>
+            <h5>Total Purchase</h5>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3">
+    <div class="card bg-success text-white shadow">
+        <div class="card-body text-center">
+            <h3>₹ {{ net_profit }}</h3>
+            <h5>Net Profit</h5>
+        </div>
+    </div>
+</div>
+
+    
 
 </div>
 
@@ -90,6 +132,33 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-6 mt-3">
+
+    <div class="card border-success shadow">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">🏆 Best Sales Employee</h5>
+        </div>
+
+        <div class="card-body text-center">
+
+            {% if best_employee %}
+
+                <h3>{{ best_employee.employee__name }}</h3>
+
+                <h5 class="text-success">
+                    {{ best_employee.total_sales }} Cars Sold
+                </h5>
+
+            {% else %}
+
+                <h5>No Sales Available</h5>
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>
 
     <div class="card shadow mb-4">
 
@@ -165,6 +234,70 @@
                     <td colspan="2" class="text-center">
                         No Sales Available
                     </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<div class="card shadow mb-4">
+
+    <div class="card-header bg-info text-white">
+        <h4>🕒 Recent Sales</h4>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Invoice</th>
+                    <th>Customer</th>
+                    <th>Car</th>
+                    <th>Employee</th>
+                    <th>Date</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for sale in recent_sales %}
+
+                <tr>
+
+                    <td>{{ sale.invoice_number }}</td>
+
+                    <td>{{ sale.customer.name }}</td>
+
+                    <td>{{ sale.car.car_name }}</td>
+
+                    <td>{{ sale.employee.name }}</td>
+
+                    <td>{{ sale.sale_date }}</td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="5" class="text-center">
+
+                        No Recent Sales
+
+                    </td>
+
                 </tr>
 
                 {% endfor %}
