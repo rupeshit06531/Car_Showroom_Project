@@ -2,29 +2,64 @@
 
 {% block content %}
 
-<div class="card shadow">
+<div class="container py-4">
 
-    <div class="card-header bg-success text-white">
-        <h3>Add Customer</h3>
-    </div>
+    <div class="card shadow-lg border-0 rounded-4">
 
-    <div class="card-body">
+        <div class="card-header text-white"
+             style="background:linear-gradient(90deg,#16a34a,#15803d);">
 
-        <form method="POST">
+            <h2 class="mb-0">
+                👤 Add New Customer
+            </h2>
 
-            {% csrf_token %}
+        </div>
 
-            {{ form.as_p }}
+        <div class="card-body">
 
-            <button type="submit" class="btn btn-success">
-                Save Customer
-            </button>
+            <form method="POST">
 
-            <a href="/customers/" class="btn btn-secondary">
-                Cancel
-            </a>
+                {% csrf_token %}
 
-        </form>
+                <div class="row">
+
+                    {% for field in form %}
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-bold">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.errors %}
+                        <div class="text-danger small">
+                            {{ field.errors }}
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <hr>
+
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="bi bi-person-check-fill"></i>
+                    Save Customer
+                </button>
+
+                <a href="/customer/" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-arrow-left"></i>
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
 
     </div>
 

@@ -1,6 +1,6 @@
 # 🚗 Car Showroom Management System
 
-A full-featured **Car Showroom Management System** built with **Django**. This project helps manage cars, customers, employees, suppliers, purchases, sales, invoices, reports, and business analytics through a professional dashboard.
+A full-featured **Car Showroom Management System** built with **Django**. The project helps manage cars, customers, employees, suppliers, purchases, sales, invoices, reports, and business analytics through a modern dashboard.
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
 ![Django](https://img.shields.io/badge/Django-5.x-green?logo=django)
@@ -11,50 +11,31 @@ A full-featured **Car Showroom Management System** built with **Django**. This p
 
 # 🌐 Live Demo
 
-🔗 **Live Project:** https://car-showroom-project-ikhe.onrender.com
+🔗 https://car-showroom-project-ikhe.onrender.com
 
 ---
 
 # 📸 Screenshots
 
-## 🔐 Login Page
-
+## 🔐 Login
 ![Login](screenshots/login.png)
 
----
-
 ## 📊 Dashboard
-
 ![Dashboard](screenshots/dashboard.png)
 
----
-
 ## 🚗 Car Management
-
 ![Cars](screenshots/cars.png)
 
----
-
 ## 👥 Customer Management
-
 ![Customers](screenshots/customers.png)
 
----
-
 ## 💰 Sales Management
-
 ![Sales](screenshots/sales.png)
 
----
-
 ## 📄 Invoice
-
 ![Invoice](screenshots/invoice.png)
 
----
-
-## 📈 Analytics Dashboard
-
+## 📈 Analytics
 ![Analytics](screenshots/analytics.png)
 
 ---
@@ -62,77 +43,115 @@ A full-featured **Car Showroom Management System** built with **Django**. This p
 # ✨ Features
 
 ## 🔐 Authentication
-- Login & Logout
-- Role Based Access Control
-- Permission Management
+- Login
+- Logout
+- Role Based Access
+- Permission Based Authorization
 
 ## 🚗 Car Management
-- Add / Edit / Delete Cars
-- Car Images
+- Add Car
+- Edit Car
+- Delete Car
+- Car Image Upload
 - Search & Filter
+- Pagination
 - Stock Management
 - Low Stock Alert
 
 ## 👥 Customer Management
-- Add / Edit / Delete Customers
+- Add Customer
+- Edit Customer
+- Delete Customer
 - Customer Purchase History
 
 ## 👨‍💼 Employee Management
-- Employee CRUD
-- Best Sales Employee
-- Employee Dashboard
+- Add Employee
+- Edit Employee
+- Delete Employee
+- Employee Photo Upload
+- Employee Photo Display
 
 ## 🏢 Supplier Management
-- Supplier CRUD
+- Add Supplier
+- Edit Supplier
+- Delete Supplier
 
 ## 📦 Purchase Management
-- Purchase Entry
-- Auto Stock Increase
+- Add Purchase
+- Edit Purchase
+- Delete Purchase
 - Purchase History
 
 ## 💰 Sales Management
-- Sales Entry
-- Auto Invoice Number
-- Auto Stock Reduction
-- Sales Report
-
-## 📄 Invoice System
+- Add Sale
+- Edit Sale
+- Delete Sale
+- Sales Records
 - Invoice Generation
-- PDF Invoice Download
-- Email Invoice
+- PDF Invoice
 
-## 📊 Dashboard Analytics
+## 📊 Dashboard
 - Total Cars
 - Total Customers
 - Total Sales
+- Total Companies
 - Revenue
 - Purchase Cost
 - Net Profit
-- Monthly Sales Chart
-- Revenue Chart
-- Company-wise Sales
-- Top Selling Cars
+- Total Stock
+- Low Stock Alert
 - Recent Sales
+- Best Employee
+- Monthly Sales Analytics
+- Revenue Analytics
+- Company-wise Sales
 
 ## 📑 Reports
+- Sales Report
 - PDF Sales Report
 - Excel Export
 - Excel Import
 
 ---
 
+# ✅ Recent Updates (July 2026)
+
+### Major Fixes
+- Fixed all missing Django view functions.
+- Fixed Employee CRUD.
+- Fixed Supplier CRUD.
+- Fixed Purchase CRUD.
+- Fixed Sales CRUD.
+- Fixed Employee image upload and display.
+- Fixed Invoice PDF generation.
+- Fixed Sales Report PDF.
+- Fixed Import Cars functionality.
+- Fixed Export Excel functionality.
+- Fixed Purchase templates.
+- Fixed Employee templates.
+- Fixed Sales templates.
+- Fixed URL routing issues.
+- Fixed NoReverseMatch errors.
+- Fixed AttributeError issues.
+- Fixed DataTables column count issue.
+- Fixed media file configuration.
+- Improved overall project stability.
+
+---
+
 # 🛠 Tech Stack
 
-| Technology | Used |
-|------------|------|
+| Technology | Status |
+|------------|--------|
 | Python | ✅ |
 | Django | ✅ |
-| SQLite | ✅ |
+| SQLite3 | ✅ |
 | Bootstrap 5 | ✅ |
 | HTML5 | ✅ |
 | CSS3 | ✅ |
 | JavaScript | ✅ |
 | Chart.js | ✅ |
+| DataTables | ✅ |
 | ReportLab | ✅ |
 | OpenPyXL | ✅ |
 | Gunicorn | ✅ |
@@ -151,8 +170,8 @@ Car_Showroom_Project/
 ├── showroom/
 ├── car_showroom/
 ├── templates/
-├── media/
 ├── static/
+├── media/
 ├── screenshots/
 ├── manage.py
 ├── requirements.txt
@@ -173,7 +192,7 @@ git clone https://github.com/rupeshit06531/Car_Showroom_Project.git
 ## Go to Project
 
 ```bash
-cd car-showroom-management-system
+cd Car_Showroom_Project
 ```
 
 ## Create Virtual Environment
@@ -182,7 +201,7 @@ cd car-showroom-management-system
 python -m venv venv
 ```
 
-## Activate Environment
+## Activate Virtual Environment
 
 ### Windows
 
@@ -208,7 +227,13 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
-## Run Development Server
+## Create Superuser
+
+```bash
+python manage.py createsuperuser
+```
+
+## Run Server
 
 ```bash
 python manage.py runserver
@@ -216,7 +241,7 @@ python manage.py runserver
 
 ---
 
-# 📊 Dashboard Modules
+# 📊 Modules
 
 - 🚗 Car Management
 - 👥 Customer Management
@@ -225,19 +250,23 @@ python manage.py runserver
 - 📦 Purchase Management
 - 💰 Sales Management
 - 📄 Invoice System
-- 📊 Analytics Dashboard
+- 📊 Dashboard Analytics
+- 📑 Reports
 
 ---
 
-# 🚀 Future Improvements
+# 🚀 Upcoming Features
 
-- PostgreSQL
-- Django REST Framework API
-- Docker Support
+- Premium Dashboard UI
+- Dark Mode
+- Responsive Mobile Design
+- Advanced Analytics
+- Better Charts
+- Notification System
+- REST API
+- PostgreSQL Support
+- Docker Deployment
 - Cloudinary Image Storage
-- SMS Notifications
-- Responsive Admin Dashboard
-- Multi-Branch Management
 
 ---
 
@@ -249,9 +278,9 @@ python manage.py runserver
 
 - Python
 - Django
-- HTML
-- CSS
-- Bootstrap
+- HTML5
+- CSS3
+- Bootstrap 5
 - JavaScript
 - SQLite
 - Git
@@ -261,19 +290,19 @@ python manage.py runserver
 
 # 🤝 Contributing
 
-Contributions are welcome!
+Contributions are welcome.
 
-1. Fork the repository
-2. Create a new branch
-3. Commit your changes
-4. Push the branch
-5. Open a Pull Request
+1. Fork the repository.
+2. Create a new branch.
+3. Commit your changes.
+4. Push your branch.
+5. Open a Pull Request.
 
 ---
 
 # ⭐ Support
 
-If you like this project, please ⭐ the repository.
+If you like this project, please give it a ⭐ on GitHub.
 
 ---
 

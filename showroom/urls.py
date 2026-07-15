@@ -23,6 +23,10 @@ urlpatterns = [
      path("delete-customer/<int:id>/", views.delete_customer, name="delete_customer"),
      path("sales/", views.sale_list, name="sale_list"),
      path("add-sale/", views.add_sale, name="add_sale"),
+
+     path("edit-sale/<int:id>/", views.edit_sale, name="edit_sale"),
+path("delete-sale/<int:id>/", views.delete_sale, name="delete_sale"),
+
      path("sales-report/", views.sales_report, name="sales_report"),
      path("sales-report/pdf/", views.sales_report_pdf, name="sales_report_pdf"),
 
@@ -54,10 +58,21 @@ urlpatterns = [
      path("customer-history/<int:id>/", views.customer_history, name="customer_history"),
      path("import-cars/", views.import_cars, name="import_cars"),
 
+     path(
+    "export-sales/",
+    views.export_sales_excel,
+    name="export_sales_excel"
+),
+
+
+     
+
 
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-
-   
+from django.conf import settings
+from django.conf.urls.static import static
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

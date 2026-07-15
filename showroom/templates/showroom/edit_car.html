@@ -2,29 +2,64 @@
 
 {% block content %}
 
-<div class="card shadow">
+<div class="container py-4">
 
-    <div class="card-header bg-warning text-dark">
-        <h3>Edit Car</h3>
-    </div>
+    <div class="card shadow-lg border-0 rounded-4">
 
-    <div class="card-body">
+        <div class="card-header text-white"
+             style="background:linear-gradient(90deg,#f59e0b,#d97706);">
 
-        <form method="POST" enctype="multipart/form-data">
+            <h2 class="mb-0">
+                ✏️ Edit Car
+            </h2>
 
-            {% csrf_token %}
+        </div>
 
-            {{ form.as_p }}
+        <div class="card-body">
 
-            <button type="submit" class="btn btn-warning">
-                Update Car
-            </button>
+            <form method="POST" enctype="multipart/form-data">
 
-            <a href="/" class="btn btn-secondary">
-                Cancel
-            </a>
+                {% csrf_token %}
 
-        </form>
+                <div class="row">
+
+                    {% for field in form %}
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-bold">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.errors %}
+                        <div class="text-danger small">
+                            {{ field.errors }}
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <hr>
+
+                <button type="submit" class="btn btn-warning btn-lg">
+                    <i class="bi bi-pencil-square"></i>
+                    Update Car
+                </button>
+
+                <a href="/" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-arrow-left"></i>
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
 
     </div>
 

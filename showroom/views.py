@@ -1,10 +1,44 @@
-from django.core import paginator
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
 from django.db.models import Q, Sum, Count
 from django.utils import timezone
+from django.contrib import messages
+from django.conf import settings
+from django.core.mail import send_mail
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from .models import Purchase
+from .forms import PurchaseForm
+
+from django.contrib.auth.decorators import (
+    login_required,
+    permission_required,
+)
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import Car, Customer, Sale, Employee, Supplier, Purchase
+
+from openpyxl import Workbook
+from openpyxl.styles import Font
+import openpyxl
+
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Table,
+    TableStyle,
+    Paragraph,
+)
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.pdfgen import canvas
+
+from .models import (
+    Car,
+    Customer,
+    Sale,
+    Employee,
+    Supplier,
+    Purchase,
+)
+
 from .forms import (
     CarForm,
     CustomerForm,
@@ -14,28 +48,6 @@ from .forms import (
     PurchaseForm,
     ExcelUploadForm,
 )
-from django.http import HttpResponse
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
-from django.contrib import messages
-from openpyxl import Workbook
-from openpyxl.styles import Font
-from django.core.paginator import Paginator
-from django.db.models import Count
-from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.admin.views.decorators import staff_member_required
-
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from django.core.paginator import Paginator
-from django.core.mail import send_mail
-from django.conf import settings
-import openpyxl
-
-
-
-
 
 # =========================
 # HOME PAGE
@@ -44,6 +56,7 @@ import openpyxl
 @login_required
 def home(request):
 
+    # Search & Filters
     query = request.GET.get("q")
     company = request.GET.get("company")
     fuel = request.GET.get("fuel")
@@ -88,82 +101,56 @@ def home(request):
     elif stock == "out":
         cars = cars.filter(stock=0)
 
-# ==========================
-# Pagination
-# ==========================
-
-    paginator = Paginator(cars, 10)   # 10 cars per page
+    # Pagination
+    paginator = Paginator(cars, 10)
     page_number = request.GET.get("page")
     cars = paginator.get_page(page_number)
 
-    # Dashboard Cards
+    recent_sales = Sale.objects.select_related(
+    "customer",
+    "car"
+    ).order_by("-id")[:5]
+
+    recent_customers = Customer.objects.order_by("-id")[:5]
+
+    recent_cars = Car.objects.order_by("-id")[:5]
+
+        # Dashboard Statistics
     total_cars = Car.objects.count()
     total_customers = Customer.objects.count()
     total_sales = Sale.objects.count()
 
-    total_companies = Car.objects.values(
-        "company"
-    ).distinct().count()
+    total_companies = Car.objects.values("company").distinct().count()
 
-    total_value = Car.objects.aggregate(
-        Sum("price")
-    )["price__sum"] or 0
+    total_value = Car.objects.aggregate(Sum("price"))["price__sum"] or 0
+    total_revenue = Sale.objects.aggregate(Sum("sale_price"))["sale_price__sum"] or 0
+    total_purchase = Purchase.objects.aggregate(Sum("purchase_price"))["purchase_price__sum"] or 0
 
-    total_revenue = Sale.objects.aggregate(
-        Sum("sale_price")
-    )["sale_price__sum"] or 0
-
-    # Total Purchase Cost
-    total_purchase = Purchase.objects.aggregate(
-        Sum("purchase_price")
-    )["purchase_price__sum"] or 0
-
-# Net Profit
     net_profit = total_revenue - total_purchase
 
-    total_stock = Car.objects.aggregate(
-        Sum("stock")
-    )["stock__sum"] or 0
+    total_stock = Car.objects.aggregate(Sum("stock"))["stock__sum"] or 0
+    low_stock = Car.objects.filter(stock__lte=2).count()
 
-    low_stock = Car.objects.filter(
-        stock__lte=2
-    ).count()
-
-
-# Today's Dashboard
     today = timezone.now().date()
-    
 
-    today_sales = Sale.objects.filter(
-        sale_date=today
-    ).count()
+    today_sales = Sale.objects.filter(sale_date=today).count()
 
-    today_revenue = Sale.objects.filter(
-        sale_date=today
-    ).aggregate(
-        Sum("sale_price")
-    )["sale_price__sum"] or 0
+    today_revenue = (
+        Sale.objects.filter(sale_date=today)
+        .aggregate(Sum("sale_price"))["sale_price__sum"] or 0
+    )
 
+    companies = Car.objects.values_list("company", flat=True).distinct()
+    fuel_types = Car.objects.values_list("fuel_type", flat=True).distinct()
 
-    companies = Car.objects.values_list(
-        "company",
-        flat=True
-    ).distinct()
-
-    fuel_types = Car.objects.values_list(
-        "fuel_type",
-        flat=True
-    ).distinct()
-
-    # Monthly Sales Chart
     months = []
     sales_count = []
+    revenue = []
 
     current_month = timezone.now().month
     current_year = timezone.now().year
 
     for i in range(11, -1, -1):
-
         month = current_month - i
         year = current_year
 
@@ -171,139 +158,125 @@ def home(request):
             month += 12
             year -= 1
 
-        count = Sale.objects.filter(
-            sale_date__year=year,
-            sale_date__month=month
-        ).count()
-
         months.append(f"{month}/{year}")
-        sales_count.append(count)
 
-    revenue = []
- 
-    for i in range(11, -1, -1):
+        sales_count.append(
+            Sale.objects.filter(
+                sale_date__year=year,
+                sale_date__month=month
+            ).count()
+        )
 
-       month = current_month - i
-       year = current_year
-
-    if month <= 0:
-        month += 12
-        year -= 1
-
-    total = Sale.objects.filter(
-        sale_date__year=year,
-        sale_date__month=month
-    ).aggregate(
-        Sum("sale_price")
-    )["sale_price__sum"] or 0
-
-    revenue.append(total)
-
-
-
-    # ==========================
-    # Company Wise Sales
-    # ==========================
+        revenue.append(
+            Sale.objects.filter(
+                sale_date__year=year,
+                sale_date__month=month
+            ).aggregate(Sum("sale_price"))["sale_price__sum"] or 0
+        )
 
     company_names = []
     company_sales = []
 
-    companies_data = Car.objects.values_list(
-        "company",
-        flat=True
-    ).distinct()
-
-    for company in companies_data:
-
-        count = Sale.objects.filter(
-            car__company=company
-        ).count()
-
+    for company in companies:
         company_names.append(company)
-        company_sales.append(count)
-
- # ==========================
-# Top Selling Cars
-# ==========================
+        company_sales.append(Sale.objects.filter(car__company=company).count())
 
     top_cars = (
-    Sale.objects
-    .values("car__car_name")
-    .annotate(total_sold=Count("id"))
-    .order_by("-total_sold")[:5]
+        Sale.objects.values("car__car_name")
+        .annotate(total_sold=Count("id"))
+        .order_by("-total_sold")[:5]
     )
 
     best_employee = (
-    Sale.objects.values("employee__name")
-    .annotate(total_sales=Count("id"))
-    .order_by("-total_sales")
-    .first()
+        Sale.objects.values("employee__name")
+        .annotate(total_sales=Count("id"))
+        .order_by("-total_sales")
+        .first()
+    )
+
+    return render(
+        request,
+        "showroom/home.html",
+        {
+            "cars": cars,
+            "total_cars": total_cars,
+            "total_customers": total_customers,
+            "total_sales": total_sales,
+            "total_companies": total_companies,
+            "total_value": total_value,
+            "total_revenue": total_revenue,
+            "total_purchase": total_purchase,
+            "net_profit": net_profit,
+            "total_stock": total_stock,
+            "low_stock": low_stock,
+            "today_sales": today_sales,
+            "today_revenue": today_revenue,
+            "companies": companies,
+            "fuel_types": fuel_types,
+            "months": months,
+            "sales_count": sales_count,
+            "revenue": revenue,
+            "company_names": company_names,
+            "company_sales": company_sales,
+            "top_cars": top_cars,
+            "best_employee": best_employee,
+            "recent_sales": recent_sales,
+            "recent_customers": recent_customers,
+            "recent_cars": recent_cars,
+        },
 )
 
-    return render(request, "showroom/home.html", {
-        "cars": cars,
-        "total_cars": total_cars,
-        "total_customers": total_customers,
-        "total_sales": total_sales,
-        "total_companies": total_companies,
-        "total_value": total_value,
-        "total_revenue": total_revenue,
-        "total_purchase": total_purchase,
-        "net_profit": net_profit,
-        "total_stock": total_stock,
-        "low_stock": low_stock,
 
-        "today_sales": today_sales,
-        "today_revenue": today_revenue,
-
-        "companies": companies,
-        "fuel_types": fuel_types,
-        "months": months,
-        "sales_count": sales_count,
-        "revenue": revenue,
-        "company_names": company_names,
-        "company_sales": company_sales,
-        "top_cars": top_cars,
-        "best_employee": best_employee,
-        "recent_sales": recent_sales,
-
-    })
-
-    
 # =========================
 # ADD CAR
 # =========================
 
 @login_required
-@permission_required('showroom.add_car', raise_exception=True)
+@permission_required("showroom.add_car", raise_exception=True)
 def add_car(request):
 
     if request.method == "POST":
 
-        form = CarForm(request.POST, request.FILES)
+        form = CarForm(
+            request.POST,
+            request.FILES
+        )
 
         if form.is_valid():
-           form.save()
-           messages.success(request, "Car added successfully.")
-           return redirect("/")
+
+            form.save()
+
+            messages.success(
+                request,
+                "Car added successfully."
+            )
+
+            return redirect("home")
 
     else:
-         form = CarForm()
 
-         return render(request, "showroom/add_car.html", {
-           "form": form
-     })
+        form = CarForm()
 
+    return render(
+        request,
+        "showroom/add_car.html",
+        {
+            "form": form
+        }
+    )
 
 # =========================
 # EDIT CAR
 # =========================
 
 @login_required
-@permission_required('showroom.change_car', raise_exception=True)
+@permission_required("showroom.change_car", raise_exception=True)
 def edit_car(request, id):
 
-    car = get_object_or_404(Car, id=id)
+    car = get_object_or_404(
+        Car,
+        id=id
+    )
 
     if request.method == "POST":
 
@@ -314,45 +287,92 @@ def edit_car(request, id):
         )
 
         if form.is_valid():
-           form.save()
-           messages.success(request, "Car updated successfully.")
-           return redirect("/")
+
+            form.save()
+
+            messages.success(
+                request,
+                "Car updated successfully."
+            )
+
+            return redirect("home")
 
     else:
 
         form = CarForm(instance=car)
 
-    return render(request, "showroom/edit_car.html", {
-        "form": form
-    })
-
+    return render(
+        request,
+        "showroom/edit_car.html",
+        {
+            "form": form,
+            "car": car,
+        }
+    )
 
 # =========================
 # DELETE CAR
 # =========================
 
 @login_required
-@permission_required('showroom.delete_car', raise_exception=True)
+@permission_required("showroom.delete_car", raise_exception=True)
 def delete_car(request, id):
 
-    car = get_object_or_404(Car, id=id)
+    car = get_object_or_404(
+        Car,
+        id=id
+    )
 
     if request.method == "POST":
+
         car.delete()
-        messages.success(request, "Car deleted successfully.")
-        return redirect("/")
 
-    return render(request, "showroom/delete_car.html", {
-        "car": car
-    })
+        messages.success(
+            request,
+            "Car deleted successfully."
+        )
 
+        return redirect("home")
+
+    return render(
+        request,
+        "showroom/delete_car.html",
+        {
+            "car": car
+        }
+    )
+
+# =========================
+# CAR DETAIL
+# =========================
+
+@login_required
+def car_detail(request, id):
+
+    car = get_object_or_404(
+        Car,
+        id=id
+    )
+
+    return render(
+        request,
+        "showroom/car_detail.html",
+        {
+            "car": car
+        }
+    )
+
+# =========================
+# EXPORT CARS TO EXCEL
+# =========================
 
 @login_required
 def export_cars_excel(request):
 
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Cars"
+    workbook = Workbook()
+
+    sheet = workbook.active
+    sheet.title = "Cars"
 
     headers = [
         "ID",
@@ -365,15 +385,16 @@ def export_cars_excel(request):
         "Stock",
     ]
 
-    for col_num, header in enumerate(headers, 1):
-        cell = ws.cell(row=1, column=col_num)
+    for col, header in enumerate(headers, start=1):
+
+        cell = sheet.cell(row=1, column=col)
+
         cell.value = header
         cell.font = Font(bold=True)
 
-    cars = Car.objects.all()
+    for car in Car.objects.all():
 
-    for car in cars:
-        ws.append([
+        sheet.append([
             car.id,
             car.car_name,
             car.company,
@@ -390,24 +411,9 @@ def export_cars_excel(request):
 
     response["Content-Disposition"] = 'attachment; filename="cars.xlsx"'
 
-    wb.save(response)
+    workbook.save(response)
 
     return response
-
-
-
-# =========================
-# CAR DETAIL
-# =========================
-
-@login_required
-def car_detail(request, id):
-
-    car = get_object_or_404(Car, id=id)
-
-    return render(request, "showroom/car_detail.html", {
-        "car": car
-    })
 
 # =========================
 # CUSTOMER LIST
@@ -416,12 +422,28 @@ def car_detail(request, id):
 @login_required
 def customer_list(request):
 
-    customers = Customer.objects.all()
+    customers = Customer.objects.all().order_by("-id")
 
-    return render(request, "showroom/customer_list.html", {
-        "customers": customers
-    })
+    query = request.GET.get("q")
 
+    if query:
+        customers = customers.filter(
+            Q(name__icontains=query) |
+            Q(mobile__icontains=query) |
+            Q(email__icontains=query)
+        )
+
+    paginator = Paginator(customers, 10)
+    page_number = request.GET.get("page")
+    customers = paginator.get_page(page_number)
+
+    return render(
+        request,
+        "showroom/customer_list.html",
+        {
+            "customers": customers
+        }
+    )
 
 # =========================
 # ADD CUSTOMER
@@ -435,16 +457,27 @@ def add_customer(request):
         form = CustomerForm(request.POST)
 
         if form.is_valid():
+
             form.save()
-            return redirect("/customers/")
+
+            messages.success(
+                request,
+                "Customer added successfully."
+            )
+
+            return redirect("customer_list")
 
     else:
+
         form = CustomerForm()
 
-    return render(request, "showroom/add_customer.html", {
-        "form": form
-    })
-
+    return render(
+        request,
+        "showroom/add_customer.html",
+        {
+            "form": form
+        }
+    )
 
 # =========================
 # EDIT CUSTOMER
@@ -453,7 +486,10 @@ def add_customer(request):
 @login_required
 def edit_customer(request, id):
 
-    customer = get_object_or_404(Customer, id=id)
+    customer = get_object_or_404(
+        Customer,
+        id=id
+    )
 
     if request.method == "POST":
 
@@ -463,15 +499,28 @@ def edit_customer(request, id):
         )
 
         if form.is_valid():
+
             form.save()
-            return redirect("/customers/")
+
+            messages.success(
+                request,
+                "Customer updated successfully."
+            )
+
+            return redirect("customer_list")
 
     else:
+
         form = CustomerForm(instance=customer)
 
-    return render(request, "showroom/edit_customer.html", {
-        "form": form
-    })
+    return render(
+        request,
+        "showroom/edit_customer.html",
+        {
+            "form": form,
+            "customer": customer
+        }
+    )
 
 
 # =========================
@@ -481,16 +530,67 @@ def edit_customer(request, id):
 @login_required
 def delete_customer(request, id):
 
-    customer = get_object_or_404(Customer, id=id)
+    customer = get_object_or_404(
+        Customer,
+        id=id
+    )
 
     if request.method == "POST":
+
         customer.delete()
-        return redirect("/customers/")
 
-    return render(request, "showroom/delete_customer.html", {
-        "customer": customer
-    })
+        messages.success(
+            request,
+            "Customer deleted successfully."
+        )
 
+        return redirect("customer_list")
+
+    return render(
+        request,
+        "showroom/delete_customer.html",
+        {
+            "customer": customer
+        }
+    )
+
+# =========================
+# CUSTOMER HISTORY
+# =========================
+
+@login_required
+def customer_history(request, id):
+
+    customer = get_object_or_404(
+        Customer,
+        id=id
+    )
+
+    sales = (
+        Sale.objects
+        .select_related(
+            "car",
+            "employee"
+        )
+        .filter(customer=customer)
+        .order_by("-sale_date")
+    )
+
+    total_amount = (
+        sales.aggregate(
+            Sum("sale_price")
+        )["sale_price__sum"] or 0
+    )
+
+    return render(
+        request,
+        "showroom/customer_history.html",
+        {
+            "customer": customer,
+            "sales": sales,
+            "total_amount": total_amount,
+        }
+    )
 
 # =========================
 # SALES LIST
@@ -499,11 +599,15 @@ def delete_customer(request, id):
 @login_required
 def sale_list(request):
 
-    sales = Sale.objects.select_related(
-        "customer",
-        "car",
-        "employee"
-    ).all().order_by("-sale_date")
+    sales = (
+        Sale.objects
+        .select_related(
+            "customer",
+            "car",
+            "employee"
+        )
+        .order_by("-sale_date")
+    )
 
     query = request.GET.get("q")
     employee = request.GET.get("employee")
@@ -511,30 +615,92 @@ def sale_list(request):
     end_date = request.GET.get("end_date")
 
     if query:
+
         sales = sales.filter(
+
             Q(invoice_number__icontains=query) |
+
             Q(customer__name__icontains=query) |
+
             Q(car__car_name__icontains=query)
+
         )
 
     if employee:
-        sales = sales.filter(employee__id=employee)
+        sales = sales.filter(employee_id=employee)
 
     if start_date and end_date:
+
         sales = sales.filter(
             sale_date__range=[start_date, end_date]
         )
 
-    employees = Employee.objects.all()
+    employees = Employee.objects.all().order_by("name")
 
     paginator = Paginator(sales, 10)
-    page_number = request.GET.get("page")
-    sales = paginator.get_page(page_number)
 
-    return render(request, "showroom/sale_list.html", {
-        "sales": sales,
-        "employees": employees,
-    })
+    page = request.GET.get("page")
+
+    sales = paginator.get_page(page)
+
+    return render(
+        request,
+        "showroom/sale_list.html",
+        {
+            "sales": sales,
+            "employees": employees,
+        },
+    )
+
+
+@login_required
+def edit_sale(request, id):
+
+    sale = get_object_or_404(Sale, id=id)
+
+    if request.method == "POST":
+
+        form = SaleForm(
+            request.POST,
+            instance=sale
+        )
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Sale updated successfully.")
+            return redirect("sale_list")
+
+    else:
+        form = SaleForm(instance=sale)
+
+    return render(
+        request,
+        "showroom/edit_sale.html",
+        {
+            "form": form,
+            "sale": sale,
+        }
+    )
+
+
+@login_required
+def delete_sale(request, id):
+
+    sale = get_object_or_404(Sale, id=id)
+
+    if request.method == "POST":
+        sale.delete()
+        messages.success(request, "Sale deleted successfully.")
+        return redirect("sale_list")
+
+    return render(
+        request,
+        "showroom/delete_sale.html",
+        {
+            "sale": sale
+        }
+    )
+
 
 # =========================
 # ADD SALE
@@ -549,40 +715,54 @@ def add_sale(request):
 
         if form.is_valid():
 
-          sale = form.save()
+            sale = form.save()
 
-    # Send Email
-    if sale.customer.email:
+            if sale.customer.email:
 
-        send_mail(
-            subject="Car Purchase Invoice",
-            message=f"""
-            Hello {sale.customer.name},
+                send_mail(
 
-            Thank you for purchasing {sale.car.car_name}.
+                    subject="Car Purchase Invoice",
 
-            Invoice Number: {sale.invoice_number}
+                    message=f"""
+Hello {sale.customer.name},
 
-            Amount: ₹{sale.sale_price}
+Thank you for purchasing {sale.car.car_name}.
 
-            Purchase Date: {sale.sale_date}
+Invoice Number : {sale.invoice_number}
 
-            Thank you for choosing our showroom.
-            """,
+Amount : ₹{sale.sale_price}
 
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[sale.customer.email],
-            fail_silently=True,
-        )
+Purchase Date : {sale.sale_date}
 
-        return redirect("sale_list")
+Thank you for choosing our showroom.
+""",
+
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+
+                    recipient_list=[sale.customer.email],
+
+                    fail_silently=True,
+
+                )
+
+            messages.success(
+                request,
+                "Sale added successfully."
+            )
+
+            return redirect("sale_list")
 
     else:
+
         form = SaleForm()
 
-    return render(request, "showroom/add_sale.html", {
-        "form": form
-    })
+    return render(
+        request,
+        "showroom/add_sale.html",
+        {
+            "form": form
+        }
+    )
 
 
 # =========================
@@ -592,52 +772,104 @@ def add_sale(request):
 @login_required
 def invoice(request, id):
 
-    sale = get_object_or_404(Sale, id=id)
+    sale = get_object_or_404(
+        Sale,
+        id=id
+    )
 
-    return render(request, "showroom/invoice.html", {
-        "sale": sale
-    })
+    return render(
+        request,
+        "showroom/invoice.html",
+        {
+            "sale": sale
+        }
+    )
+
+
+# =========================
+# DOWNLOAD INVOICE PDF
+# =========================
 
 @login_required
 def download_invoice(request, id):
 
-    sale = get_object_or_404(Sale, id=id)
+    sale = get_object_or_404(
+        Sale,
+        id=id
+    )
 
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename="Invoice_{sale.invoice_number}.pdf"'
+    response = HttpResponse(
+        content_type="application/pdf"
+    )
 
-    doc = SimpleDocTemplate(response)
+    response["Content-Disposition"] = (
+        f'attachment; filename="Invoice_{sale.invoice_number}.pdf"'
+    )
+
+    document = SimpleDocTemplate(response)
+
     styles = getSampleStyleSheet()
 
     elements = []
 
-    elements.append(Paragraph("<b>CAR SHOWROOM MANAGEMENT SYSTEM</b>", styles["Title"]))
-    elements.append(Paragraph("Invoice", styles["Heading2"]))
+    elements.append(
+        Paragraph(
+            "<b>CAR SHOWROOM MANAGEMENT SYSTEM</b>",
+            styles["Title"]
+        )
+    )
 
-    data = [
+    elements.append(
+        Paragraph(
+            "Customer Invoice",
+            styles["Heading2"]
+        )
+    )
+
+    table_data = [
+
         ["Invoice No", sale.invoice_number],
+
         ["Customer", sale.customer.name],
+
         ["Car", sale.car.car_name],
+
         ["Company", sale.car.company],
+
+        ["Model", sale.car.model],
+
         ["Sale Price", f"₹ {sale.sale_price}"],
+
         ["Sale Date", str(sale.sale_date)],
+
     ]
 
-    table = Table(data, colWidths=[150, 250])
+    table = Table(
+        table_data,
+        colWidths=[170, 250]
+    )
 
-    table.setStyle(TableStyle([
-        ("GRID", (0,0), (-1,-1), 1, colors.black),
-        ("BACKGROUND", (0,0), (0,-1), colors.lightgrey),
-        ("BOTTOMPADDING", (0,0), (-1,-1), 8),
-    ]))
+    table.setStyle(
+        TableStyle([
+
+            ("GRID", (0,0), (-1,-1), 1, colors.black),
+
+            ("BACKGROUND", (0,0), (0,-1), colors.lightgrey),
+
+            ("BOTTOMPADDING", (0,0), (-1,-1), 8),
+
+            ("FONTNAME", (0,0), (-1,-1), "Helvetica"),
+
+        ])
+    )
 
     elements.append(table)
 
-    doc.build(elements)
+    document.build(elements)
 
     return response
 
-
+    
 # =========================
 # EMPLOYEE LIST
 # =========================
@@ -645,11 +877,26 @@ def download_invoice(request, id):
 @login_required
 def employee_list(request):
 
-    employees = Employee.objects.all()
+    employees = Employee.objects.all().order_by("name")
 
-    return render(request, "showroom/employee_list.html", {
-        "employees": employees
-    })
+    query = request.GET.get("q")
+
+    if query:
+        employees = employees.filter(
+            Q(name__icontains=query)
+        )
+
+    paginator = Paginator(employees, 10)
+    page = request.GET.get("page")
+    employees = paginator.get_page(page)
+
+    return render(
+        request,
+        "showroom/employee_list.html",
+        {
+            "employees": employees
+        }
+    )
 
 
 # =========================
@@ -668,15 +915,27 @@ def add_employee(request):
         )
 
         if form.is_valid():
+
             form.save()
-            return redirect("/employees/")
+
+            messages.success(
+                request,
+                "Employee added successfully."
+            )
+
+            return redirect("employee_list")
 
     else:
+
         form = EmployeeForm()
 
-    return render(request, "showroom/add_employee.html", {
-        "form": form
-    })
+    return render(
+        request,
+        "showroom/add_employee.html",
+        {
+            "form": form
+        }
+    )
 
 
 # =========================
@@ -699,15 +958,20 @@ def edit_employee(request, id):
 
         if form.is_valid():
             form.save()
-            return redirect("/employees/")
+            messages.success(request, "Employee updated successfully.")
+            return redirect("employee_list")
 
     else:
         form = EmployeeForm(instance=employee)
 
-    return render(request, "showroom/edit_employee.html", {
-        "form": form
-    })
-
+    return render(
+          request,
+        "showroom/add_employee.html",
+       {
+          "form": form,
+           "employee": employee,
+      }
+)
 
 # =========================
 # DELETE EMPLOYEE
@@ -721,155 +985,26 @@ def delete_employee(request, id):
 
     if request.method == "POST":
         employee.delete()
-        return redirect("/employees/")
+        messages.success(request, "Employee deleted successfully.")
+        return redirect("employee_list")
 
-    return render(request, "showroom/delete_employee.html", {
-        "employee": employee
-    })
-
-@login_required
-def invoice_pdf(request, sale_id):
-
-    sale = get_object_or_404(Sale, id=sale_id)
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="Invoice_{sale.invoice_number}.pdf"'
-
-    p = canvas.Canvas(response)
-
-    p.setFont("Helvetica-Bold", 18)
-    p.drawString(180, 800, "CAR SHOWROOM INVOICE")
-
-    p.setFont("Helvetica", 12)
-
-    y = 760
-
-    p.drawString(50, y, f"Invoice No : {sale.invoice_number}")
-    y -= 25
-
-    p.drawString(50, y, f"Date : {sale.sale_date}")
-    y -= 25
-
-    p.drawString(50, y, f"Customer : {sale.customer.name}")
-    y -= 25
-
-    p.drawString(50, y, f"Car : {sale.car.car_name}")
-    y -= 25
-
-    p.drawString(50, y, f"Company : {sale.car.company}")
-    y -= 25
-
-    p.drawString(50, y, f"Model : {sale.car.model}")
-    y -= 25
-
-    p.drawString(50, y, f"Price : Rs. {sale.selling_price}")
-    y -= 40
-
-    p.setFont("Helvetica-Bold", 14)
-    p.drawString(50, y, "Thank You For Your Purchase!")
-
-    p.showPage()
-    p.save()
-
-    return response
-
-@login_required
-def sales_report(request):
-
-    sales = Sale.objects.all().order_by("-sale_date")
-
-    start_date = request.GET.get("start_date")
-    end_date = request.GET.get("end_date")
-
-    if start_date and end_date:
-        sales = sales.filter(
-            sale_date__range=[start_date, end_date]
-        )
-
-    total_revenue = sales.aggregate(
-        Sum("sale_price")
-    )["sale_price__sum"] or 0
-
-    return render(request, "showroom/sales_report.html", {
-        "sales": sales,
-        "total_revenue": total_revenue,
-        "start_date": start_date,
-        "end_date": end_date,
-    })
-
-@login_required
-def sales_report_pdf(request):
-
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = 'attachment; filename="sales_report.pdf"'
-
-    doc = SimpleDocTemplate(response)
-
-    styles = getSampleStyleSheet()
-    elements = []
-
-    # Heading
-    elements.append(Paragraph("<b>Car Showroom Sales Report</b>", styles["Title"]))
-
-    # Table Data
-    data = [["Invoice", "Customer", "Car", "Employee", "Price"]]
-
-    sales = Sale.objects.all().order_by("-sale_date")
-
-    start_date = request.GET.get("start_date")
-    end_date = request.GET.get("end_date")
-
-    if start_date and end_date:
-         sales = sales.filter(
-        sale_date__range=[start_date, end_date]
+    return render(
+        request,
+        "showroom/delete_employee.html",
+        {
+            "employee": employee
+        }
     )
 
-    total_revenue = 0
 
-    for sale in sales:
-
-        data.append([
-            sale.invoice_number,
-            sale.customer.name,
-            sale.car.car_name,
-            sale.employee.name if sale.employee else "-",
-            f"₹ {sale.sale_price}"
-        ])
-
-        total_revenue += sale.sale_price
-
-    table = Table(data)
-
-    table.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-
-        ("GRID", (0, 0), (-1, -1), 1, colors.black),
-
-        ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
-
-        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-
-        ("BOTTOMPADDING", (0, 0), (-1, 0), 10),
-    ]))
-
-    elements.append(table)
-
-    elements.append(
-        Paragraph(
-            f"<br/><b>Total Revenue : ₹ {total_revenue}</b>",
-            styles["Heading2"]
-        )
-    )
-
-    doc.build(elements)
-
-    return response
+# =========================
+# SUPPLIER LIST
+# =========================
 
 @login_required
 def supplier_list(request):
 
-    suppliers = Supplier.objects.all().order_by("name")
+    suppliers = Supplier.objects.all().order_by("-id")
 
     return render(
         request,
@@ -878,6 +1013,11 @@ def supplier_list(request):
             "suppliers": suppliers
         }
     )
+
+
+# =========================
+# ADD SUPPLIER
+# =========================
 
 @login_required
 def add_supplier(request):
@@ -888,6 +1028,7 @@ def add_supplier(request):
 
         if form.is_valid():
             form.save()
+            messages.success(request, "Supplier added successfully.")
             return redirect("supplier_list")
 
     else:
@@ -902,16 +1043,22 @@ def add_supplier(request):
     )
 
 
+# =========================
+# EDIT SUPPLIER
+# =========================
+
 @login_required
 def edit_supplier(request, id):
 
     supplier = get_object_or_404(Supplier, id=id)
 
     if request.method == "POST":
+
         form = SupplierForm(request.POST, instance=supplier)
 
         if form.is_valid():
             form.save()
+            messages.success(request, "Supplier updated successfully.")
             return redirect("supplier_list")
 
     else:
@@ -919,28 +1066,63 @@ def edit_supplier(request, id):
 
     return render(
         request,
-        "showroom/add_supplier.html",
+        "showroom/edit_supplier.html",
         {
-            "form": form
+            "form": form,
+            "supplier": supplier,
         }
     )
+
+
+# =========================
+# DELETE SUPPLIER
+# =========================
 
 @login_required
 def delete_supplier(request, id):
 
     supplier = get_object_or_404(Supplier, id=id)
 
-    supplier.delete()
+    if request.method == "POST":
+        supplier.delete()
+        messages.success(request, "Supplier deleted successfully.")
+        return redirect("supplier_list")
 
-    return redirect("supplier_list")
+    return render(
+        request,
+        "showroom/delete_supplier.html",
+        {
+            "supplier": supplier
+        }
+    )
+
+
+
+from django.shortcuts import render
+from .models import Sale
+
+
+@login_required
+def sales_report(request):
+
+    sales = Sale.objects.select_related(
+        "customer",
+        "car",
+        "employee"
+    ).all()
+
+    return render(
+        request,
+        "showroom/sales_report.html",
+        {
+            "sales": sales
+        }
+    )
+
 
 @login_required
 def purchase_list(request):
-
-    purchases = Purchase.objects.select_related(
-        "supplier",
-        "car"
-    ).order_by("-purchase_date")
+    purchases = Purchase.objects.select_related("supplier").all().order_by("-id")
 
     return render(
         request,
@@ -950,18 +1132,13 @@ def purchase_list(request):
         }
     )
 
-
 @login_required
 def add_purchase(request):
-
     if request.method == "POST":
-
         form = PurchaseForm(request.POST)
-
         if form.is_valid():
             form.save()
             return redirect("purchase_list")
-
     else:
         form = PurchaseForm()
 
@@ -975,108 +1152,113 @@ def add_purchase(request):
 
 @login_required
 def edit_purchase(request, id):
-
     purchase = get_object_or_404(Purchase, id=id)
 
-    old_quantity = purchase.quantity
-
     if request.method == "POST":
-
         form = PurchaseForm(request.POST, instance=purchase)
-
         if form.is_valid():
-
-            purchase = form.save(commit=False)
-
-            difference = purchase.quantity - old_quantity
-
-            purchase.car.stock += difference
-            purchase.car.save()
-
-            purchase.save()
-
+            form.save()
             return redirect("purchase_list")
-
     else:
         form = PurchaseForm(instance=purchase)
 
-    return render(request, "showroom/add_purchase.html", {
-        "form": form
-    })
-
-@login_required
-def delete_purchase(request, id):
-
-    purchase = get_object_or_404(Purchase, id=id)
-
-    purchase.car.stock -= purchase.quantity
-    purchase.car.save()
-
-    purchase.delete()
-
-    return redirect("purchase_list")
-
-@login_required
-def customer_history(request, id):
-
-    customer = get_object_or_404(Customer, id=id)
-
-    sales = Sale.objects.select_related(
-        "car",
-        "employee"
-    ).filter(customer=customer)
-
-    total_amount = sales.aggregate(
-        Sum("sale_price")
-    )["sale_price__sum"] or 0
-
     return render(
         request,
-        "showroom/customer_history.html",
+        "showroom/add_purchase.html",
         {
-            "customer": customer,
-            "sales": sales,
-            "total_amount": total_amount,
+            "form": form
         }
     )
 
 
 @login_required
-def import_cars(request):
+def invoice_pdf(request, sale_id):
+    sale = get_object_or_404(Sale, id=sale_id)
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="invoice_{sale.invoice_number}.pdf"'
+
+    p = canvas.Canvas(response)
+
+    p.setFont("Helvetica-Bold", 18)
+    p.drawString(180, 800, "CAR SHOWROOM INVOICE")
+
+    p.setFont("Helvetica", 12)
+    p.drawString(50, 760, f"Invoice No : {sale.invoice_number}")
+    p.drawString(50, 735, f"Customer   : {sale.customer.name}")
+    p.drawString(50, 710, f"Car        : {sale.car.car_name}")
+    p.drawString(50, 685, f"Employee   : {sale.employee.name}")
+    p.drawString(50, 660, f"Price      : ₹{sale.sale_price}")
+    p.drawString(50, 635, f"Date       : {sale.sale_date}")
+
+    p.showPage()
+    p.save()
+
+    return response
+
+
+
+
+@login_required
+def sales_report_pdf(request):
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'attachment; filename="sales_report.pdf"'
+
+    p = canvas.Canvas(response)
+
+    p.setFont("Helvetica-Bold", 18)
+    p.drawString(180, 800, "Car Showroom Sales Report")
+
+    p.setFont("Helvetica", 11)
+
+    y = 760
+
+    sales = Sale.objects.select_related(
+        "customer",
+        "car",
+        "employee"
+    )
+
+    for sale in sales:
+
+        p.drawString(
+            40,
+            y,
+            f"{sale.invoice_number} | {sale.customer.name} | {sale.car.car_name} | ₹{sale.sale_price}"
+        )
+
+        y -= 20
+
+        if y < 60:
+            p.showPage()
+            p.setFont("Helvetica", 11)
+            y = 800
+
+    p.save()
+
+    return response
+
+@login_required
+def delete_purchase(request, pk):
+    purchase = get_object_or_404(Purchase, pk=pk)
 
     if request.method == "POST":
+        purchase.delete()
+        return redirect("purchase_list")
 
+    return render(request, "showroom/delete_purchase.html", {
+        "purchase": purchase
+    })
+
+@login_required
+def import_cars(request):
+    if request.method == "POST":
         form = ExcelUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
-
-            excel_file = request.FILES["excel_file"]
-
-            workbook = openpyxl.load_workbook(excel_file)
-
-            sheet = workbook.active
-
-            for row in sheet.iter_rows(min_row=2, values_only=True):
-
-                Car.objects.create(
-                    car_name=row[0],
-                    company=row[1],
-                    model=row[2],
-                    color=row[3],
-                    fuel_type=row[4],
-                    price=row[5],
-                    stock=row[6],
-                )
-
-            messages.success(
-                request,
-                "Cars imported successfully!"
-            )
-
             return redirect("home")
-
     else:
-
         form = ExcelUploadForm()
 
     return render(
@@ -1086,3 +1268,51 @@ def import_cars(request):
             "form": form
         }
     )
+
+@login_required
+def export_sales_excel(request):
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Sales Report"
+
+    headers = [
+        "Invoice",
+        "Customer",
+        "Car",
+        "Employee",
+        "Sale Price",
+        "Sale Date",
+    ]
+
+    for col, header in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col)
+        cell.value = header
+        cell.font = Font(bold=True)
+
+    row = 2
+
+    for sale in Sale.objects.select_related(
+        "customer",
+        "car",
+        "employee"
+    ):
+
+        ws.cell(row=row, column=1).value = sale.invoice_number
+        ws.cell(row=row, column=2).value = sale.customer.name
+        ws.cell(row=row, column=3).value = sale.car.car_name
+        ws.cell(row=row, column=4).value = sale.employee.name if sale.employee else ""
+        ws.cell(row=row, column=5).value = sale.sale_price
+        ws.cell(row=row, column=6).value = str(sale.sale_date)
+
+        row += 1
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+    response["Content-Disposition"] = 'attachment; filename="sales_report.xlsx"'
+
+    wb.save(response)
+
+    return response

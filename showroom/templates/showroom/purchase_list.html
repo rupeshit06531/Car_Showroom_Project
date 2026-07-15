@@ -18,23 +18,7 @@
             <th>Purchase Price</th>
             <th>Date</th>
             <th>Action</th>
-
         </tr>
-        
-        <td>
-
-    <a href="{% url 'edit_purchase' purchase.id %}"
-       class="btn btn-warning btn-sm">
-        Edit
-    </a>
-
-    <a href="{% url 'delete_purchase' purchase.id %}"
-       class="btn btn-danger btn-sm"
-       onclick="return confirm('Delete this purchase?')">
-        Delete
-    </a>
-
-</td>
     </thead>
 
     <tbody>
@@ -47,12 +31,24 @@
             <td>{{ purchase.quantity }}</td>
             <td>₹ {{ purchase.purchase_price }}</td>
             <td>{{ purchase.purchase_date }}</td>
+
+            <td>
+                <a href="{% url 'edit_purchase' purchase.id %}" class="btn btn-warning btn-sm">
+                    Edit
+                </a>
+
+                <a href="{% url 'delete_purchase' purchase.id %}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Delete this purchase?')">
+                    Delete
+                </a>
+            </td>
         </tr>
 
     {% empty %}
 
         <tr>
-            <td colspan="5" class="text-center">
+            <td colspan="6" class="text-center">
                 No Purchases Found
             </td>
         </tr>

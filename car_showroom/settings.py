@@ -121,6 +121,10 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = '/media/'
@@ -143,3 +147,6 @@ EMAIL_HOST_USER = "yourgmail@gmail.com"
 EMAIL_HOST_PASSWORD = "YOUR_APP_PASSWORD"
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"

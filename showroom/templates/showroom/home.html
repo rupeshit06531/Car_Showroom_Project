@@ -1,638 +1,1329 @@
 {% extends "showroom/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | Car Showroom{% endblock %}
 
 {% block content %}
 
-<h1 class="text-primary mb-4">
-    🚗 Available Cars
-</h1>
+<div class="page-header mb-4">
 
-<!-- Dashboard Cards -->
-<div class="row mb-4">
+    <div>
 
+        <h2 class="fw-bold">
+            Dashboard
+        </h2>
 
+        <p class="text-muted">
+            Welcome to Car Showroom Management System
+        </p>
 
-    <div class="col-md-6">
-        <div class="card bg-secondary text-white shadow">
-            <div class="card-body text-center">
-                <h3>{{ today_sales }}</h3>
-                <h5>Today's Sales</h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="card bg-dark text-white shadow">
-            <div class="card-body text-center">
-                <h3>₹ {{ today_revenue }}</h3>
-                <h5>Today's Revenue</h5>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="col-md-3">
-        <div class="card bg-primary text-white shadow">
-            <div class="card-body text-center">
-                <h3>{{ total_cars }}</h3>
-                <h5>Total Cars</h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card bg-success text-white shadow">
-            <div class="card-body text-center">
-                <h3>{{ total_customers }}</h3>
-                <h5>Total Customers</h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card bg-warning text-dark shadow">
-            <div class="card-body text-center">
-                <h3>{{ total_sales }}</h3>
-                <h5>Total Sales</h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card bg-danger text-white shadow">
-            <div class="card-body text-center">
-                <h3>₹ {{ total_revenue }}</h3>
-                <h5>Total Revenue</h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-    <div class="card bg-secondary text-white shadow">
-        <div class="card-body text-center">
-            <h3>₹ {{ total_purchase }}</h3>
-            <h5>Total Purchase</h5>
-        </div>
-    </div>
-</div>
-
-<div class="col-md-3">
-    <div class="card bg-success text-white shadow">
-        <div class="card-body text-center">
-            <h3>₹ {{ net_profit }}</h3>
-            <h5>Net Profit</h5>
-        </div>
-    </div>
-</div>
-
-    
-
-</div>
-
-<!-- Stock Dashboard -->
-<div class="row mb-4">
-
-    <div class="col-md-6">
-        <div class="card bg-info text-white shadow">
-            <div class="card-body text-center">
-                <h3>{{ total_stock }}</h3>
-                <h5>Total Stock</h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="card bg-dark text-white shadow">
-            <div class="card-body text-center">
-                <h3>{{ low_stock }}</h3>
-                <h5>Low Stock Cars</h5>
-            </div>
-        </div>
     </div>
 
 </div>
 
-<!-- Extra Dashboard -->
-<div class="row mb-4">
+<!-- =========================
+      HERO SECTION
+========================= -->
 
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-body text-center">
-                <h3>{{ total_companies }}</h3>
-                <h5>Total Companies</h5>
+<section class="hero-section mb-5">
+
+    <div class="hero-overlay">
+
+        <div class="container">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-6">
+
+                    <span class="badge bg-warning text-dark px-3 py-2 mb-3">
+
+                        Premium Car Showroom
+
+                    </span>
+
+                    <h1 class="display-4 fw-bold text-white">
+
+                        Welcome To
+
+                        <span class="text-warning">
+
+                            Car Showroom
+
+                        </span>
+
+                    </h1>
+
+                    <p class="lead text-light">
+
+                        Manage Cars, Customers, Sales, Employees,
+                        Reports and Dashboard from one place.
+
+                    </p>
+
+                    <div class="mt-4">
+
+                        <a href="{% url 'add_car' %}"
+                           class="btn btn-warning btn-lg me-3">
+
+                            <i class="fas fa-plus-circle"></i>
+
+                            Add Car
+
+                        </a>
+
+                        <a href="{% url 'sale_list' %}"
+                           class="btn btn-outline-light btn-lg">
+
+                            <i class="fas fa-chart-line"></i>
+
+                            View Sales
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6 text-center">
+
+                    {% if cars and cars.0.image %}
+                     <img src="{{ cars.0.image.url }}"
+                        class="img-fluid hero-car rounded-4 shadow-lg"
+                        alt="Car">
+                    {% else %}
+                    <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop"
+                        class="img-fluid hero-car rounded-4 shadow-lg"
+                        alt="Car">
+                  {% endif %}
+
+                </div>
+
             </div>
+
         </div>
+
     </div>
 
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-body text-center">
-                <h3>₹ {{ total_value }}</h3>
-                <h5>Total Car Value</h5>
+</section>
+
+<!-- =========================
+      QUICK ACTION
+========================= -->
+
+<div class="row g-4 mb-4">
+
+    <div class="col-lg-3">
+
+        <a href="{% url 'add_car' %}"
+           class="text-decoration-none">
+
+            <div class="quick-card bg-primary">
+
+                <i class="fas fa-car-side"></i>
+
+                <h5>Add Car</h5>
+
             </div>
-        </div>
+
+        </a>
+
     </div>
 
-    <div class="col-md-6 mt-3">
+    <div class="col-lg-3">
 
-    <div class="card border-success shadow">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0">🏆 Best Sales Employee</h5>
+        <a href="{% url 'add_customer' %}"
+           class="text-decoration-none">
+
+            <div class="quick-card bg-success">
+
+                <i class="fas fa-users"></i>
+
+                <h5>Add Customer</h5>
+
+            </div>
+
+        </a>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <a href="{% url 'add_sale' %}"
+           class="text-decoration-none">
+
+            <div class="quick-card bg-warning">
+
+                <i class="fas fa-cart-shopping"></i>
+
+                <h5>Add Sale</h5>
+
+            </div>
+
+        </a>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <a href="{% url 'sale_list' %}"
+           class="text-decoration-none">
+
+            <div class="quick-card bg-danger">
+
+                <i class="fas fa-chart-line"></i>
+
+                <h5>Reports</h5>
+
+            </div>
+
+        </a>
+
+    </div>
+
+</div>
+
+<!-- =========================
+      WELCOME
+========================= -->
+
+<div class="alert alert-primary border-0 rounded-4 shadow-sm mb-4">
+
+    <h4 class="mb-1">
+
+        Welcome,
+
+        <strong>{{ user.username }}</strong>
+
+    </h4>
+
+    <small>
+
+        Today is {% now "l, d F Y" %}
+
+    </small>
+
+</div>
+
+<!-- =========================
+      DASHBOARD CARDS
+========================= -->
+
+<div class="row g-4">
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="dashboard-card bg-blue p-4">
+
+            <h6>Total Cars</h6>
+
+            <h2 class="counter">
+
+                {{ total_cars }}
+
+            </h2>
+
+            <i class="fas fa-car-side icon"></i>
+
         </div>
 
-        <div class="card-body text-center">
+    </div>
 
-            {% if best_employee %}
+    <div class="col-lg-3 col-md-6">
 
-                <h3>{{ best_employee.employee__name }}</h3>
+        <div class="dashboard-card bg-green p-4">
 
-                <h5 class="text-success">
-                    {{ best_employee.total_sales }} Cars Sold
+            <h6>Total Customers</h6>
+
+            <h2 class="counter">
+
+                {{ total_customers }}
+
+            </h2>
+
+            <i class="fas fa-users icon"></i>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="dashboard-card bg-orange p-4">
+
+            <h6>Total Sales</h6>
+
+            <h2 class="counter">
+
+                {{ total_sales }}
+
+            </h2>
+
+            <i class="fas fa-chart-line icon"></i>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="dashboard-card bg-purple p-4">
+
+            <h6>Total Revenue</h6>
+
+            <h2>
+
+                ₹{{ total_revenue }}
+
+            </h2>
+
+            <i class="fas fa-indian-rupee-sign icon"></i>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- PART 1 END -->
+
+<!-- =========================
+      TODAY SUMMARY
+========================= -->
+
+<div class="row mt-4">
+
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center">
+
+                <h6>Today's Sales</h6>
+
+                <h2 class="text-primary">
+
+                    {{ today_sales }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center">
+
+                <h6>Today's Revenue</h6>
+
+                <h2 class="text-success">
+
+                    ₹{{ today_revenue }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center">
+
+                <h6>Low Stock Cars</h6>
+
+                <h2 class="text-danger">
+
+                    {{ low_stock }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+      CHARTS
+========================= -->
+
+<div class="row mt-4">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow border-0 rounded-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="fw-bold mb-0">
+
+                    <i class="fas fa-chart-line text-primary"></i>
+
+                    Monthly Sales
+
                 </h5>
 
-            {% else %}
+            </div>
 
-                <h5>No Sales Available</h5>
+            <div class="card-body">
 
-            {% endif %}
+                <div style="height:350px;">
+                  <canvas id="monthlySalesChart"></canvas>
+
+                      <div class="card shadow mt-4">
+                         <div class="card-header">
+                             <h5 class="mb-0">Monthly Revenue</h5>
+                              </div>
+
+                              <div class="card-body">
+                                <canvas id="revenueChart"></canvas>
+                         </div>
+                    </div>
+
+
+                </div>
+
+            </div>
 
         </div>
+
     </div>
-</div>
 
-    <div class="card shadow mb-4">
+    <div class="col-lg-4">
 
-        <div class="card-header bg-primary text-white">
-             <h4>📊 Monthly Sales Analytics</h4>
-       </div>
+        <div class="card shadow border-0 rounded-4">
 
-        <div class="card-body">
+            <div class="card-header bg-white">
 
-             <canvas id="salesChart"></canvas>
+                <h5 class="fw-bold mb-0">
+
+                    <i class="fas fa-chart-pie text-success"></i>
+
+                    Company Wise Sales
+
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div style="height:350px;">
+                   <canvas id="companyChart"></canvas>
+                </div>
+
+            </div>
 
         </div>
 
     </div>
 
-    <div class="card shadow mb-4">
+</div>
 
-    <div class="card-header bg-success text-white">
-        <h4>💰 Monthly Revenue Analytics</h4>
+<!-- =========================
+      FINANCIAL SUMMARY
+========================= -->
+
+<div class="row mt-4">
+
+    <div class="col-lg-4">
+
+        <div class="dashboard-card bg-warning p-4">
+
+            <h6>Total Purchase</h6>
+
+            <h2>
+
+                ₹{{ total_purchase }}
+
+            </h2>
+
+            <i class="fas fa-cart-shopping icon"></i>
+
+        </div>
+
     </div>
 
-    <div class="card-body">
+    <div class="col-lg-4">
 
-        <canvas id="revenueChart"></canvas>
+        <div class="dashboard-card bg-green p-4">
+
+            <h6>Net Profit</h6>
+
+            <h2>
+
+                ₹{{ net_profit }}
+
+            </h2>
+
+            <i class="fas fa-coins icon"></i>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="dashboard-card bg-darkblue p-4">
+
+            <h6>Inventory Value</h6>
+
+            <h2>
+
+                ₹{{ total_value }}
+
+            </h2>
+
+            <i class="fas fa-warehouse icon"></i>
+
+        </div>
 
     </div>
 
 </div>
 
-<div class="card shadow mb-4">
+<!-- =========================
+      QUICK OVERVIEW
+========================= -->
 
-    <div class="card-header bg-warning">
-        <h4>🚗 Company-wise Sales</h4>
+<div class="row mt-4">
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow-sm text-center">
+
+            <div class="card-body">
+
+                <h6>Total Companies</h6>
+
+                <h2 class="text-primary">
+
+                    {{ total_companies }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="card-body">
+    <div class="col-md-3">
 
-        <canvas id="companyChart"></canvas>
+        <div class="card border-0 shadow-sm text-center">
+
+            <div class="card-body">
+
+                <h6>Total Stock</h6>
+
+                <h2 class="text-success">
+
+                    {{ total_stock }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow-sm text-center">
+
+            <div class="card-body">
+
+                <h6>Today's Sales</h6>
+
+                <h2 class="text-warning">
+
+                    {{ today_sales }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow-sm text-center">
+
+            <div class="card-body">
+
+                <h6>Low Stock</h6>
+
+                <h2 class="text-danger">
+
+                    {{ low_stock }}
+
+                </h2>
+
+            </div>
+
+        </div>
 
     </div>
 
 </div>
 
-<div class="card shadow mb-4">
+<div class="row mt-4 g-4">
 
-    <div class="card-header bg-dark text-white">
-        <h4>🏆 Top Selling Cars</h4>
+    <div class="col-lg-3">
+        <div class="card shadow border-0 rounded-4 text-center p-3">
+            <h6>Total Companies</h6>
+            <h2 class="text-primary">{{ total_companies }}</h2>
+        </div>
     </div>
 
-    <div class="card-body">
+    <div class="col-lg-3">
+        <div class="card shadow border-0 rounded-4 text-center p-3">
+            <h6>Total Stock</h6>
+            <h2 class="text-success">{{ total_stock }}</h2>
+        </div>
+    </div>
 
-        <table class="table table-striped">
+    <div class="col-lg-3">
+        <div class="card shadow border-0 rounded-4 text-center p-3">
+            <h6>Inventory Value</h6>
+            <h2 class="text-warning">₹{{ total_value }}</h2>
+        </div>
+    </div>
 
-            <thead>
-                <tr>
-                    <th>Car Name</th>
-                    <th>Total Sold</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for car in top_cars %}
-
-                <tr>
-                    <td>{{ car.car__car_name }}</td>
-                    <td>{{ car.total_sold }}</td>
-                </tr>
-
-                {% empty %}
-
-                <tr>
-                    <td colspan="2" class="text-center">
-                        No Sales Available
-                    </td>
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
+    <div class="col-lg-3">
+        <div class="card shadow border-0 rounded-4 text-center p-3">
+            <h6>Best Employee</h6>
+            <h5>
+                {% if best_employee %}
+                    {{ best_employee.employee__name }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </h5>
+        </div>
     </div>
 
 </div>
 
-<div class="card shadow mb-4">
+<!-- PART 2 END -->
 
-    <div class="card-header bg-info text-white">
-        <h4>🕒 Recent Sales</h4>
-    </div>
+<!-- =========================
+      RECENT ACTIVITY
+========================= -->
 
-    <div class="card-body">
+<div class="row mt-4">
 
-        <table class="table table-striped">
+    <!-- Recent Sales -->
 
-            <thead>
+    <div class="col-lg-4">
 
-                <tr>
+        <div class="card border-0 shadow-lg rounded-4">
 
-                    <th>Invoice</th>
-                    <th>Customer</th>
-                    <th>Car</th>
-                    <th>Employee</th>
-                    <th>Date</th>
+            <div class="card-header bg-primary text-white">
 
-                </tr>
+                <h5 class="mb-0">
 
-            </thead>
+                    <i class="fas fa-cart-shopping"></i>
 
-            <tbody>
+                    Recent Sales
+
+                </h5>
+
+            </div>
+
+            <div class="card-body">
 
                 {% for sale in recent_sales %}
 
-                <tr>
+                <div class="d-flex justify-content-between border-bottom py-2">
 
-                    <td>{{ sale.invoice_number }}</td>
+                    <div>
 
-                    <td>{{ sale.customer.name }}</td>
+                        <strong>{{ sale.customer.name }}</strong>
 
-                    <td>{{ sale.car.car_name }}</td>
+                        <br>
 
-                    <td>{{ sale.employee.name }}</td>
+                        <small>{{ sale.car.car_name }}</small>
 
-                    <td>{{ sale.sale_date }}</td>
+                    </div>
 
-                </tr>
+                    <div class="text-success fw-bold">
+
+                        ₹{{ sale.sale_price }}
+
+                    </div>
+
+                </div>
 
                 {% empty %}
 
-                <tr>
+                <p class="text-muted">
 
-                    <td colspan="5" class="text-center">
+                    No Sales Found
 
-                        No Recent Sales
-
-                    </td>
-
-                </tr>
+                </p>
 
                 {% endfor %}
 
-            </tbody>
+            </div>
 
-        </table>
+        </div>
+
+    </div>
+
+    <!-- Recent Customers -->
+
+    <div class="col-lg-4">
+
+        <div class="card border-0 shadow-lg rounded-4">
+
+            <div class="card-header bg-success text-white">
+
+                <h5 class="mb-0">
+
+                    <i class="fas fa-users"></i>
+
+                    Recent Customers
+
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                {% for customer in recent_customers %}
+
+                <div class="border-bottom py-2">
+
+                    <strong>{{ customer.name }}</strong>
+
+                    <br>
+
+                    <small>{{ customer.mobile }}</small>
+
+                </div>
+
+                {% empty %}
+
+                <p class="text-muted">
+
+                    No Customers
+
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Recent Cars -->
+
+    <div class="col-lg-4">
+
+        <div class="card border-0 shadow-lg rounded-4">
+
+            <div class="card-header bg-warning">
+
+                <h5 class="mb-0">
+
+                    <i class="fas fa-car"></i>
+
+                    Latest Cars
+
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                {% for car in recent_cars %}
+
+                <div class="border-bottom py-2">
+
+                    <strong>{{ car.car_name }}</strong>
+
+                    <br>
+
+                    <small>{{ car.company }}</small>
+
+                </div>
+
+                {% empty %}
+
+                <p class="text-muted">
+
+                    No Cars Found
+
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
 
     </div>
 
 </div>
 
-</div>
+<!-- =========================
+      CAR LIST
+========================= -->
 
-<!-- Search -->
-<form method="GET" class="row g-2 mb-4">
+<div class="container-fluid mt-5">
 
-    <div class="col-md-3">
-        <input
-            type="text"
-            name="q"
-            class="form-control"
-            placeholder="Search"
-            value="{{ request.GET.q }}">
-    </div>
-
-    <div class="col-md-2">
-        <select name="company" class="form-select">
-
-            <option value="">Company</option>
-
-            {% for company in companies %}
-
-            <option value="{{ company }}"
-                {% if request.GET.company == company %}
-                selected
-                {% endif %}>
-                {{ company }}
-            </option>
-
-            {% endfor %}
-
-        </select>
-    </div>
-
-    <div class="col-md-2">
-        <select name="fuel" class="form-select">
-
-            <option value="">Fuel</option>
-
-            {% for fuel in fuel_types %}
-
-            <option value="{{ fuel }}"
-                {% if request.GET.fuel == fuel %}
-                selected
-                {% endif %}>
-                {{ fuel }}
-            </option>
-
-            {% endfor %}
-
-        </select>
-    </div>
-
-    <div class="col-md-2">
-        <select name="price" class="form-select">
-
-            <option value="">Price</option>
-
-            <option value="1">Below 5 Lakh</option>
-            <option value="2">5-10 Lakh</option>
-            <option value="3">Above 10 Lakh</option>
-
-        </select>
-    </div>
-
-    <div class="col-md-2">
-        <select name="stock" class="form-select">
-
-            <option value="">Stock</option>
-
-            <option value="available">Available</option>
-            <option value="out">Out of Stock</option>
-
-        </select>
-    </div>
-
-    <div class="col-md-1">
-        <button class="btn btn-primary w-100">
-            Go
-        </button>
-    </div>
-
-</form>
-
-<a href="/" class="btn btn-secondary mb-3">
-    Reset Search
-</a>
-
-{% if perms.showroom.add_car %}
-<a href="/add-car/" class="btn btn-success mb-3">
-    + Add New Car
-</a>
-{% endif %}
-
-<a href="{% url 'export_cars_excel' %}"
-   class="btn btn-success mb-3">
-    📊 Export Excel
-</a>
-
-<a href="{% url 'import_cars' %}"
-   class="btn btn-primary mb-3">
-    📥 Import Excel
-</a>
-
-<table class="table table-bordered table-hover">
-
-    <thead class="table-dark">
-
-        <tr>
-
-            <th>Image</th>
-            <th>Name</th>
-            <th>Company</th>
-            <th>Model</th>
-            <th>Color</th>
-            <th>Fuel</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Action</th>
-
-        </tr>
-
-    </thead>
-
-    <tbody>
+    <div class="row g-4">
 
         {% for car in cars %}
 
-        <tr>
+        <div class="col-lg-4 col-md-6">
 
-            <td>
+            <div class="car-card">
 
-                {% if car.image %}
+                <div class="car-image">
 
-                <img
-                    src="{{ car.image.url }}"
-                    width="120"
-                    height="80"
-                    class="rounded">
+                    {% if car.image %}
 
-                {% else %}
+                    <img src="{{ car.image.url }}"
+                         alt="{{ car.car_name }}">
 
-                No Image
+                    {% else %}
 
-                {% endif %}
+                    <img src="https://via.placeholder.com/500x300?text=No+Image"
+                         alt="No Image">
 
-            </td>
+                    {% endif %}
 
-            <td>{{ car.car_name }}</td>
-            <td>{{ car.company }}</td>
-            <td>{{ car.model }}</td>
-            <td>{{ car.color }}</td>
-            <td>{{ car.fuel_type }}</td>
-            <td>₹ {{ car.price }}</td>
+                    <span class="price-badge">
 
-            <td>
+                        ₹{{ car.price }}
 
-                {% if car.stock == 0 %}
+                    </span>
 
-                <span class="badge bg-danger">
-                    Out of Stock
-                </span>
+                </div>
 
-                {% elif car.stock <= 2 %}
+                <div class="car-body">
 
-                <span class="badge bg-warning text-dark">
-                    {{ car.stock }}
-                </span>
+                    <h4>{{ car.car_name }}</h4>
 
-                {% else %}
+                    <p class="text-muted">
 
-                <span class="badge bg-success">
-                    {{ car.stock }}
-                </span>
+                        {{ car.company }}
 
-                {% endif %}
+                        |
 
-            </td>
+                        {{ car.model }}
 
-            <td>
+                    </p>
 
-                <a href="/car/{{ car.id }}/"
-                    class="btn btn-info btn-sm">
-                    View
-                </a>
+                    <div class="d-flex justify-content-between mb-3">
 
-                {% if perms.showroom.change_car %}
-<a href="/edit-car/{{ car.id }}/"
-   class="btn btn-warning btn-sm">
-    Edit
-</a>
-{% endif %}
+                        <span>
 
-                {% if perms.showroom.delete_car %}
-<a href="/delete-car/{{ car.id }}/"
-   class="btn btn-danger btn-sm">
-    Delete
-</a>
-{% endif %}
-            </td>
+                            <i class="fas fa-gas-pump"></i>
 
-        </tr>
+                            {{ car.fuel_type }}
 
-        {% empty %}
+                        </span>
 
-        <tr>
+                        <span>
 
-            <td colspan="9" class="text-center">
-                No Cars Available
-            </td>
+                            <i class="fas fa-palette"></i>
 
-        </tr>
+                            {{ car.color }}
+
+                        </span>
+
+                    </div>
+
+                    {% if car.stock > 0 %}
+
+                    <span class="badge bg-success">
+
+                        In Stock ({{ car.stock }})
+
+                    </span>
+
+                    {% else %}
+
+                    <span class="badge bg-danger">
+
+                        Out Of Stock
+
+                    </span>
+
+                    {% endif %}
+
+                    <div class="mt-4 d-flex gap-2">
+
+                        <a href="{% url 'car_detail' car.id %}"
+                           class="btn btn-primary w-100">
+
+                            View
+
+                        </a>
+
+                        <a href="{% url 'edit_car' car.id %}"
+                           class="btn btn-warning">
+
+                            <i class="fas fa-edit"></i>
+
+                        </a>
+
+                        <a href="{% url 'delete_car' car.id %}"
+                           class="btn btn-danger">
+
+                            <i class="fas fa-trash"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
 
         {% endfor %}
 
-    </tbody>
+    </div>
 
-</table>
+</div>
+
+<!-- PART 3 END -->
+
+<!-- =========================
+      RECENT SALES TABLE
+========================= -->
+
+<div class="card border-0 shadow-sm mt-5">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+
+            <i class="fas fa-file-invoice-dollar text-primary"></i>
+
+            Recent Sales
+
+        </h5>
+
+    </div>
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Invoice</th>
+                        <th>Customer</th>
+                        <th>Car</th>
+                        <th>Employee</th>
+                        <th>Amount</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for sale in recent_sales %}
+
+                    <tr>
+
+                        <td>{{ sale.invoice_number }}</td>
+
+                        <td>{{ sale.customer.name }}</td>
+
+                        <td>{{ sale.car.car_name }}</td>
+
+                        <td>
+
+                            {% if sale.employee %}
+
+                                {{ sale.employee.name }}
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+                        <td class="fw-bold text-success">
+
+                            ₹{{ sale.sale_price }}
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center py-4">
+
+                            No Sales Available
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+      TOP SELLING CARS
+========================= -->
+
+<div class="card border-0 shadow-sm mt-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+
+            <i class="fas fa-trophy text-warning"></i>
+
+            Top Selling Cars
+
+        </h5>
+
+    </div>
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Car Name</th>
+
+                        <th>Total Sold</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for car in top_cars %}
+
+                    <tr>
+
+                        <td>{{ car.car__car_name }}</td>
+
+                        <td>
+
+                            <span class="badge bg-success">
+
+                                {{ car.total_sold }}
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="2" class="text-center py-4">
+
+                            No Data Available
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+      PAGINATION
+========================= -->
+
+{% if cars.has_other_pages %}
+
+<nav class="mt-5">
+
+    <ul class="pagination justify-content-center">
+
+        {% if cars.has_previous %}
+
+        <li class="page-item">
+
+            <a class="page-link"
+               href="?page={{ cars.previous_page_number }}">
+
+                Previous
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+        {% for i in cars.paginator.page_range %}
+
+            {% if cars.number == i %}
+
+            <li class="page-item active">
+
+                <span class="page-link">
+
+                    {{ i }}
+
+                </span>
+
+            </li>
+
+            {% else %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ i }}">
+
+                    {{ i }}
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+        {% endfor %}
+
+        {% if cars.has_next %}
+
+        <li class="page-item">
+
+            <a class="page-link"
+               href="?page={{ cars.next_page_number }}">
+
+                Next
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+    </ul>
+
+</nav>
+
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
 
 <script>
 
-const ctx = document.getElementById('salesChart');
+const monthlyCtx=document.getElementById("monthlySalesChart");
 
-new Chart(ctx, {
+if(monthlyCtx){
 
-    type: 'bar',
+new Chart(monthlyCtx,{
 
-    data: {
+type:"line",
 
-        labels: {{ months|safe }},
+data:{
 
-        datasets: [{
+labels:{{ months|safe }},
 
-            label: 'Monthly Sales',
+datasets:[{
 
-            data: {{ sales_count|safe }},
+label:"Monthly Sales",
 
-            borderWidth: 1
+data:{{ sales_count|safe }},
+
+borderWidth:3,
+
+fill:true,
+
+tension:.4
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+maintainAspectRatio:false
+
+}
+
+});
+
+}
+
+const companyCtx=document.getElementById("companyChart");
+
+if(companyCtx){
+
+new Chart(companyCtx,{
+
+type:"doughnut",
+
+data:{
+
+labels:{{ company_names|safe }},
+
+datasets:[{
+
+data:{{ company_sales|safe }},
+
+backgroundColor:[
+
+"#2563eb",
+
+"#16a34a",
+
+"#f59e0b",
+
+"#dc2626",
+
+"#7c3aed",
+
+"#0891b2",
+
+"#ea580c"
+
+]
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+
+legend:{
+
+position:"bottom"
+
+}
+
+}
+
+}
+
+});
+
+}
+
+Chart.defaults.font.family = "Poppins";
+Chart.defaults.plugins.legend.labels.boxWidth = 14;
+Chart.defaults.plugins.legend.position = "bottom";
+Chart.defaults.animation.duration = 1800;
+Chart.defaults.animation.easing = "easeOutQuart";
+
+</script>
+
+
+<script>
+
+const months = {{ months|safe }};
+const sales = {{ sales_count|safe }};
+const revenue = {{ revenue|safe }};
+
+new Chart(document.getElementById("monthlySalesChart"),{
+
+    type:"line",
+
+    data:{
+
+        labels:months,
+
+        datasets:[{
+
+            label:"Monthly Sales",
+
+            data:sales,
+
+            borderWidth:3,
+
+            tension:.4,
+
+            fill:true
 
         }]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        scales: {
-
-            y: {
-
-                beginAtZero: true
-
-            }
-
-        }
 
     }
 
 });
 
-const revenueCtx = document.getElementById('revenueChart');
+new Chart(document.getElementById("revenueChart"),{
 
-new Chart(revenueCtx, {
+    type:"bar",
 
-    type: 'line',
+    data:{
 
-    data: {
+        labels:months,
 
-        labels: {{ months|safe }},
+        datasets:[{
 
-        datasets: [{
+            label:"Revenue",
 
-            label: 'Monthly Revenue',
+            data:revenue,
 
-            data: {{ revenue|safe }},
-
-            borderWidth: 3,
-
-            fill: false
+            borderWidth:2
 
         }]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        scales: {
-
-            y: {
-
-                beginAtZero: true
-
-            }
-
-        }
-
-    }
-
-});
-
-const companyCtx = document.getElementById('companyChart');
-
-new Chart(companyCtx, {
-
-    type: 'pie',
-
-    data: {
-
-        labels: {{ company_names|safe }},
-
-        datasets: [{
-
-            data: {{ company_sales|safe }}
-
-        }]
-
-    },
-
-    options: {
-
-        responsive: true
 
     }
 
@@ -640,4 +1331,6 @@ new Chart(companyCtx, {
 
 </script>
 
+
 {% endblock %}
+

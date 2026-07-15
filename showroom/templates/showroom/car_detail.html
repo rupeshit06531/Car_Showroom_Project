@@ -2,63 +2,126 @@
 
 {% block content %}
 
-<div class="card shadow">
+<div class="container py-4">
 
-    <div class="card-header bg-info text-white">
-        <h3>Car Details</h3>
-    </div>
+    <div class="card shadow-lg border-0 rounded-4">
 
-    <div class="card-body">
+        <div class="card-header text-white"
+             style="background:linear-gradient(90deg,#0f172a,#2563eb);">
 
-        {% if car.image %}
-            <img src="{{ car.image.url }}" width="300" class="img-thumbnail mb-3">
-        {% endif %}
+            <h2 class="mb-0">
+                🚗 {{ car.car_name }}
+            </h2>
 
-        <table class="table table-bordered">
+        </div>
 
-            <tr>
-                <th>Car Name</th>
-                <td>{{ car.car_name }}</td>
-            </tr>
+        <div class="card-body">
 
-            <tr>
-                <th>Company</th>
-                <td>{{ car.company }}</td>
-            </tr>
+            <div class="row">
 
-            <tr>
-                <th>Model</th>
-                <td>{{ car.model }}</td>
-            </tr>
+                <!-- Car Image -->
 
-            <tr>
-                <th>Color</th>
-                <td>{{ car.color }}</td>
-            </tr>
+                <div class="col-lg-5 text-center">
 
-            <tr>
-                <th>Fuel Type</th>
-                <td>{{ car.fuel_type }}</td>
-            </tr>
+                    {% if car.image %}
 
-            <tr>
-                <th>Price</th>
-                <td>₹ {{ car.price }}</td>
-            </tr>
+                    <img src="{{ car.image.url }}"
+                         class="img-fluid rounded shadow"
+                         style="max-height:350px; object-fit:cover;">
 
-        </table>
+                    {% else %}
 
-        <a href="/edit-car/{{ car.id }}/" class="btn btn-warning">
-            Edit
-        </a>
+                    <img src="https://via.placeholder.com/500x350?text=No+Image"
+                         class="img-fluid rounded shadow">
 
-        <a href="/delete-car/{{ car.id }}/" class="btn btn-danger">
-            Delete
-        </a>
+                    {% endif %}
 
-        <a href="/" class="btn btn-secondary">
-            Back
-        </a>
+                </div>
+
+                <!-- Car Details -->
+
+                <div class="col-lg-7">
+
+                    <table class="table table-borderless">
+
+                        <tr>
+                            <th width="180">Company</th>
+                            <td>{{ car.company }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Model</th>
+                            <td>{{ car.model }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Color</th>
+                            <td>{{ car.color }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Fuel Type</th>
+                            <td>
+                                <span class="badge bg-primary">
+                                    {{ car.fuel_type }}
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Price</th>
+                            <td class="text-success fw-bold fs-4">
+                                ₹ {{ car.price }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Stock</th>
+
+                            <td>
+
+                                {% if car.stock > 0 %}
+
+                                <span class="badge bg-success">
+                                    {{ car.stock }} Available
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge bg-danger">
+                                    Out of Stock
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                    <hr>
+
+                    <a href="/edit-car/{{ car.id }}/"
+                       class="btn btn-warning">
+                        ✏ Edit
+                    </a>
+
+                    <a href="/delete-car/{{ car.id }}/"
+                       class="btn btn-danger">
+                        🗑 Delete
+                    </a>
+
+                    <a href="/"
+                       class="btn btn-secondary">
+                        ⬅ Back
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
