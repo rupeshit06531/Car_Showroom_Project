@@ -1,59 +1,132 @@
 {% extends "showroom/base.html" %}
 
+{% block title %}Suppliers{% endblock %}
+
 {% block content %}
 
-<h2 class="mb-4">🏢 Supplier List</h2>
+<div class="page-header mb-4">
 
-<a href="{% url 'add_supplier' %}" class="btn btn-success mb-3">
-    + Add Supplier
-</a>
+    <div>
 
-<table class="table table-bordered table-hover">
+        <h2 class="fw-bold">
 
-    <thead class="table-dark">
-        <tr>
-            <th>Name</th>
-            <th>Company</th>
-            <th>Mobile</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Action</th>
-        </tr>
-    </thead>
+            <i class="fas fa-truck text-primary me-2"></i>
 
-    <tbody>
+            Supplier Management
 
-    {% for supplier in suppliers %}
+        </h2>
 
-        <tr>
-            <td>{{ supplier.name }}</td>
-            <td>{{ supplier.company }}</td>
-            <td>{{ supplier.mobile }}</td>
-            <td>{{ supplier.email }}</td>
-            <td>{{ supplier.address }}</td>
-            <td>
-                <a href="{% url 'edit_supplier' id=supplier.id %}" class="btn btn-sm btn-warning">
-                    Edit
-                </a>
-                <a href="{% url 'delete_supplier' id=supplier.id %}" class="btn btn-sm btn-danger">
-                    Delete
-                </a>
-            </td>
-        </tr>
+        <p class="text-muted">
 
-    {% empty %}
+            Manage all suppliers
 
-        <tr>
-            <td colspan="6" class="text-center">
-                No Suppliers Found
-            </td>
-        </tr>
+        </p>
 
-    {% endfor %}
-    
+    </div>
 
-    </tbody>
+    <a href="{% url 'add_supplier' %}" class="btn btn-primary">
 
-</table>
+        <i class="fas fa-plus-circle me-2"></i>
+
+        Add Supplier
+
+    </a>
+
+</div>
+
+<div class="card border-0 shadow-hover rounded-4">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table id="supplierTable" class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th width="180">Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for supplier in suppliers %}
+
+                    <tr>
+
+                        <td>{{ supplier.name }}</td>
+
+                        <td>{{ supplier.mobile }}</td>
+
+                        <td>{{ supplier.email }}</td>
+
+                        <td>{{ supplier.address }}</td>
+
+                        <td>
+
+                            <a href="{% url 'edit_supplier' supplier.id %}" class="btn btn-warning btn-sm">
+
+                                <i class="fas fa-edit"></i>
+
+                            </a>
+
+                            <a href="{% url 'delete_supplier' supplier.id %}" class="btn btn-danger btn-sm">
+
+                                <i class="fas fa-trash"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center py-5">
+
+                            No Supplier Found
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+$(function(){
+
+    $("#supplierTable").DataTable({
+        responsive:true,
+        pageLength:10
+    });
+
+});
+
+</script>
 
 {% endblock %}

@@ -1,62 +1,139 @@
 {% extends "showroom/base.html" %}
 
+{% block title %}Purchases{% endblock %}
+
 {% block content %}
 
-<h2 class="mb-4">📦 Purchase List</h2>
+<div class="page-header mb-4">
 
-<a href="{% url 'add_purchase' %}" class="btn btn-success mb-3">
-    + Add Purchase
-</a>
+    <div>
 
-<table class="table table-bordered table-hover">
+        <h2 class="fw-bold">
 
-    <thead class="table-dark">
-        <tr>
-            <th>Supplier</th>
-            <th>Car</th>
-            <th>Quantity</th>
-            <th>Purchase Price</th>
-            <th>Date</th>
-            <th>Action</th>
-        </tr>
-    </thead>
+            <i class="fas fa-box-open text-warning me-2"></i>
 
-    <tbody>
+            Purchase Management
 
-    {% for purchase in purchases %}
+        </h2>
 
-        <tr>
-            <td>{{ purchase.supplier.name }}</td>
-            <td>{{ purchase.car.car_name }}</td>
-            <td>{{ purchase.quantity }}</td>
-            <td>₹ {{ purchase.purchase_price }}</td>
-            <td>{{ purchase.purchase_date }}</td>
+        <p class="text-muted">
 
-            <td>
-                <a href="{% url 'edit_purchase' purchase.id %}" class="btn btn-warning btn-sm">
-                    Edit
-                </a>
+            Manage all purchases
 
-                <a href="{% url 'delete_purchase' purchase.id %}"
-                   class="btn btn-danger btn-sm"
-                   onclick="return confirm('Delete this purchase?')">
-                    Delete
-                </a>
-            </td>
-        </tr>
+        </p>
 
-    {% empty %}
+    </div>
 
-        <tr>
-            <td colspan="6" class="text-center">
-                No Purchases Found
-            </td>
-        </tr>
+    <a href="{% url 'add_purchase' %}" class="btn btn-warning text-dark">
 
-    {% endfor %}
+        <i class="fas fa-plus-circle me-2"></i>
 
-    </tbody>
+        Add Purchase
 
-</table>
+    </a>
+
+</div>
+
+<div class="card border-0 shadow-hover rounded-4">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table id="purchaseTable" class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Supplier</th>
+                        <th>Car</th>
+                        <th>Quantity</th>
+                        <th>Purchase Price</th>
+                        <th>Date</th>
+                        <th width="180">Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for purchase in purchases %}
+
+                    <tr>
+
+                        <td>{{ purchase.supplier.name }}</td>
+
+                        <td>{{ purchase.car.car_name }}</td>
+
+                        <td>{{ purchase.quantity }}</td>
+
+                        <td class="fw-bold text-success">
+
+                            ₹{{ purchase.purchase_price }}
+
+                        </td>
+
+                        <td>{{ purchase.purchase_date }}</td>
+
+                        <td>
+
+                            <a href="{% url 'edit_purchase' purchase.id %}" class="btn btn-warning btn-sm">
+
+                                <i class="fas fa-edit"></i>
+
+                            </a>
+
+                            <a href="{% url 'delete_purchase' purchase.id %}" class="btn btn-danger btn-sm">
+
+                                <i class="fas fa-trash"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="6" class="text-center py-5">
+
+                            No Purchase Found
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+$(function(){
+
+    $("#purchaseTable").DataTable({
+        responsive:true,
+        pageLength:10
+    });
+
+});
+
+</script>
 
 {% endblock %}

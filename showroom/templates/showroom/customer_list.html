@@ -1,55 +1,51 @@
 {% extends "showroom/base.html" %}
 
+{% block title %}Customers{% endblock %}
+
 {% block content %}
 
-<div class="container-fluid mt-4">
+<div class="page-header mb-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
 
-        <div>
+        <h2 class="fw-bold">
+            <i class="fas fa-users text-success me-2"></i>
+            Customer Management
+        </h2>
 
-            <h2 class="fw-bold">
-                <i class="fas fa-users text-primary"></i>
-                Customers
-            </h2>
-
-            <p class="text-muted mb-0">
-                Manage all registered customers
-            </p>
-
-        </div>
-
-        <a href="{% url 'add_customer' %}" class="btn btn-primary">
-
-            <i class="fas fa-user-plus"></i>
-
-            Add Customer
-
-        </a>
+        <p class="text-muted">
+            Manage showroom customers
+        </p>
 
     </div>
 
-    <div class="card shadow border-0 rounded-4">
+    <a href="{% url 'add_customer' %}" class="btn btn-success">
 
-        <div class="card-body">
+        <i class="fas fa-user-plus me-2"></i>
 
-            <table class="table table-hover align-middle" id="customerTable">
+        Add Customer
+
+    </a>
+
+</div>
+
+<div class="card border-0 shadow-hover rounded-4">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table id="customerTable" class="table table-hover align-middle">
 
                 <thead>
 
                     <tr>
 
-                        <th>ID</th>
-
                         <th>Name</th>
-
                         <th>Mobile</th>
-
                         <th>Email</th>
-
                         <th>Address</th>
-
-                        <th>Action</th>
+                        <th width="180">Action</th>
 
                     </tr>
 
@@ -61,13 +57,7 @@
 
                     <tr>
 
-                        <td>{{ customer.id }}</td>
-
-                        <td>
-
-                            <strong>{{ customer.name }}</strong>
-
-                        </td>
+                        <td>{{ customer.name }}</td>
 
                         <td>{{ customer.mobile }}</td>
 
@@ -77,19 +67,29 @@
 
                         <td>
 
-                            <a href="{% url 'edit_customer' customer.id %}"
-                               class="btn btn-warning btn-sm">
+                            <a href="{% url 'edit_customer' customer.id %}" class="btn btn-warning btn-sm">
 
                                 <i class="fas fa-edit"></i>
 
                             </a>
 
-                            <a href="{% url 'delete_customer' customer.id %}"
-                               class="btn btn-danger btn-sm">
+                            <a href="{% url 'delete_customer' customer.id %}" class="btn btn-danger btn-sm">
 
                                 <i class="fas fa-trash"></i>
 
                             </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center py-4">
+
+                            No Customers Found
 
                         </td>
 
@@ -106,5 +106,19 @@
     </div>
 
 </div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+$(function(){
+
+$("#customerTable").DataTable();
+
+});
+
+</script>
 
 {% endblock %}

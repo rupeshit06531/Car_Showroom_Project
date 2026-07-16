@@ -1,85 +1,159 @@
 {% extends "showroom/base.html" %}
 
+{% block title %}Employees{% endblock %}
+
 {% block content %}
 
-<div class="container mt-4">
+<div class="page-header mb-4">
 
-    <div class="d-flex justify-content-between mb-3">
-        <h2>Employee List</h2>
+    <div>
 
-        <a href="/add-employee/" class="btn btn-primary">
-            Add Employee
-        </a>
+        <h2 class="fw-bold">
+
+            <i class="fas fa-user-tie text-info me-2"></i>
+
+            Employee Management
+
+        </h2>
+
+        <p class="text-muted">
+
+            Manage all employees
+
+        </p>
+
     </div>
 
-    <table class="table table-bordered table-hover">
+    <a href="{% url 'add_employee' %}" class="btn btn-info text-white">
 
-        <thead class="table-dark">
-            <tr>
-                <th>Photo</th>
-                <th>Name</th>
-                <th>Mobile</th>
-                <th>Email</th>
-                <th>Designation</th>
-                <th>Salary</th>
-                <th>Joining Date</th>
-                <th>Action</th>
-            </tr>
-        </thead>
+        <i class="fas fa-user-plus me-2"></i>
 
-        <tbody>
+        Add Employee
 
-        {% for employee in employees %}
-
-        <tr>
-
-            <td>
-                <td>
-    {% if employee.photo %}
-        <img src="{{ employee.photo.url }}"
-             width="60"
-             height="60"
-             class="rounded-circle"
-             style="object-fit:cover;">
-    {% else %}
-        No Photo
-    {% endif %}
-</td>
-            </td>
-
-            <td>{{ employee.name }}</td>
-            <td>{{ employee.mobile }}</td>
-            <td>{{ employee.email }}</td>
-            <td>{{ employee.designation }}</td>
-            <td>₹ {{ employee.salary }}</td>
-            <td>{{ employee.joining_date }}</td>
-
-            <td>
-                <a href="/edit-employee/{{ employee.id }}/" class="btn btn-warning btn-sm">
-                    Edit
-                </a>
-
-                <a href="/delete-employee/{{ employee.id }}/" class="btn btn-danger btn-sm">
-                    Delete
-                </a>
-            </td>
-
-        </tr>
-
-        {% empty %}
-
-        <tr>
-            <td colspan="8" class="text-center">
-                No Employee Found
-            </td>
-        </tr>
-
-        {% endfor %}
-
-        </tbody>
-
-    </table>
+    </a>
 
 </div>
+
+<div class="card border-0 shadow-hover rounded-4">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table id="employeeTable" class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Email</th>
+                        <th>Designation</th>
+                        <th>Salary</th>
+                        <th width="180">Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for employee in employees %}
+
+                    <tr>
+
+                        <td>
+
+                            {% if employee.photo %}
+
+                            <img src="{{ employee.photo.url }}"
+                                 width="55"
+                                 height="55"
+                                 class="rounded-circle"
+                                 style="object-fit:cover;">
+
+                            {% else %}
+
+                            <img src="https://via.placeholder.com/55"
+                                 class="rounded-circle">
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>{{ employee.name }}</td>
+
+                        <td>{{ employee.mobile }}</td>
+
+                        <td>{{ employee.email }}</td>
+
+                        <td>{{ employee.designation }}</td>
+
+                        <td class="fw-bold text-success">
+
+                            ₹{{ employee.salary }}
+
+                        </td>
+
+                        <td>
+
+                            <a href="{% url 'edit_employee' employee.id %}" class="btn btn-warning btn-sm">
+
+                                <i class="fas fa-edit"></i>
+
+                            </a>
+
+                            <a href="{% url 'delete_employee' employee.id %}" class="btn btn-danger btn-sm">
+
+                                <i class="fas fa-trash"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="7" class="text-center py-5">
+
+                            No Employee Found
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+$(function(){
+
+    $("#employeeTable").DataTable({
+        responsive:true,
+        pageLength:10
+    });
+
+});
+
+</script>
 
 {% endblock %}

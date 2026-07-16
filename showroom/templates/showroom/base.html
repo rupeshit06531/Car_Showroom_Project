@@ -44,41 +44,69 @@
 
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
 {% block extra_css %}
 {% endblock %}
 
 </head>
 
-<body class="bg-light">
+<body>
 
-<div class="wrapper d-flex min-vh-100 bg-light">
+<div id="loader">
+    <div class="loader-car">
+        <i class="fas fa-car-side"></i>
+    </div>
+</div>
+
+<div class="wrapper d-flex min-vh-100">
 
 <!-- ===========================
 SIDEBAR
 =========================== -->
 
-<div class="sidebar shadow-lg position-sticky top-0 vh-100">
+<div class="sidebar position-sticky top-0 vh-100">
 
-    <div class="logo text-center py-4 border-bottom mb-3">
+    <div class="logo text-center py-4">
 
-    <div class="mb-2">
-        <i class="fas fa-car-side fa-2x text-warning"></i>
+    <div class="mb-3">
+    <div class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center shadow"
+         style="width:70px;height:70px;">
+        <i class="fas fa-car-side fa-2x text-primary"></i>
+    </div>
     </div>
 
-    <h5 class="fw-bold mb-0 text-white">
-        Car Showroom
-    </h5>
+    <h4 class="text-white fw-bold mb-1">
+       Car Showroom
+    </h4>
 
-    <small class="text-light opacity-75">
-        Management System
+    <small class="text-white-50">
+      Management Dashboard
     </small>
 
 </div>
 
-    <ul class="sidebar-menu mt-4 list-unstyled px-3">
+    <ul class="sidebar-menu list-unstyled px-3 mt-4">
+
+
+        <li class="mb-4 px-2">
+            <div class="bg-primary rounded-4 text-white p-3 text-center">
+
+                <i class="fas fa-chart-line fa-2x mb-3"></i>
+
+                <h6 class="fw-bold mb-1">
+                    Dashboard
+                </h6>
+
+                <small class="opacity-75">
+                    Professional Admin Panel
+                </small>
+
+            </div>
+        </li>
 
         <li>
-            <a href="{% url 'home' %}" class="d-flex align-items-center">
+            <a href="{% url 'home' %}" class="d-flex align-items-center active">
               <i class="fas fa-house me-3"></i>
               <span>Dashboard</span>
             </a>
@@ -142,34 +170,59 @@ SIDEBAR
 CONTENT START
 =========================== -->
 
-<div class="main-content flex-grow-1 p-4 overflow-auto">
+<div class="main-content flex-grow-1 overflow-auto"> overflow-auto">
 
 <!-- TOPBAR -->
 
-<nav class="navbar navbar-expand-lg bg-white shadow rounded-4 mb-4 px-4 py-3 border-0">
+<nav class="navbar navbar-expand-lg bg-white mb-4 px-4 py-3 border-0">
 
 <div class="container-fluid px-0">
 
-<div>
-    <h4 class="mb-0 fw-bold">
-        <i class="fas fa-car-side text-primary me-2"></i>
-        Car Showroom Dashboard
-    </h4>
-    <small class="text-muted">Welcome back, {{ request.user.username }}</small>
+      <button class="btn btn-light d-lg-none me-3" id="menuToggle">
+         <i class="fas fa-bars"></i>
+      </button>
+
+    <div>
+        <small class="text-uppercase text-primary fw-semibold">
+            Dashboard
+        </small>
+
+        <h3 class="fw-bold mb-1">
+            Welcome, {{ request.user.username }}
+        </h3>
+
+        <span class="text-muted">
+            Car Showroom Management System
+        </span>
+    </div>
+
+<div class="d-flex align-items-center gap-4">
+
+<button class="btn btn-light border rounded-circle"
+        style="width:45px;height:45px;">
+    <i class="fas fa-bell"></i>
+</button>
+
+<div class="d-flex align-items-center">
+
+<div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
+     style="width:50px;height:50px;">
+    <i class="fas fa-user"></i>
 </div>
 
-<div class="d-flex align-items-center gap-3">
-
-<div class="text-end">
-    <h6 class="mb-0 fw-semibold">
-        <i class="fas fa-user-circle text-primary me-1"></i>
+<div>
+    <h6 class="mb-0 fw-bold">
         {{ request.user.username }}
     </h6>
-    <small class="text-muted">Administrator</small>
+    <small class="text-muted">
+        Administrator
+    </small>
 </div>
 
-<a href="{% url 'logout' %}" class="btn btn-danger rounded-pill px-3">
-    <i class="fas fa-right-from-bracket me-1"></i>
+</div>
+
+<a href="{% url 'logout' %}" class="btn btn-danger px-4">
+    <i class="fas fa-right-from-bracket me-2"></i>
     Logout
 </a>
 
@@ -185,21 +238,32 @@ MESSAGES
 
 {% if messages %}
 
+<div class="mb-4">
+
 {% for message in messages %}
 
-<div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow rounded-3 border-0 mb-4" role="alert">
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 shadow-sm" role="alert">
 
-    {{ message }}
+    <div class="d-flex align-items-center">
+
+        <i class="fas fa-circle-check me-2"></i>
+
+        <div>
+            {{ message }}
+        </div>
+
+    </div>
 
     <button type="button"
             class="btn-close"
             data-bs-dismiss="alert">
-
     </button>
 
 </div>
 
 {% endfor %}
+
+</div>
 
 {% endif %}
 
@@ -207,7 +271,7 @@ MESSAGES
 PAGE CONTENT
 =========================== -->
 
-<main class="dashboard-content container-fluid px-0 py-2 animate__animated animate__fadeIn">
+<main class="dashboard-content container-fluid px-0 py-3 animate__animated animate__fadeIn">
 
 {% block content %}
 
@@ -223,27 +287,19 @@ PAGE CONTENT
 FOOTER
 =========================== -->
 
-<footer class="bg-white border-top mt-5 py-4 shadow-sm">
+<footer class="bg-white mt-4 py-3 border-0">
 
     <div class="container-fluid">
 
-        <div class="row align-items-center">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
 
-            <div class="col-md-6 text-center text-md-start">
+            <small class="text-muted">
+                © {% now "Y" %} Car Showroom Management System
+            </small>
 
-                <small class="text-muted">
-                    © {% now "Y" %} <strong>Car Showroom Management System</strong>
-                </small>
-
-            </div>
-
-            <div class="col-md-6 text-center text-md-end">
-
-                <small class="text-muted">
-                    Developed with ❤️ by <strong>Rupesh Mahto</strong>
-                </small>
-
-            </div>
+            <small class="text-muted">
+                Version 1.0
+            </small>
 
         </div>
 
@@ -271,10 +327,43 @@ SCRIPTS
 
 <script src="{% static 'js/main.js' %}"></script>
 
+<script>
+document.querySelectorAll(".sidebar-menu a").forEach(link=>{
+    if(link.href===window.location.href){
+        document
+            .querySelectorAll(".sidebar-menu a")
+            .forEach(a=>a.classList.remove("active"));
+
+        link.classList.add("active");
+    }
+});
+</script>
+
+
+
 {% block extra_js %}
 
 {% endblock %}
 
+<script>
+window.addEventListener("load",function(){
+    document.getElementById("loader").classList.add("hide");
+});
+</script>
+
+<script>
+const menuToggle=document.getElementById("menuToggle");
+
+if(menuToggle){
+
+menuToggle.addEventListener("click",function(){
+
+document.querySelector(".sidebar").classList.toggle("show");
+
+});
+
+}
+</script>
 
 </body>
 

@@ -1,0 +1,172 @@
+{% extends "showroom/base.html" %}
+{% load static %}
+
+{% block title %}Cars | Car Showroom{% endblock %}
+
+{% block content %}
+
+<div class="page-header mb-4">
+    <div>
+        <h2 class="fw-bold">
+            <i class="fas fa-car text-primary me-2"></i>
+            Car Management
+        </h2>
+        <p class="text-muted mb-0">
+            Manage all showroom cars
+        </p>
+    </div>
+
+    <a href="{% url 'add_car' %}" class="btn btn-primary">
+        <i class="fas fa-plus-circle me-2"></i>
+        Add New Car
+    </a>
+</div>
+
+<div class="card shadow-hover border-0 rounded-4">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table id="carTable" class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Image</th>
+                        <th>Car</th>
+                        <th>Company</th>
+                        <th>Model</th>
+                        <th>Fuel</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th width="180">Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for car in cars %}
+
+                    <tr>
+
+                        <td>
+
+                            {% if car.image %}
+                                <img src="{{ car.image.url }}"
+                                     class="rounded"
+                                     width="80"
+                                     height="55"
+                                     style="object-fit:cover;">
+                            {% else %}
+                                <img src="https://via.placeholder.com/80x55"
+                                     class="rounded">
+                            {% endif %}
+
+                        </td>
+
+                        <td class="fw-semibold">
+                            {{ car.car_name }}
+                        </td>
+
+                        <td>
+                            {{ car.company }}
+                        </td>
+
+                        <td>
+                            {{ car.model }}
+                        </td>
+
+                        <td>
+                            {{ car.fuel_type }}
+                        </td>
+
+                        <td class="fw-bold text-success">
+                            ₹{{ car.price }}
+                        </td>
+
+                        <td>
+
+                            {% if car.stock > 0 %}
+
+                                <span class="badge bg-success">
+                                    {{ car.stock }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+                                    Out
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <a href="{% url 'car_detail' car.id %}"
+                               class="btn btn-sm btn-primary">
+                                <i class="fas fa-eye"></i>
+                            </a>
+
+                            <a href="{% url 'edit_car' car.id %}"
+                               class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+
+                            <a href="{% url 'delete_car' car.id %}"
+                               class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="8" class="text-center py-5">
+
+                            No Cars Available
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+$(document).ready(function(){
+
+    $("#carTable").DataTable({
+        responsive:true,
+        pageLength:10,
+        ordering:true
+    });
+
+});
+
+</script>
+
+{% endblock %}

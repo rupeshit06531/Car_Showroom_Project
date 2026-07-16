@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from .models import Purchase
+
 from .forms import PurchaseForm
 
 from django.contrib.auth.decorators import (
@@ -414,6 +414,39 @@ def export_cars_excel(request):
     workbook.save(response)
 
     return response
+
+
+# =========================
+# CAR LIST
+# =========================
+
+@login_required
+def car_list(request):
+
+    cars = Car.objects.all().order_by("-id")
+
+    query = request.GET.get("q")
+
+    if query:
+        cars = cars.filter(
+            Q(car_name__icontains=query) |
+            Q(company__icontains=query) |
+            Q(model__icontains=query)
+        )
+
+    paginator = Paginator(cars, 10)
+    page = request.GET.get("page")
+    cars = paginator.get_page(page)
+
+    return render(
+        request,
+        "showroom/car_list.html",
+        {
+            "cars": cars
+        }
+    )
+
+
 
 # =========================
 # CUSTOMER LIST
@@ -1240,8 +1273,8 @@ def sales_report_pdf(request):
     return response
 
 @login_required
-def delete_purchase(request, pk):
-    purchase = get_object_or_404(Purchase, pk=pk)
+def delete_purchase(request, id):
+    purchase = get_object_or_404(Purchase, id=id)
 
     if request.method == "POST":
         purchase.delete()
@@ -1316,3 +1349,4 @@ def export_sales_excel(request):
     wb.save(response)
 
     return response
+

@@ -1,84 +1,41 @@
 {% extends "showroom/base.html" %}
 
+{% block title %}Sales{% endblock %}
+
 {% block content %}
 
-<div class="container-fluid mt-4">
+<div class="page-header mb-4">
 
-    <div class="row g-4 mb-4">
+    <div>
 
-        <div class="col-lg-4">
+        <h2 class="fw-bold">
+            <i class="fas fa-cart-shopping text-primary me-2"></i>
+            Sales Management
+        </h2>
 
-            <div class="dashboard-card bg-blue p-4">
-
-                <h6>Total Sales</h6>
-
-                <h2 class="counter">{{ total_sales }}</h2>
-
-                <i class="fas fa-cart-shopping icon"></i>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-4">
-
-            <div class="dashboard-card bg-green p-4">
-
-                <h6>Total Revenue</h6>
-
-                <h2>₹{{ total_revenue }}</h2>
-
-                <i class="fas fa-indian-rupee-sign icon"></i>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-4">
-
-            <div class="dashboard-card bg-orange p-4">
-
-                <h6>Total Customers</h6>
-
-                <h2 class="counter">{{ total_customers }}</h2>
-
-                <i class="fas fa-users icon"></i>
-
-            </div>
-
-        </div>
+        <p class="text-muted">
+            Manage all showroom sales
+        </p>
 
     </div>
 
-    <div class="card shadow border-0 rounded-4">
+    <a href="{% url 'add_sale' %}" class="btn btn-primary">
 
-        <div class="card-header bg-white py-3">
+        <i class="fas fa-plus-circle me-2"></i>
 
-            <div class="d-flex justify-content-between align-items-center">
+        Add Sale
 
-                <h4 class="mb-0">
+    </a>
 
-                    <i class="fas fa-file-invoice-dollar text-primary"></i>
+</div>
 
-                    Sales Records
+<div class="card border-0 shadow-hover rounded-4">
 
-                </h4>
+    <div class="card-body">
 
-                <a href="{% url 'add_sale' %}" class="btn btn-primary">
+        <div class="table-responsive">
 
-                    <i class="fas fa-plus"></i>
-
-                    Add Sale
-
-                </a>
-
-            </div>
-
-        </div>
-
-        <div class="card-body">
-
-            <table class="table table-hover align-middle" id="salesTable">
+            <table id="saleTable" class="table table-hover align-middle">
 
                 <thead>
 
@@ -87,9 +44,10 @@
                         <th>Invoice</th>
                         <th>Customer</th>
                         <th>Car</th>
+                        <th>Employee</th>
                         <th>Amount</th>
                         <th>Date</th>
-                        <th>Action</th>
+                        <th width="220">Action</th>
 
                     </tr>
 
@@ -107,26 +65,48 @@
 
                         <td>{{ sale.car.car_name }}</td>
 
-                        <td>₹{{ sale.sale_price }}</td>
+                        <td>
+
+                            {% if sale.employee %}
+                                {{ sale.employee.name }}
+                            {% else %}
+                                -
+                            {% endif %}
+
+                        </td>
+
+                        <td class="fw-bold text-success">
+                            ₹{{ sale.sale_price }}
+                        </td>
 
                         <td>{{ sale.sale_date }}</td>
 
                         <td>
-                            <a href="{% url 'edit_sale' sale.id %}"
-                            class="btn btn-warning btn-sm">
+
+                            <a href="{% url 'invoice' sale.id %}" class="btn btn-success btn-sm">
+                                <i class="fas fa-file-pdf"></i>
+                            </a>
+
+                            <a href="{% url 'edit_sale' sale.id %}" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit"></i>
                             </a>
 
-                            <a href="{% url 'delete_sale' sale.id %}"
-                            class="btn btn-danger btn-sm"
-                            onclick="return confirm('Delete this sale?')">
+                            <a href="{% url 'delete_sale' sale.id %}" class="btn btn-danger btn-sm">
                                 <i class="fas fa-trash"></i>
                             </a>
 
-                            <a href="{% url 'invoice' sale.id %}"
-                            class="btn btn-success btn-sm">
-                                <i class="fas fa-file-pdf"></i>
-                            </a>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="7" class="text-center py-5">
+
+                            No Sales Found
+
                         </td>
 
                     </tr>
@@ -142,5 +122,22 @@
     </div>
 
 </div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+$(function(){
+
+    $("#saleTable").DataTable({
+        responsive:true,
+        pageLength:10
+    });
+
+});
+
+</script>
 
 {% endblock %}

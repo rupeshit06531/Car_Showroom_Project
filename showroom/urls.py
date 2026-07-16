@@ -58,6 +58,8 @@ path("delete-sale/<int:id>/", views.delete_sale, name="delete_sale"),
      path("customer-history/<int:id>/", views.customer_history, name="customer_history"),
      path("import-cars/", views.import_cars, name="import_cars"),
 
+     path("cars/", views.car_list, name="car_list"),
+
      path(
     "export-sales/",
     views.export_sales_excel,
