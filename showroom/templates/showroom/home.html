@@ -5,29 +5,41 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+<div class="container-fluid">
 
-    <div>
-        <h2 class="fw-bold mb-1">
-            Dashboard Overview
-        </h2>
+<div class="dashboard-header">
 
-        <p class="text-muted mb-0">
-            Welcome back, {{ user.username }}
-        </p>
-    </div>
+    <div class="row align-items-center">
 
-    <div class="d-flex gap-2">
+        <div class="col-lg-8">
 
-        <a href="{% url 'add_car' %}" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>
-            Add Car
-        </a>
+            <span class="dashboard-subtitle">
+                Dashboard Overview
+            </span>
 
-        <a href="{% url 'add_sale' %}" class="btn btn-success">
-            <i class="fas fa-cart-plus me-2"></i>
-            New Sale
-        </a>
+            <h2 class="dashboard-title">
+                Welcome Back, {{ user.username }}
+            </h2>
+
+            <p class="dashboard-text">
+                Manage Cars, Customers, Employees and Sales from one place.
+            </p>
+
+        </div>
+
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+
+            <a href="{% url 'add_car' %}" class="btn btn-primary btn-lg me-2">
+                <i class="fas fa-plus me-2"></i>
+                Add Car
+            </a>
+
+            <a href="{% url 'add_sale' %}" class="btn btn-success btn-lg">
+                <i class="fas fa-cart-plus me-2"></i>
+                New Sale
+            </a>
+
+        </div>
 
     </div>
 
@@ -131,9 +143,9 @@
       HERO SECTION
 ========================= -->
 
-<section class="hero-section mb-4">
+<section class="hero-section mb-5">
 
-    <div class="hero-overlay">
+    <div class="hero-overlay container-fluid">
 
         <div class="container">
 
@@ -216,14 +228,14 @@
       QUICK ACTION
 ========================= -->
 
-<div class="row g-4 mb-4">
+<div class="row g-4 mb-5 quick-action-section">
 
     <div class="col-lg-3">
 
         <a href="{% url 'add_car' %}"
            class="text-decoration-none">
 
-            <div class="quick-card bg-primary">
+            <div class="quick-card quick-card-primary">
 
                 <i class="fas fa-car-side"></i>
 
@@ -240,7 +252,7 @@
         <a href="{% url 'add_customer' %}"
            class="text-decoration-none">
 
-            <div class="quick-card bg-success">
+            <div class="quick-card quick-card-success">
 
                 <i class="fas fa-users"></i>
 
@@ -257,7 +269,7 @@
         <a href="{% url 'add_sale' %}"
            class="text-decoration-none">
 
-            <div class="quick-card bg-warning">
+            <div class="quick-card quick-card-warning">
 
                 <i class="fas fa-cart-shopping"></i>
 
@@ -274,7 +286,7 @@
         <a href="{% url 'sale_list' %}"
            class="text-decoration-none">
 
-            <div class="quick-card bg-danger">
+            <div class="quick-card quick-card-danger">
 
                 <i class="fas fa-chart-line"></i>
 
@@ -306,59 +318,119 @@
 <div class="row g-4 mb-4">
 
     <div class="col-xl-3 col-md-6">
+
         <div class="dashboard-card">
-            <div class="icon bg-blue">
-                <i class="fas fa-car"></i>
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <small>Total Cars</small>
+
+                    <h2>{{ total_cars }}</h2>
+
+                    <span class="text-success">
+                        <i class="fas fa-arrow-trend-up"></i>
+                        +12%
+                    </span>
+
+                </div>
+
+                <div class="icon bg-blue">
+                    <i class="fas fa-car"></i>
+                </div>
+
             </div>
 
-            <h3>{{ total_cars }}</h3>
-
-            <p class="text-muted mb-0">
-                Total Cars
-            </p>
         </div>
+
     </div>
 
     <div class="col-xl-3 col-md-6">
+
         <div class="dashboard-card">
-            <div class="icon bg-green">
-                <i class="fas fa-users"></i>
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <small>Customers</small>
+
+                    <h2>{{ total_customers }}</h2>
+
+                    <span class="text-success">
+                        <i class="fas fa-arrow-trend-up"></i>
+                        +18%
+                    </span>
+
+                </div>
+
+                <div class="icon bg-green">
+                    <i class="fas fa-users"></i>
+                </div>
+
             </div>
 
-            <h3>{{ total_customers }}</h3>
-
-            <p class="text-muted mb-0">
-                Customers
-            </p>
         </div>
+
     </div>
 
     <div class="col-xl-3 col-md-6">
+
         <div class="dashboard-card">
-            <div class="icon bg-orange">
-                <i class="fas fa-cart-shopping"></i>
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <small>Total Sales</small>
+
+                    <h2>{{ total_sales }}</h2>
+
+                    <span class="text-success">
+                        <i class="fas fa-arrow-trend-up"></i>
+                        +8%
+                    </span>
+
+                </div>
+
+                <div class="icon bg-orange">
+                    <i class="fas fa-cart-shopping"></i>
+                </div>
+
             </div>
 
-            <h3>{{ total_sales }}</h3>
-
-            <p class="text-muted mb-0">
-                Sales
-            </p>
         </div>
+
     </div>
 
     <div class="col-xl-3 col-md-6">
+
         <div class="dashboard-card">
-            <div class="icon bg-red">
-                <i class="fas fa-indian-rupee-sign"></i>
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <small>Revenue</small>
+
+                    <h2>₹{{ total_revenue }}</h2>
+
+                    <span class="text-success">
+                        <i class="fas fa-arrow-trend-up"></i>
+                        +25%
+                    </span>
+
+                </div>
+
+                <div class="icon bg-red">
+                    <i class="fas fa-indian-rupee-sign"></i>
+                </div>
+
             </div>
 
-            <h3>₹{{ total_revenue }}</h3>
-
-            <p class="text-muted mb-0">
-                Revenue
-            </p>
         </div>
+
     </div>
 
 </div>
@@ -375,38 +447,51 @@
 
     <div class="col-lg-6">
 
-        <div class="card border-0">
+        <div class="card dashboard-progress-card">
+
+            <div class="card-header">
+                <h5 class="mb-0">Business Performance</h5>
+            </div>
 
             <div class="card-body">
 
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Total Cars</span>
-                    <strong>{{ total_cars }}</strong>
+                <div class="progress-item">
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total Cars</span>
+                        <strong>{{ total_cars }}</strong>
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" style="width:85%;"></div>
+                    </div>
+
                 </div>
 
-                <div class="progress" style="height:10px;">
-                    <div class="progress-bar bg-primary"
-                         style="width:85%"></div>
+                <div class="progress-item mt-4">
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total Sales</span>
+                        <strong>{{ total_sales }}</strong>
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar bg-success" style="width:70%;"></div>
+                    </div>
+
                 </div>
 
-                <div class="d-flex justify-content-between mt-4 mb-2">
-                    <span>Total Sales</span>
-                    <strong>{{ total_sales }}</strong>
-                </div>
+                <div class="progress-item mt-4">
 
-                <div class="progress" style="height:10px;">
-                    <div class="progress-bar bg-success"
-                         style="width:70%"></div>
-                </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Revenue</span>
+                        <strong>₹{{ total_revenue }}</strong>
+                    </div>
 
-                <div class="d-flex justify-content-between mt-4 mb-2">
-                    <span>Revenue</span>
-                    <strong>₹{{ total_revenue }}</strong>
-                </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-warning" style="width:90%;"></div>
+                    </div>
 
-                <div class="progress" style="height:10px;">
-                    <div class="progress-bar bg-warning"
-                         style="width:90%"></div>
                 </div>
 
             </div>
@@ -417,30 +502,30 @@
 
     <div class="col-lg-6">
 
-        <div class="card border-0">
+        <div class="card dashboard-status-card">
+
+            <div class="card-header">
+                <h5 class="mb-0">Business Status</h5>
+            </div>
 
             <div class="card-body">
 
-                <h5 class="fw-bold mb-4">
-                    Business Status
-                </h5>
-
-                <div class="d-flex justify-content-between py-2">
+                <div class="status-item">
                     <span>Cars Available</span>
                     <strong>{{ total_cars }}</strong>
                 </div>
 
-                <div class="d-flex justify-content-between py-2">
+                <div class="status-item">
                     <span>Customers</span>
                     <strong>{{ total_customers }}</strong>
                 </div>
 
-                <div class="d-flex justify-content-between py-2">
+                <div class="status-item">
                     <span>Sales</span>
                     <strong>{{ total_sales }}</strong>
                 </div>
 
-                <div class="d-flex justify-content-between py-2">
+                <div class="status-item">
                     <span>Revenue</span>
                     <strong>₹{{ total_revenue }}</strong>
                 </div>
@@ -453,11 +538,165 @@
 
 </div>
 
-<div class="row mt-4 g-4 align-items-stretch">
+
+<!-- =========================
+      SYSTEM STATUS
+========================= -->
+
+<div class="row g-4 mb-4">
+
+    <div class="col-lg-8">
+
+        <div class="welcome-card">
+
+            <div class="row align-items-center">
+
+                <div class="col-md-8">
+
+                    <h2 class="mb-3">
+                        Welcome Back,
+                        <span class="text-primary">
+                            {{ user.username }}
+                        </span>
+                    </h2>
+
+                    <p class="text-muted mb-4">
+                        Manage your showroom, customers, inventory and sales from one dashboard.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-2">
+
+                        <span class="badge bg-primary px-3 py-2">
+                            {{ total_cars }} Cars
+                        </span>
+
+                        <span class="badge bg-success px-3 py-2">
+                            {{ total_customers }} Customers
+                        </span>
+
+                        <span class="badge bg-warning text-dark px-3 py-2">
+                            {{ total_sales }} Sales
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4 text-center">
+
+                    <i class="fas fa-car-side welcome-icon"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="today-card">
+
+            <h5 class="mb-3">
+                Today
+            </h5>
+
+            <h2>
+                {% now "d" %}
+            </h2>
+
+            <h6>
+                {% now "F Y" %}
+            </h6>
+
+            <p class="mb-0 text-muted">
+                {% now "l" %}
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="row g-4 mb-4">
+
+    <div class="col-lg-4">
+
+        <div class="status-card">
+
+            <div class="status-icon bg-success">
+                <i class="fas fa-server"></i>
+            </div>
+
+            <div>
+
+                <h5>Server Status</h5>
+
+                <span class="badge bg-success">
+                    Online
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="status-card">
+
+            <div class="status-icon bg-primary">
+                <i class="fas fa-database"></i>
+            </div>
+
+            <div>
+
+                <h5>Database</h5>
+
+                <span class="badge bg-primary">
+                    Connected
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="status-card">
+
+            <div class="status-icon bg-warning">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+
+            <div>
+
+                <h5>Security</h5>
+
+                <span class="badge bg-warning text-dark">
+                    Protected
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row g-4 mt-4 dashboard-chart-section">
 
     <div class="col-xl-8 col-lg-7">
 
-        <div class="card shadow-hover border-0 rounded-4 h-100">
+        <div class="card chart-card h-100">
 
             <div class="card-header bg-white">
 
@@ -473,13 +712,13 @@
 
             <div class="card-body">
 
-                <div style="height:350px;">
-                        <canvas id="monthlySalesChart"></canvas>
-                    </div>
+                <div class="chart-box">
+                    <canvas id="monthlySalesChart"></canvas>
+                </div>
 
-                    <div class="mt-4" style="height:320px;">
-                        <canvas id="revenueChart"></canvas>
-                    </div>
+                <div class="chart-box mt-4">
+                    <canvas id="revenueChart"></canvas>
+                </div>
 
             </div>
 
@@ -489,7 +728,7 @@
 
     <div class="col-xl-4 col-lg-5">
 
-        <div class="card shadow border-0 rounded-4">
+        <div class="card chart-card h-100">
 
             <div class="card-header bg-white">
 
@@ -505,8 +744,8 @@
 
             <div class="card-body">
 
-                <div style="height:350px;">
-                   <canvas id="companyChart"></canvas>
+                <div class="chart-box">
+                    <canvas id="companyChart"></canvas>
                 </div>
 
             </div>
@@ -518,29 +757,188 @@
 </div>
 
 
+<!-- =========================
+      QUICK STATS
+========================= -->
 
+<div class="row g-4 mb-4">
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="stats-box">
+
+            <i class="fas fa-car-side"></i>
+
+            <h3>{{ total_cars }}</h3>
+
+            <p>Total Cars</p>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="stats-box">
+
+            <i class="fas fa-users"></i>
+
+            <h3>{{ total_customers }}</h3>
+
+            <p>Total Customers</p>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="stats-box">
+
+            <i class="fas fa-cart-shopping"></i>
+
+            <h3>{{ total_sales }}</h3>
+
+            <p>Total Sales</p>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="stats-box">
+
+            <i class="fas fa-indian-rupee-sign"></i>
+
+            <h3>₹{{ total_revenue }}</h3>
+
+            <p>Total Revenue</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+      DASHBOARD OVERVIEW
+========================= -->
+
+<div class="dashboard-overview mb-4">
+
+    <div class="row g-4">
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="overview-card blue">
+
+                <div class="overview-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+
+                <div class="overview-content">
+
+                    <h2>{{ total_cars }}</h2>
+
+                    <span>Total Cars</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="overview-card green">
+
+                <div class="overview-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+
+                <div class="overview-content">
+
+                    <h2>{{ total_customers }}</h2>
+
+                    <span>Customers</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="overview-card orange">
+
+                <div class="overview-icon">
+                    <i class="fas fa-cart-shopping"></i>
+                </div>
+
+                <div class="overview-content">
+
+                    <h2>{{ total_sales }}</h2>
+
+                    <span>Sales</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="overview-card red">
+
+                <div class="overview-icon">
+                    <i class="fas fa-indian-rupee-sign"></i>
+                </div>
+
+                <div class="overview-content">
+
+                    <h2>₹{{ total_revenue }}</h2>
+
+                    <span>Revenue</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 <!-- =========================
       RECENT ACTIVITY
 ========================= -->
 
-<div class="row mt-4">
-
-    <!-- Recent Sales -->
+<div class="row mt-4 dashboard-table-section">
 
     <div class="col-lg-12">
 
-        <div class="card border-0 rounded-4 h-100">
+        <div class="card recent-sales-card">
 
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center">
 
                 <h5 class="fw-bold mb-0">
 
-                    <i class="fas fa-cart-shopping"></i>
+                    <i class="fas fa-cart-shopping text-primary me-2"></i>
 
                     Recent Sales
 
                 </h5>
+
+                <a href="{% url 'sale_list' %}" class="btn btn-primary btn-sm">
+
+                    View All
+
+                </a>
 
             </div>
 
@@ -607,7 +1005,88 @@
 
 </div>
 
-<!-- PART 3 END -->
+
+
+<!-- =========================
+      RECENT CUSTOMERS
+========================= -->
+
+<div class="card recent-customers-card mt-4">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0 fw-bold">
+
+            <i class="fas fa-users text-primary me-2"></i>
+
+            Recent Customers
+
+        </h5>
+
+        <a href="{% url 'customer_list' %}" class="btn btn-outline-primary btn-sm">
+
+            View All
+
+        </a>
+
+    </div>
+
+    <div class="card-body">
+
+        {% for customer in recent_customers %}
+
+        <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
+
+            <div class="d-flex align-items-center">
+
+                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
+                     style="width:45px;height:45px;">
+
+                    <i class="fas fa-user"></i>
+
+                </div>
+
+                <div>
+
+                    <h6 class="mb-0">
+                        {{ customer.name }}
+                    </h6>
+
+                    <small class="text-muted">
+                        {{ customer.phone }}
+                    </small>
+
+                </div>
+
+            </div>
+
+            <span class="badge bg-success">
+
+                Active
+
+            </span>
+
+        </div>
+
+        {% empty %}
+
+        <div class="text-center py-5">
+
+            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+
+            <h6 class="text-muted">
+
+                No Customers Found
+
+            </h6>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
 
 <!-- =========================
       PAGINATION

@@ -817,3 +817,1293 @@ footer small{
 .page-header + .row{
     margin-top:25px!important;
 }
+
+/* =========================
+   TOP NAVBAR
+========================= */
+
+.navbar{
+    position:sticky;
+    top:15px;
+    z-index:999;
+}
+
+.navbar .dropdown-menu{
+    min-width:240px;
+    border:none;
+    border-radius:16px;
+    box-shadow:0 15px 35px rgba(0,0,0,.12);
+}
+
+.navbar .dropdown-item{
+    padding:12px 18px;
+    transition:.3s;
+}
+
+.navbar .dropdown-item:hover{
+    background:#f1f5f9;
+    color:#2563eb;
+}
+
+.navbar .rounded-circle{
+    transition:.3s;
+}
+
+.navbar .rounded-circle:hover{
+    transform:scale(1.08);
+}
+
+.navbar h6{
+    margin:0;
+}
+
+.navbar small{
+    font-size:13px;
+}
+
+.navbar .badge{
+    font-size:10px;
+    padding:5px 7px;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    transition:.35s;
+    box-shadow:8px 0 30px rgba(0,0,0,.12);
+}
+
+.sidebar .logo{
+    padding:25px 20px;
+}
+
+.sidebar-menu{
+    margin-top:15px;
+}
+
+.sidebar-menu li{
+    margin-bottom:8px;
+}
+
+.sidebar-menu li a{
+    height:54px;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.sidebar-menu li a i{
+    width:26px;
+    font-size:18px;
+    text-align:center;
+}
+
+.sidebar-menu li a:hover{
+    background:#2563eb;
+    color:#fff;
+    transform:translateX(8px);
+}
+
+.sidebar-menu li a.active{
+    background:linear-gradient(90deg,#2563eb,#3b82f6);
+    color:#fff;
+    box-shadow:0 12px 25px rgba(37,99,235,.35);
+}
+
+.sidebar-menu li:last-child{
+    margin-top:25px;
+}
+
+.sidebar::-webkit-scrollbar{
+    width:6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb{
+    background:#3b82f6;
+    border-radius:20px;
+}
+
+/* =========================
+   PREMIUM SIDEBAR ANIMATION
+========================= */
+
+.sidebar .logo{
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.sidebar .logo .rounded-circle{
+    transition:.35s;
+}
+
+.sidebar .logo:hover .rounded-circle{
+    transform:rotate(-10deg) scale(1.08);
+}
+
+.sidebar-menu li a{
+    position:relative;
+    overflow:hidden;
+}
+
+.sidebar-menu li a::after{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:0;
+    height:100%;
+    background:rgba(255,255,255,.08);
+    transition:.35s;
+}
+
+.sidebar-menu li a:hover::after,
+.sidebar-menu li a.active::after{
+    width:100%;
+}
+
+.sidebar-menu li a span,
+.sidebar-menu li a i{
+    position:relative;
+    z-index:2;
+}
+
+.sidebar-menu li a i{
+    transition:.35s;
+}
+
+.sidebar-menu li a:hover i,
+.sidebar-menu li a.active i{
+    transform:scale(1.15);
+}
+
+.sidebar-menu li a:hover{
+    padding-left:24px;
+}
+
+.sidebar-menu li a.active{
+    border-left:4px solid #ffffff;
+}
+
+/* =========================
+   NAVBAR TITLE
+========================= */
+
+.navbar h3{
+    font-size:28px;
+    color:#0f172a;
+}
+
+.navbar .badge{
+    border-radius:30px;
+    padding:7px 12px;
+    font-size:11px;
+    letter-spacing:.5px;
+}
+
+/* =========================
+   SIDEBAR LOGO
+========================= */
+
+.sidebar .logo a{
+    display:block;
+}
+
+.sidebar .logo .rounded-circle{
+    transition:.35s ease;
+}
+
+.sidebar .logo:hover .rounded-circle{
+    transform:scale(1.08) rotate(-8deg);
+    box-shadow:0 20px 45px rgba(37,99,235,.35);
+}
+
+.sidebar .logo h4{
+    letter-spacing:1px;
+    margin-top:12px;
+}
+
+.sidebar .logo small{
+    letter-spacing:.5px;
+}
+
+/* =========================
+   DASHBOARD HEADER
+========================= */
+
+.dashboard-header{
+    background:#ffffff;
+    padding:30px;
+    border-radius:22px;
+    margin-bottom:30px;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.dashboard-subtitle{
+    color:#2563eb;
+    font-size:13px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.dashboard-title{
+    font-size:38px;
+    font-weight:700;
+    color:#0f172a;
+    margin:12px 0;
+}
+
+.dashboard-text{
+    color:#64748b;
+    margin:0;
+    font-size:16px;
+}
+
+.dashboard-header .btn{
+    min-width:170px;
+}
+
+
+/* =========================
+   KPI CARDS
+========================= */
+
+.dashboard-card small{
+    color:#64748b;
+    text-transform:uppercase;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.8px;
+}
+
+.dashboard-card h2{
+    margin:10px 0;
+    font-size:34px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.dashboard-card .text-success{
+    font-size:14px;
+    font-weight:600;
+}
+
+.dashboard-card .icon{
+    flex-shrink:0;
+}
+
+.dashboard-card:hover{
+    transform:translateY(-10px);
+}
+
+
+.dashboard-progress-card,
+.dashboard-status-card{
+    border-radius:20px;
+}
+
+.progress-item .progress{
+    height:10px;
+    border-radius:20px;
+}
+
+.status-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.status-item:last-child{
+    border-bottom:none;
+}
+
+.status-item strong{
+    color:#0f172a;
+}
+
+/* =========================
+   CHART SECTION
+========================= */
+
+.dashboard-chart-section{
+    margin-top:35px;
+}
+
+.chart-card{
+    border:none;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+    transition:.35s;
+}
+
+.chart-card:hover{
+    transform:translateY(-8px);
+}
+
+.chart-card .card-header{
+    padding:22px 25px;
+    background:#fff;
+    border-bottom:1px solid #eef2f7;
+}
+
+.chart-card .card-header h5{
+    margin:0;
+    font-size:20px;
+    font-weight:700;
+}
+
+.chart-card .card-body{
+    padding:25px;
+}
+
+.chart-card canvas{
+    width:100% !important;
+}
+
+/* =========================
+   RECENT SALES
+========================= */
+
+.dashboard-table-section{
+    margin-top:35px;
+}
+
+.recent-sales-card{
+    border:none;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.recent-sales-card .card-header{
+    padding:20px 25px;
+    background:#fff;
+    border-bottom:1px solid #eef2f7;
+}
+
+.recent-sales-card .card-body{
+    padding:25px;
+}
+
+.recent-sales-card .border-bottom{
+    border-radius:12px;
+    transition:.3s;
+}
+
+.recent-sales-card .border-bottom:hover{
+    background:#f8fafc;
+    transform:translateX(8px);
+}
+
+.recent-sales-card .rounded-circle{
+    transition:.3s;
+}
+
+.recent-sales-card .border-bottom:hover .rounded-circle{
+    transform:scale(1.1);
+}
+
+/* =========================
+   CHART BOX
+========================= */
+
+.chart-box{
+    position:relative;
+    height:350px;
+    width:100%;
+}
+
+.chart-box canvas{
+    width:100% !important;
+    height:100% !important;
+}
+
+.chart-card{
+    overflow:hidden;
+}
+
+.chart-card:hover{
+    box-shadow:0 25px 55px rgba(37,99,235,.12);
+}
+
+/* =========================
+   FINAL DASHBOARD POLISH
+========================= */
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    overflow-x:hidden;
+}
+
+.main-content{
+    min-height:100vh;
+}
+
+.dashboard-content>*{
+    animation:fadeUp .6s ease;
+}
+
+.dashboard-card,
+.chart-card,
+.recent-sales-card,
+.dashboard-header,
+.hero-section{
+    transition:.35s;
+}
+
+.dashboard-card:hover,
+.chart-card:hover,
+.recent-sales-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 50px rgba(37,99,235,.12);
+}
+
+.btn{
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.card-header{
+    border-bottom:1px solid #eef2f7!important;
+}
+
+.card-header h5{
+    color:#0f172a;
+}
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+    background:#fff;
+    border-radius:20px 20px 0 0;
+    box-shadow:0 -10px 30px rgba(0,0,0,.05);
+}
+
+.footer small{
+    font-size:14px;
+    color:#64748b;
+}
+
+.footer .container-fluid{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.footer:hover{
+    box-shadow:0 -15px 40px rgba(37,99,235,.10);
+}
+
+/* =========================
+   RESPONSIVE DASHBOARD
+========================= */
+
+@media (max-width:1200px){
+
+.dashboard-title{
+    font-size:32px;
+}
+
+.dashboard-header{
+    padding:25px;
+}
+
+.chart-box{
+    height:300px;
+}
+
+}
+
+@media (max-width:992px){
+
+.sidebar{
+    position:fixed;
+    left:-280px;
+    top:0;
+    width:280px;
+    height:100vh;
+    z-index:1055;
+    transition:.35s;
+}
+
+.sidebar.show{
+    left:0;
+}
+
+.main-content{
+    width:100%;
+    margin-left:0;
+}
+
+.dashboard-header{
+    text-align:center;
+}
+
+.dashboard-header .btn{
+    width:100%;
+    margin-top:10px;
+}
+
+.chart-box{
+    height:280px;
+}
+
+.footer .container-fluid{
+    justify-content:center;
+    text-align:center;
+    gap:10px;
+}
+
+}
+
+@media (max-width:768px){
+
+.navbar{
+    padding:15px!important;
+}
+
+.navbar h3{
+    font-size:22px;
+}
+
+.dashboard-title{
+    font-size:28px;
+}
+
+.dashboard-card{
+    padding:20px;
+}
+
+.dashboard-card h2{
+    font-size:28px;
+}
+
+.hero-overlay{
+    padding:30px;
+}
+
+.chart-box{
+    height:250px;
+}
+
+.recent-sales-card .card-header{
+    flex-direction:column;
+    align-items:flex-start!important;
+    gap:10px;
+}
+
+}
+
+@media (max-width:576px){
+
+.dashboard-title{
+    font-size:24px;
+}
+
+.dashboard-header{
+    padding:20px;
+}
+
+.chart-box{
+    height:220px;
+}
+
+.dashboard-card{
+    text-align:center;
+}
+
+.dashboard-card .d-flex{
+    flex-direction:column;
+}
+
+.dashboard-card .icon{
+    margin-top:20px;
+}
+
+}
+
+/* =========================
+   PREMIUM UI FINISH
+========================= */
+
+.wrapper{
+    background:#f8fafc;
+}
+
+.dashboard-content{
+    animation:fadeUp .5s ease;
+}
+
+.dashboard-content>*{
+    margin-bottom:30px;
+}
+
+.dashboard-card,
+.chart-card,
+.recent-sales-card,
+.dashboard-header,
+.hero-section,
+.page-header{
+    border:1px solid rgba(226,232,240,.8);
+}
+
+.dashboard-card:hover,
+.chart-card:hover,
+.recent-sales-card:hover,
+.hero-section:hover{
+    box-shadow:0 30px 60px rgba(37,99,235,.15);
+}
+
+.sidebar{
+    border-right:1px solid rgba(255,255,255,.08);
+}
+
+.sidebar-menu li a{
+    letter-spacing:.3px;
+}
+
+.sidebar-menu li a i{
+    min-width:26px;
+}
+
+.navbar{
+    margin-bottom:30px!important;
+}
+
+.navbar,
+.footer,
+.dashboard-card,
+.chart-card,
+.recent-sales-card,
+.dashboard-header,
+.hero-section{
+    transition:all .3s ease;
+}
+
+.btn-primary{
+    background:#2563eb;
+    border-color:#2563eb;
+}
+
+.btn-primary:hover{
+    background:#1d4ed8;
+    border-color:#1d4ed8;
+}
+
+/* ===========================
+   HERO SECTION V2
+=========================== */
+
+.hero-section{
+    position:relative;
+    overflow:hidden;
+    border-radius:24px;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+}
+
+.hero-overlay{
+    padding:70px 60px;
+}
+
+.hero-section::before{
+    content:"";
+    position:absolute;
+    top:-120px;
+    right:-120px;
+    width:300px;
+    height:300px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+}
+
+.hero-section::after{
+    content:"";
+    position:absolute;
+    bottom:-100px;
+    left:-100px;
+    width:250px;
+    height:250px;
+    border-radius:50%;
+    background:rgba(255,255,255,.05);
+}
+
+.hero-car{
+    transition:.4s;
+}
+
+.hero-car:hover{
+    transform:scale(1.05);
+}
+
+
+/* ===========================
+   QUICK ACTION V2
+=========================== */
+
+.quick-action-section{
+    margin-bottom:40px;
+}
+
+.quick-card{
+    border-radius:22px;
+    padding:35px 20px;
+    color:#fff;
+    text-align:center;
+    transition:.35s;
+    cursor:pointer;
+    overflow:hidden;
+    position:relative;
+}
+
+.quick-card::before{
+    content:"";
+    position:absolute;
+    top:-40px;
+    right:-40px;
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background:rgba(255,255,255,.12);
+}
+
+.quick-card i{
+    font-size:38px;
+    margin-bottom:18px;
+    transition:.35s;
+}
+
+.quick-card h5{
+    margin:0;
+    font-weight:700;
+}
+
+.quick-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 20px 45px rgba(0,0,0,.15);
+}
+
+.quick-card:hover i{
+    transform:scale(1.2) rotate(-10deg);
+}
+
+.quick-card-primary{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+}
+
+.quick-card-success{
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+}
+
+.quick-card-warning{
+    background:linear-gradient(135deg,#f59e0b,#ea580c);
+}
+
+.quick-card-danger{
+    background:linear-gradient(135deg,#dc2626,#ef4444);
+}
+
+/* ===========================
+   QUICK STATS
+=========================== */
+
+.stats-box{
+    background:#ffffff;
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    transition:.35s;
+}
+
+.stats-box i{
+    font-size:40px;
+    color:#2563eb;
+    margin-bottom:15px;
+}
+
+.stats-box h3{
+    font-size:32px;
+    font-weight:700;
+    color:#0f172a;
+    margin-bottom:8px;
+}
+
+.stats-box p{
+    margin:0;
+    color:#64748b;
+    font-weight:600;
+}
+
+.stats-box:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 45px rgba(37,99,235,.15);
+}
+
+/* ===========================
+   SYSTEM STATUS
+=========================== */
+
+.status-card{
+    background:#fff;
+    border-radius:20px;
+    padding:25px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+    transition:.35s;
+}
+
+.status-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 45px rgba(37,99,235,.15);
+}
+
+.status-icon{
+    width:65px;
+    height:65px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:24px;
+}
+
+.status-card h5{
+    margin:0 0 8px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.status-card .badge{
+    padding:8px 14px;
+    border-radius:30px;
+}
+
+/* ===========================
+   RECENT CUSTOMERS
+=========================== */
+
+.recent-customers-card{
+    border:none;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.recent-customers-card .card-header{
+    padding:20px 25px;
+    background:#fff;
+}
+
+.recent-customers-card .card-body{
+    padding:25px;
+}
+
+.recent-customers-card .border-bottom{
+    transition:.3s;
+}
+
+.recent-customers-card .border-bottom:hover{
+    background:#f8fbff;
+    transform:translateX(8px);
+}
+
+.recent-customers-card .badge{
+    border-radius:20px;
+    padding:8px 14px;
+}
+
+/* ===========================
+   WELCOME CARD
+=========================== */
+
+.welcome-card{
+    background:#fff;
+    border-radius:24px;
+    padding:35px;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+    transition:.35s;
+}
+
+.welcome-card:hover{
+    transform:translateY(-8px);
+}
+
+.welcome-icon{
+    font-size:120px;
+    color:#2563eb;
+    opacity:.12;
+}
+
+.today-card{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:#fff;
+    border-radius:24px;
+    padding:35px;
+    text-align:center;
+    height:100%;
+    box-shadow:0 15px 40px rgba(37,99,235,.25);
+}
+
+.today-card h2{
+    font-size:56px;
+    font-weight:700;
+    margin:10px 0;
+}
+
+.today-card h6{
+    font-size:22px;
+    margin-bottom:10px;
+}
+
+.today-card p{
+    color:rgba(255,255,255,.85)!important;
+}
+
+/* ===========================
+   DASHBOARD OVERVIEW
+=========================== */
+
+.dashboard-overview{
+    margin-bottom:35px;
+}
+
+.overview-card{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    background:#fff;
+    padding:28px;
+    border-radius:22px;
+    transition:.35s;
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+.overview-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 25px 50px rgba(37,99,235,.15);
+}
+
+.overview-icon{
+    width:70px;
+    height:70px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:28px;
+}
+
+.overview-content h2{
+    margin:0;
+    font-size:34px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.overview-content span{
+    color:#64748b;
+    font-size:15px;
+}
+
+.blue .overview-icon{
+    background:#2563eb;
+}
+
+.green .overview-icon{
+    background:#16a34a;
+}
+
+.orange .overview-icon{
+    background:#f59e0b;
+}
+
+.red .overview-icon{
+    background:#dc2626;
+}
+
+/* ===================================
+   FINAL PREMIUM EFFECTS
+=================================== */
+
+:root{
+    --primary:#2563eb;
+    --success:#16a34a;
+    --warning:#f59e0b;
+    --danger:#dc2626;
+    --dark:#0f172a;
+    --light:#f8fafc;
+}
+
+*{
+    scroll-behavior:smooth;
+}
+
+.card,
+.dashboard-card,
+.chart-card,
+.recent-sales-card,
+.recent-customers-card,
+.status-card,
+.stats-box,
+.overview-card,
+.quick-card,
+.welcome-card{
+    transition:all .35s ease;
+}
+
+.card:hover,
+.dashboard-card:hover,
+.chart-card:hover,
+.recent-sales-card:hover,
+.recent-customers-card:hover,
+.status-card:hover,
+.stats-box:hover,
+.overview-card:hover,
+.quick-card:hover,
+.welcome-card:hover{
+    transform:translateY(-8px);
+}
+
+.badge{
+    border-radius:30px;
+}
+
+.btn{
+    border-radius:12px;
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.table tbody tr{
+    transition:.3s;
+}
+
+.table tbody tr:hover{
+    background:#f8fbff;
+}
+
+::-webkit-scrollbar{
+    width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#2563eb;
+    border-radius:20px;
+}
+
+::-webkit-scrollbar-track{
+    background:#edf2f7;
+}
+
+/* ===========================
+   SIDEBAR ACTIVE MENU
+=========================== */
+
+.sidebar-menu a.active{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:#fff !important;
+    border-radius:14px;
+    font-weight:600;
+    box-shadow:0 10px 25px rgba(37,99,235,.25);
+}
+
+.sidebar-menu a.active i{
+    color:#fff;
+}
+
+.sidebar-menu a{
+    transition:.3s;
+}
+
+.sidebar-menu a:hover{
+    background:#eef4ff;
+    border-radius:14px;
+    transform:translateX(5px);
+}
+
+.sidebar-menu a:hover i{
+    color:#2563eb;
+}
+
+/* ===========================
+   SIDEBAR PREMIUM
+=========================== */
+
+.sidebar{
+    background:linear-gradient(180deg,#0f172a,#1e293b);
+}
+
+.sidebar-menu{
+    padding-top:10px;
+}
+
+.sidebar-menu li{
+    margin-bottom:8px;
+}
+
+.sidebar-menu a{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:14px 18px;
+    color:#cbd5e1;
+    text-decoration:none;
+    border-radius:14px;
+    font-weight:500;
+    transition:.35s;
+}
+
+.sidebar-menu a i{
+    width:22px;
+    text-align:center;
+    font-size:18px;
+}
+
+.sidebar-menu a:hover{
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    padding-left:24px;
+}
+
+.sidebar-menu a:hover i{
+    transform:scale(1.15);
+}
+
+.sidebar .logo{
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.sidebar .logo h4{
+    letter-spacing:1px;
+}
+
+.sidebar .logo small{
+    letter-spacing:.8px;
+}
+
+.sidebar-menu li:last-child{
+    margin-top:25px;
+}
+
+
+/* ===========================
+   PREMIUM NAVBAR
+=========================== */
+
+.premium-navbar{
+    backdrop-filter:blur(12px);
+    border-radius:20px;
+    transition:.35s;
+}
+
+.premium-navbar:hover{
+    box-shadow:0 18px 45px rgba(37,99,235,.15);
+}
+
+.premium-navbar h3{
+    font-size:28px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.premium-navbar small{
+    letter-spacing:.8px;
+}
+
+.premium-navbar .badge{
+    padding:8px 14px;
+    border-radius:30px;
+}
+
+.premium-navbar .dropdown button{
+    transition:.3s;
+}
+
+.premium-navbar .dropdown button:hover{
+    transform:scale(1.08);
+}
+
+.premium-navbar .rounded-circle{
+    transition:.3s;
+}
+
+.premium-navbar .rounded-circle:hover{
+    transform:rotate(10deg) scale(1.08);
+}
+
+/* ===========================
+   PREMIUM MAIN CONTENT
+=========================== */
+
+.premium-main-content{
+    background:#f8fafc;
+    padding:25px;
+    min-height:100vh;
+}
+
+.premium-main-content .dashboard-content{
+    max-width:1600px;
+    margin:auto;
+}
+
+.premium-main-content .card{
+    border:none;
+    border-radius:22px;
+}
+
+.premium-main-content .card-header{
+    background:#fff;
+    border-bottom:1px solid #eef2f7;
+    padding:20px 25px;
+}
+
+.premium-main-content .card-body{
+    padding:25px;
+}
+
+.premium-main-content .table{
+    margin-bottom:0;
+}
+
+.premium-main-content .btn{
+    border-radius:12px;
+}
+
+.premium-main-content .badge{
+    border-radius:30px;
+}

@@ -59,34 +59,42 @@
     </div>
 </div>
 
-<div class="wrapper d-flex min-vh-100">
+<div class="wrapper d-flex min-vh-100 bg-light">
 
 <!-- ===========================
 SIDEBAR
 =========================== -->
 
-<div class="sidebar position-sticky top-0 vh-100">
+<div class="sidebar position-sticky top-0 vh-100 d-flex flex-column shadow-lg">
 
     <div class="logo text-center py-4">
 
-    <div class="mb-3">
-    <div class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center shadow"
-         style="width:70px;height:70px;">
-        <i class="fas fa-car-side fa-2x text-primary"></i>
-    </div>
-    </div>
+    <a href="{% url 'home' %}" class="text-decoration-none">
 
-    <h4 class="text-white fw-bold mb-1">
-       Car Showroom
-    </h4>
+        <div class="mb-3">
 
-    <small class="text-white-50">
-      Management Dashboard
-    </small>
+            <div class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center shadow"
+                 style="width:75px;height:75px;">
+
+                <i class="fas fa-car-side fa-2x text-primary"></i>
+
+            </div>
+
+        </div>
+
+        <h4 class="text-white fw-bold mb-1">
+            CAR SHOWROOM
+        </h4>
+
+        <small class="text-white-50">
+            Management System
+        </small>
+
+    </a>
 
 </div>
 
-    <ul class="sidebar-menu list-unstyled px-3 mt-4">
+    <ul class="sidebar-menu list-unstyled px-3 mt-4 flex-grow-1">
 
 
         <li class="mb-4 px-2">
@@ -155,12 +163,12 @@ SIDEBAR
               </a>
         </li>
 
-       <li>
-             <a href="{% url 'logout' %}" class="d-flex align-items-center text-danger">
-                <i class="fas fa-right-from-bracket me-3"></i>
-               <span>Logout</span>
-             </a>
-        </li>
+       <li class="mt-auto mb-4">
+    <a href="{% url 'logout' %}" class="d-flex align-items-center text-danger">
+        <i class="fas fa-right-from-bracket me-3"></i>
+        <span>Logout</span>
+    </a>
+</li>
 
     </ul>
 
@@ -170,61 +178,145 @@ SIDEBAR
 CONTENT START
 =========================== -->
 
-<div class="main-content flex-grow-1 overflow-auto"> overflow-auto">
+<div class="main-content flex-grow-1 overflow-auto premium-main-content">
 
 <!-- TOPBAR -->
 
-<nav class="navbar navbar-expand-lg bg-white mb-4 px-4 py-3 border-0">
+<nav class="navbar navbar-expand-lg bg-white shadow-sm rounded-4 mb-4 px-4 py-3 border-0 sticky-top premium-navbar">
 
-<div class="container-fluid px-0">
+<div class="container-fluid px-0 align-items-center">
 
       <button class="btn btn-light d-lg-none me-3" id="menuToggle">
          <i class="fas fa-bars"></i>
       </button>
 
     <div>
-        <small class="text-uppercase text-primary fw-semibold">
-            Dashboard
-        </small>
 
-        <h3 class="fw-bold mb-1">
-            Welcome, {{ request.user.username }}
+    <small class="text-uppercase text-primary fw-semibold">
+        Dashboard
+    </small>
+
+    <div class="d-flex align-items-center gap-2">
+
+        <h3 class="fw-bold mb-0">
+            Welcome,
+            {{ request.user.username }}
         </h3>
 
-        <span class="text-muted">
-            Car Showroom Management System
+        <span class="badge bg-success">
+            Online
         </span>
+
     </div>
 
-<div class="d-flex align-items-center gap-4">
+    <span class="text-muted">
+        Car Showroom Management System
+    </span>
 
-<button class="btn btn-light border rounded-circle"
-        style="width:45px;height:45px;">
-    <i class="fas fa-bell"></i>
+</div>
+
+<div class="d-flex align-items-center gap-3">
+
+<div class="dropdown">
+
+<button class="btn btn-light border rounded-circle position-relative"
+        style="width:45px;height:45px;"
+        data-bs-toggle="dropdown">
+
+<i class="fas fa-bell"></i>
+
+<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+3
+</span>
+
 </button>
 
-<div class="d-flex align-items-center">
+<ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4">
+
+<li>
+<h6 class="dropdown-header">
+Notifications
+</h6>
+</li>
+
+<li>
+<a class="dropdown-item" href="#">
+New Booking Received
+</a>
+</li>
+
+<li>
+<a class="dropdown-item" href="#">
+New Customer Added
+</a>
+</li>
+
+<li>
+<a class="dropdown-item" href="#">
+Payment Successful
+</a>
+</li>
+
+</ul>
+
+</div>
+
+<div class="dropdown">
+
+<a href="#"
+   class="d-flex align-items-center text-decoration-none"
+   data-bs-toggle="dropdown">
 
 <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
      style="width:50px;height:50px;">
     <i class="fas fa-user"></i>
 </div>
 
-<div>
-    <h6 class="mb-0 fw-bold">
-        {{ request.user.username }}
-    </h6>
-    <small class="text-muted">
-        Administrator
-    </small>
-</div>
+<div class="text-start">
+
+<h6 class="mb-0 fw-bold">
+{{ request.user.username }}
+</h6>
+
+<small class="text-muted">
+Administrator
+</small>
 
 </div>
 
-<a href="{% url 'logout' %}" class="btn btn-danger px-4">
-    <i class="fas fa-right-from-bracket me-2"></i>
-    Logout
+<i class="fas fa-chevron-down ms-3 text-muted"></i>
+
 </a>
+
+<ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 mt-3">
+
+<li>
+<a class="dropdown-item" href="#">
+<i class="fas fa-user me-2"></i>
+My Profile
+</a>
+</li>
+
+<li>
+<a class="dropdown-item" href="#">
+<i class="fas fa-gear me-2"></i>
+Settings
+</a>
+</li>
+
+<li><hr class="dropdown-divider"></li>
+
+<li>
+<a class="dropdown-item text-danger"
+   href="{% url 'logout' %}">
+<i class="fas fa-right-from-bracket me-2"></i>
+Logout
+</a>
+</li>
+
+</ul>
+
+</div>
 
 </div>
 
@@ -271,7 +363,7 @@ MESSAGES
 PAGE CONTENT
 =========================== -->
 
-<main class="dashboard-content container-fluid px-0 py-3 animate__animated animate__fadeIn">
+<main class="dashboard-content container-fluid px-3 py-4 animate__animated animate__fadeIn">
 
 {% block content %}
 
@@ -287,9 +379,9 @@ PAGE CONTENT
 FOOTER
 =========================== -->
 
-<footer class="bg-white mt-4 py-3 border-0">
+<footer class="footer mt-4">
 
-    <div class="container-fluid">
+    <div class="container-fluid py-3">
 
         <div class="d-flex justify-content-between align-items-center flex-wrap">
 
@@ -363,6 +455,60 @@ document.querySelector(".sidebar").classList.toggle("show");
 });
 
 }
+</script>
+
+<script>
+
+window.addEventListener("scroll",function(){
+
+const navbar=document.querySelector(".navbar");
+
+if(window.scrollY>20){
+
+navbar.style.boxShadow="0 15px 40px rgba(37,99,235,.12)";
+
+}else{
+
+navbar.style.boxShadow="0 10px 25px rgba(0,0,0,.08)";
+
+}
+
+});
+
+</script>
+
+<script>
+
+document.addEventListener("click",function(e){
+
+const sidebar=document.querySelector(".sidebar");
+
+const toggle=document.getElementById("menuToggle");
+
+if(window.innerWidth<992){
+
+if(
+sidebar.classList.contains("show") &&
+!sidebar.contains(e.target) &&
+!toggle.contains(e.target)
+){
+sidebar.classList.remove("show");
+}
+
+}
+
+});
+
+</script>
+
+<script>
+
+window.addEventListener("load",()=>{
+
+document.body.classList.add("loaded");
+
+});
+
 </script>
 
 </body>
