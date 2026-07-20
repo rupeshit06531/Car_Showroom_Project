@@ -4,11 +4,11 @@
 
 {% block content %}
 
-<div class="page-header mb-4">
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
 
     <div>
 
-        <h2 class="fw-bold">
+        <h2 class="page-title">
 
             <i class="fas fa-user-tie text-info me-2"></i>
 
@@ -16,100 +16,180 @@
 
         </h2>
 
-        <p class="text-muted">
+        <p class="page-subtitle">
 
-            Manage all employees
+            Manage employee records with a premium dashboard experience.
 
         </p>
 
     </div>
 
-    <a href="{% url 'add_employee' %}" class="btn btn-info text-white">
+    <a href="{% url 'add_employee' %}"
+     class="btn btn-dark rounded-pill px-4 py-2 shadow-sm d-inline-flex align-items-center">
 
-        <i class="fas fa-user-plus me-2"></i>
+        <i class="fas fa-plus-circle me-2"></i>
 
-        Add Employee
+        Add New Employee
 
     </a>
 
+    </div>
+
+
+
+<div class="content-card border-0 rounded-4 shadow-lg overflow-hidden animate__animated animate__fadeInUp">
+
+    <div class="card-body p-4 p-lg-5">
+
+        <div class="row mb-4 align-items-center g-3">
+
+    <div class="col-lg-6 col-md-8">
+
+        <div class="col-lg-6 col-md-8">
+
+    <div class="input-group shadow-sm rounded-4 overflow-hidden">
+
+        <span class="input-group-text bg-white">
+            <i class="fas fa-search"></i>
+        </span>
+
+        <input
+            type="text"
+            id="employeeSearch"
+            class="form-control border-0 shadow-none"
+            placeholder="Search by Name, Mobile, Email..."
+            autocomplete="off">
+
+    </div>
+
 </div>
 
-<div class="card border-0 shadow-hover rounded-4">
+<div class="col-lg-6 col-md-4 text-md-end">
 
-    <div class="card-body">
+    <span class="badge bg-dark rounded-pill px-4 py-3 fs-6 shadow-sm">
+    <i class="fas fa-users me-2"></i>
+    Total Employees : {{ employees.paginator.count }}
+</span>
 
-        <div class="table-responsive">
+</div>
 
-            <table id="employeeTable" class="table table-hover align-middle">
+</div>
 
-                <thead>
+</div>
+
+        <div class="table-responsive rounded-4 shadow-sm border bg-white">
+
+            <table id="employeeTable" class="table table-hover align-middle table-borderless mb-0 caption-top">
+
+                <caption class="px-4 pt-3 pb-2 text-secondary fw-semibold">
+                    Premium Employee Directory
+                </caption>
+
+                <colgroup>
+                    <col style="width:90px">
+                    <col style="width:22%">
+                    <col style="width:16%">
+                    <col style="width:24%">
+                    <col style="width:15%">
+                    <col style="width:12%">
+                    <col style="width:180px">
+                </colgroup>
+
+                <thead class="table-dark text-uppercase sticky-top">
 
                     <tr>
 
-                        <th>Photo</th>
+                        <th class="text-center">Photo</th>
                         <th>Name</th>
                         <th>Mobile</th>
                         <th>Email</th>
                         <th>Designation</th>
                         <th>Salary</th>
-                        <th width="180">Action</th>
+                        <th class="text-center" width="180">Action</th>
 
                     </tr>
 
                 </thead>
 
-                <tbody>
+                <tbody class="align-middle">
 
                     {% for employee in employees %}
 
-                    <tr>
+                    <tr class="border-bottom employee-row">
 
-                        <td>
+                        <td class="text-center">
 
-                            {% if employee.photo %}
+                           {% if employee.photo %}
 
                             <img src="{{ employee.photo.url }}"
-                                 width="55"
-                                 height="55"
-                                 class="rounded-circle"
-                                 style="object-fit:cover;">
+                            class="employee-photo rounded-circle shadow"
+                            style="width:60px;height:60px;object-fit:cover;">
 
                             {% else %}
 
-                            <img src="https://via.placeholder.com/55"
-                                 class="rounded-circle">
+                            <img src="https://via.placeholder.com/60"
+                            class="employee-photo rounded-circle shadow"
+                            style="width:60px;height:60px;object-fit:cover;">
 
                             {% endif %}
 
                         </td>
 
-                        <td>{{ employee.name }}</td>
+                        <td>
+                            <div class="fw-bold text-dark">
+                                {{ employee.name }}
+                            </div>
 
-                        <td>{{ employee.mobile }}</td>
-
-                        <td>{{ employee.email }}</td>
-
-                        <td>{{ employee.designation }}</td>
-
-                        <td class="fw-bold text-success">
-
-                            ₹{{ employee.salary }}
-
+                            <small class="text-muted">
+                                ID #{{ employee.id }}
+                            </small>
                         </td>
 
                         <td>
-
-                            <a href="{% url 'edit_employee' employee.id %}" class="btn btn-warning btn-sm">
-
-                                <i class="fas fa-edit"></i>
-
+                            <a href="tel:{{ employee.mobile }}"
+                            class="text-decoration-none text-dark fw-semibold">
+                                <i class="fas fa-phone-alt text-success me-2"></i>
+                                {{ employee.mobile }}
                             </a>
+                        </td>
 
-                            <a href="{% url 'delete_employee' employee.id %}" class="btn btn-danger btn-sm">
+                        <td>
+                        <a href="mailto:{{ employee.email }}"
+                        class="text-decoration-none text-dark">
+                            <i class="fas fa-envelope text-primary me-2"></i>
+                            {{ employee.email }}
+                        </a>
+                    </td>
 
-                                <i class="fas fa-trash"></i>
+                        <td>
+                            <span class="badge bg-dark rounded-pill px-3 py-2">
+                                {{ employee.designation }}
+                            </span>
+                        </td>
 
-                            </a>
+                        <td>
+                            <span class="fw-bold fs-6 text-success">
+                                ₹{{ employee.salary }}
+                            </span>
+                        </td>
+
+                        <td class="text-center">
+
+                                <div class="d-inline-flex gap-2">
+
+                                <a href="{% url 'edit_employee' employee.id %}"
+                                    class="btn btn-outline-dark btn-sm rounded-pill px-3">
+                                        <i class="fas fa-pen me-1"></i>
+                                        Edit
+                                    </a>
+
+                                <a href="{% url 'delete_employee' employee.id %}"
+                                    class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                        <i class="fas fa-trash me-1"></i>
+                                        Delete
+                                    </a>
+
+                            </div>
 
                         </td>
 
@@ -121,13 +201,52 @@
 
                         <td colspan="7" class="text-center py-5">
 
-                            No Employee Found
+                            <i class="fas fa-users-slash fa-3x text-secondary mb-3 d-block"></i>
+
+                            <h5 class="fw-bold mb-2">
+                                No Employees Found
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                There are no employee records available.
+                            </p>
 
                         </td>
 
                     </tr>
 
                     {% endfor %}
+
+                    {% if employees.has_other_pages %}
+                    <nav class="mt-4 d-flex justify-content-center">
+                        <ul class="pagination pagination-lg">
+
+                            {% if employees.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ employees.previous_page_number }}">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            </li>
+                            {% endif %}
+
+                            {% for i in employees.paginator.page_range %}
+                                <li class="page-item {% if employees.number == i %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+
+                            {% if employees.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ employees.next_page_number }}">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                            {% endif %}
+
+                        </ul>
+                    </nav>
+                    {% endif %}
+
 
                 </tbody>
 
@@ -141,15 +260,284 @@
 
 {% endblock %}
 
+{% block extra_css %}
+<style>
+
+.page-title{
+    font-size:2rem;
+    font-weight:700;
+    color:#111827;
+    margin-bottom:.35rem;
+}
+
+.page-subtitle{
+    color:#6b7280;
+    font-size:.95rem;
+}
+
+.content-card{
+    background:#ffffff;
+    border-radius:24px;
+    border:1px solid rgba(0,0,0,.06);
+    box-shadow:0 20px 50px rgba(0,0,0,.08);
+}
+
+@media (max-width:991px){
+
+    .page-title{
+        font-size:1.6rem;
+    }
+
+    .page-subtitle{
+        font-size:.9rem;
+    }
+
+    .btn-dark{
+        width:100%;
+    }
+
+}
+
+@media (max-width:768px){
+
+    .content-card{
+        border-radius:18px;
+    }
+
+    #employeeTable{
+        min-width:900px;
+    }
+
+}
+
+
+.content-card{
+    background:#fff;
+    border-radius:24px;
+}
+
+#employeeTable thead th{
+    letter-spacing:.08em;
+    font-size:.82rem;
+    padding:18px;
+}
+
+#employeeTable tbody td{
+    padding:18px;
+    vertical-align:middle;
+}
+
+#employeeTable tbody td{
+    border-color:#eef2f7;
+}
+
+#employeeTable thead th{
+    border-bottom:none;
+}
+
+caption{
+    caption-side:top;
+    font-size:.95rem;
+    letter-spacing:.04em;
+}
+
+.pagination{
+    gap:8px;
+}
+
+.pagination .page-link{
+    border:none;
+    border-radius:12px;
+    min-width:44px;
+    height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#111827;
+    font-weight:600;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+    transition:.3s;
+}
+
+.pagination .page-link:hover{
+    background:#111827;
+    color:#fff;
+    transform:translateY(-2px);
+}
+
+.pagination .page-item.active .page-link{
+    background:#111827;
+    color:#fff;
+}
+
+.content-card{
+    transition:.35s ease;
+}
+
+.content-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 30px 70px rgba(0,0,0,.12)!important;
+}
+
+.employee-row{
+    cursor:pointer;
+}
+
+.employee-row td{
+    transition:background .25s ease,color .25s ease;
+}
+
+.employee-row:hover td{
+    background:#f8fafc;
+}
+
+#employeeTable tbody tr{
+    transition:.25s;
+}
+
+#employeeTable tbody tr{
+    animation:fadeUp .45s ease;
+}
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(12px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+#employeeTable tbody tr:hover{
+    transform:translateY(-3px);
+    background:#f8fafc;
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+}
+
+.input-group-text{
+    border-radius:14px 0 0 14px;
+}
+
+#employeeSearch{
+    border-radius:0 14px 14px 0;
+}
+
+.btn-outline-dark,
+.btn-outline-danger{
+    min-width:90px;
+}
+
+.btn-dark{
+    background:#111827;
+    border-color:#111827;
+    transition:.3s;
+}
+
+.btn-dark:hover{
+    background:#000;
+    border-color:#000;
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(0,0,0,.18);
+}
+
+.employee-photo{
+    transition:.35s ease;
+}
+
+.employee-row:hover .employee-photo{
+    transform:scale(1.08) rotate(-2deg);
+    box-shadow:0 18px 40px rgba(0,0,0,.18);
+}
+
+#employeeTable a{
+    transition:.25s ease;
+}
+
+#employeeTable a:hover{
+    opacity:.8;
+}
+
+#employeeTable td:nth-child(2){
+    white-space:normal;
+}
+
+#employeeTable{
+    margin-bottom:0!important;
+}
+
+</style>
 {% block extra_js %}
 
 <script>
 
-$(function(){
+document.addEventListener("DOMContentLoaded", function () {
 
-    $("#employeeTable").DataTable({
+    document.querySelectorAll(".employee-row").forEach(function(row){
+
+        row.addEventListener("mouseenter", function(){
+            this.style.cursor = "pointer";
+        });
+
+    });
+
+});
+
+$(document).ready(function(){
+
+    var table = $("#employeeTable").DataTable({
+
         responsive:true,
-        pageLength:10
+        pageLength:10,
+        ordering:true,
+        autoWidth:false,
+        language:{
+            search:"",
+            searchPlaceholder:"Search Employee..."
+        }
+
+    });
+
+    $("#employeeSearch").on("keyup",function(){
+
+        table.search(this.value).draw();
+
+    });
+
+});
+
+.table-dark{
+    background:#111827 !important;
+}
+
+.table-dark th{
+    position:sticky;
+    top:0;
+    z-index:2;
+    background:#111827!important;
+    vertical-align:middle;
+}
+
+</style>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.querySelectorAll(".btn-outline-dark, .btn-outline-danger").forEach(function(btn){
+
+        btn.addEventListener("mouseenter", function(){
+            this.style.transform = "translateY(-2px)";
+        });
+
+        btn.addEventListener("mouseleave", function(){
+            this.style.transform = "translateY(0)";
+        });
+
     });
 
 });

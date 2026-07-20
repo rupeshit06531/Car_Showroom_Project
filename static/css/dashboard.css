@@ -1214,7 +1214,7 @@ footer small{
 
 .chart-box{
     position:relative;
-    height:350px;
+    height:420px;
     width:100%;
 }
 
@@ -1337,7 +1337,7 @@ body{
 }
 
 .chart-box{
-    height:300px;
+    height:420px;
 }
 
 }
@@ -2728,4 +2728,1246 @@ h2.fw-bold{font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.3px
 @keyframes fadeUpPage{
   from{opacity:0;transform:translateY(10px);}
   to{opacity:1;transform:translateY(0);}
+}
+
+/* =====================================
+BUSINESS ANALYTICS
+===================================== */
+
+.analytics-card{
+
+background:#fff;
+
+border-radius:22px;
+
+padding:28px;
+
+display:flex;
+
+align-items:center;
+
+gap:20px;
+
+position:relative;
+
+overflow:hidden;
+
+box-shadow:0 18px 40px rgba(0,0,0,.08);
+
+transition:.35s;
+
+}
+
+.analytics-card:hover{
+
+transform:translateY(-10px);
+
+}
+
+.analytics-card::before{
+
+content:"";
+
+position:absolute;
+
+right:-45px;
+
+top:-45px;
+
+width:150px;
+
+height:150px;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.08);
+
+}
+
+.analytics-icon{
+
+width:72px;
+
+height:72px;
+
+border-radius:18px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:30px;
+
+color:#fff;
+
+flex-shrink:0;
+
+}
+
+.analytics-content{
+
+flex:1;
+
+}
+
+.analytics-content small{
+
+display:block;
+
+font-size:13px;
+
+font-weight:600;
+
+text-transform:uppercase;
+
+letter-spacing:1px;
+
+color:#64748b;
+
+}
+
+.analytics-content h2{
+
+margin:8px 0;
+
+font-size:30px;
+
+font-weight:700;
+
+color:#0f172a;
+
+}
+
+.revenue-card{
+
+background:linear-gradient(135deg,#ffffff,#eef6ff);
+
+}
+
+.purchase-card{
+
+background:linear-gradient(135deg,#ffffff,#eefdf4);
+
+}
+
+.profit-card{
+
+background:linear-gradient(135deg,#ffffff,#fff8eb);
+
+}
+
+.inventory-card{
+
+background:linear-gradient(135deg,#ffffff,#fff0f0);
+
+}
+
+.revenue-card .analytics-icon{
+
+background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+}
+
+.purchase-card .analytics-icon{
+
+background:linear-gradient(135deg,#22c55e,#16a34a);
+
+}
+
+.profit-card .analytics-icon{
+
+background:linear-gradient(135deg,#f59e0b,#ea580c);
+
+}
+
+.inventory-card .analytics-icon{
+
+background:linear-gradient(135deg,#ef4444,#dc2626);
+
+}
+
+
+/* =====================================
+LIVE PERFORMANCE
+===================================== */
+
+.performance-banner{
+
+background:linear-gradient(135deg,#0f172a,#2563eb);
+
+border-radius:24px;
+
+padding:35px;
+
+overflow:hidden;
+
+position:relative;
+
+color:#fff;
+
+box-shadow:0 25px 50px rgba(37,99,235,.25);
+
+}
+
+.performance-banner::before{
+
+content:"";
+
+position:absolute;
+
+top:-120px;
+
+right:-100px;
+
+width:260px;
+
+height:260px;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.08);
+
+}
+
+.performance-banner::after{
+
+content:"";
+
+position:absolute;
+
+bottom:-120px;
+
+left:-80px;
+
+width:220px;
+
+height:220px;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.05);
+
+}
+
+.performance-badge{
+
+display:inline-block;
+
+padding:8px 18px;
+
+border-radius:30px;
+
+background:rgba(255,255,255,.15);
+
+font-size:12px;
+
+letter-spacing:1px;
+
+margin-bottom:18px;
+
+}
+
+.performance-banner h2{
+
+font-size:48px;
+
+font-weight:700;
+
+margin-bottom:8px;
+
+}
+
+.performance-progress{
+
+height:12px;
+
+background:rgba(255,255,255,.18);
+
+border-radius:30px;
+
+margin-top:20px;
+
+overflow:hidden;
+
+}
+
+.performance-fill{
+
+width:88%;
+
+height:100%;
+
+background:linear-gradient(90deg,#22c55e,#facc15);
+
+border-radius:30px;
+
+animation:progressMove 2s ease;
+
+}
+
+@keyframes progressMove{
+
+from{
+
+width:0;
+
+}
+
+to{
+
+width:88%;
+
+}
+
+}
+
+.performance-icon{
+
+font-size:140px;
+
+opacity:.15;
+
+}
+
+.performance-side-card{
+
+height:100%;
+
+border-radius:24px;
+
+background:#fff;
+
+padding:35px;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+box-shadow:0 20px 45px rgba(0,0,0,.08);
+
+}
+
+.performance-side-card h1{
+
+font-size:54px;
+
+font-weight:700;
+
+margin:10px 0;
+
+color:#2563eb;
+
+}
+
+.performance-side-card small{
+
+color:#64748b;
+
+}
+
+
+/* =====================================
+GLASS CHART CARD
+===================================== */
+
+.glass-chart-card{
+
+background:rgba(255,255,255,.72);
+
+backdrop-filter:blur(18px);
+
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.55);
+
+border-radius:28px;
+
+overflow:hidden;
+
+box-shadow:0 25px 60px rgba(37,99,235,.12);
+
+transition:.4s;
+
+position:relative;
+
+}
+
+.glass-chart-card::before{
+
+content:"";
+
+position:absolute;
+
+top:-80px;
+
+right:-80px;
+
+width:180px;
+
+height:180px;
+
+border-radius:50%;
+
+background:rgba(37,99,235,.08);
+
+}
+
+.glass-chart-card::after{
+
+content:"";
+
+position:absolute;
+
+bottom:-70px;
+
+left:-70px;
+
+width:150px;
+
+height:150px;
+
+border-radius:50%;
+
+background:rgba(34,197,94,.08);
+
+}
+
+.glass-chart-card:hover{
+
+transform:translateY(-10px);
+
+box-shadow:0 35px 80px rgba(37,99,235,.18);
+
+}
+
+.glass-chart-card .card-header{
+
+background:transparent!important;
+
+border-bottom:1px solid rgba(226,232,240,.8)!important;
+
+padding:24px 28px;
+
+}
+
+.glass-chart-card .card-body{
+
+padding:28px;
+
+}
+
+.glass-chart-card canvas{
+
+position:relative;
+
+z-index:2;
+
+}
+
+
+/* =====================================
+PREMIUM LIST CARD
+===================================== */
+
+.premium-list-card{
+
+background:#fff;
+
+border-radius:24px;
+
+overflow:hidden;
+
+box-shadow:0 18px 45px rgba(0,0,0,.08);
+
+transition:.35s;
+
+height:100%;
+
+}
+
+.premium-list-card:hover{
+
+transform:translateY(-10px);
+
+box-shadow:0 30px 60px rgba(37,99,235,.15);
+
+}
+
+.premium-list-header{
+
+padding:22px 25px;
+
+border-bottom:1px solid #eef2f7;
+
+background:linear-gradient(to right,#ffffff,#f8fbff);
+
+}
+
+.premium-list-header h5{
+
+margin:0;
+
+font-weight:700;
+
+}
+
+.premium-list-body{
+
+padding:22px;
+
+}
+
+.premium-item{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+padding:14px 0;
+
+border-bottom:1px solid #eef2f7;
+
+transition:.3s;
+
+}
+
+.premium-item:last-child{
+
+border-bottom:none;
+
+}
+
+.premium-item:hover{
+
+transform:translateX(8px);
+
+}
+
+.premium-avatar{
+
+width:55px;
+
+height:55px;
+
+border-radius:16px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+color:#fff;
+
+font-size:20px;
+
+flex-shrink:0;
+
+}
+
+.premium-item strong{
+
+display:block;
+
+color:#0f172a;
+
+}
+
+.premium-item small{
+
+display:block;
+
+color:#64748b;
+
+}
+
+/* =====================================
+FLOATING BUTTON
+===================================== */
+
+.floating-dashboard-btn{
+
+position:fixed;
+
+right:30px;
+
+bottom:30px;
+
+width:65px;
+
+height:65px;
+
+border-radius:50%;
+
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+color:#fff;
+
+font-size:24px;
+
+text-decoration:none;
+
+box-shadow:0 18px 45px rgba(37,99,235,.35);
+
+z-index:9999;
+
+transition:.35s;
+
+animation:floatingBtn 2.5s infinite;
+
+opacity:0;
+
+visibility:hidden;
+
+}
+
+.floating-dashboard-btn:hover{
+
+transform:translateY(-8px) scale(1.08);
+
+color:#fff;
+
+}
+
+@keyframes floatingBtn{
+
+0%{transform:translateY(0);}
+
+50%{transform:translateY(-10px);}
+
+100%{transform:translateY(0);}
+
+}
+
+/* =====================================
+CARD HOVER EFFECT
+===================================== */
+
+.dashboard-card,
+.analytics-card,
+.performance-banner,
+.performance-side-card,
+.glass-chart-card,
+.premium-list-card,
+.overview-card,
+.status-card,
+.welcome-card,
+.today-card,
+.stats-box{
+
+cursor:pointer;
+
+transition:all .35s ease;
+
+}
+
+.dashboard-card:hover,
+.analytics-card:hover,
+.performance-banner:hover,
+.performance-side-card:hover,
+.glass-chart-card:hover,
+.premium-list-card:hover,
+.overview-card:hover,
+.status-card:hover,
+.welcome-card:hover,
+.today-card:hover,
+.stats-box:hover{
+
+transform:translateY(-10px);
+
+box-shadow:0 30px 70px rgba(37,99,235,.18);
+
+}
+
+
+/* =====================================
+PREMIUM SCROLLBAR
+===================================== */
+
+::-webkit-scrollbar{
+
+width:10px;
+
+height:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+background:#edf2f7;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+background:linear-gradient(180deg,#2563eb,#1d4ed8);
+
+border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+background:linear-gradient(180deg,#1d4ed8,#1e40af);
+
+}
+
+/* =====================================
+TABLE PREMIUM EFFECT
+===================================== */
+
+table{
+
+border-collapse:separate;
+
+border-spacing:0 10px;
+
+}
+
+table tbody tr{
+
+background:#fff;
+
+transition:.35s;
+
+box-shadow:0 10px 25px rgba(0,0,0,.05);
+
+}
+
+table tbody tr:hover{
+
+transform:scale(1.01);
+
+box-shadow:0 20px 40px rgba(37,99,235,.12);
+
+}
+
+table td,
+table th{
+
+vertical-align:middle;
+
+border:none!important;
+
+padding:18px!important;
+
+}
+
+
+/* =====================================
+BUTTON EFFECT
+===================================== */
+
+.btn{
+
+border-radius:12px;
+
+transition:.35s;
+
+font-weight:600;
+
+}
+
+.btn:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 12px 30px rgba(37,99,235,.20);
+
+}
+
+/* =====================================
+PREMIUM PAGE
+===================================== */
+
+.premium-page{
+
+padding-left:30px;
+
+padding-right:30px;
+
+min-height:100vh;
+
+}
+
+/* =====================================
+COMMON PAGE HEADER
+===================================== */
+
+.page-title{
+
+font-size:34px;
+
+font-weight:700;
+
+color:#0f172a;
+
+margin-bottom:8px;
+
+}
+
+.page-subtitle{
+
+color:#64748b;
+
+font-size:15px;
+
+margin-bottom:25px;
+
+}
+
+/* =====================================
+COMMON CARD
+===================================== */
+
+.content-card{
+
+background:#fff;
+
+border-radius:24px;
+
+padding:28px;
+
+box-shadow:0 18px 45px rgba(0,0,0,.08);
+
+margin-bottom:25px;
+
+transition:.35s;
+
+}
+
+.content-card:hover{
+
+transform:translateY(-8px);
+
+box-shadow:0 28px 60px rgba(37,99,235,.14);
+
+}
+
+/* =====================================
+CAR TABLE
+===================================== */
+
+.content-card table{
+
+margin-bottom:0;
+
+}
+
+.content-card thead th{
+
+padding:18px!important;
+
+font-size:14px;
+
+letter-spacing:.5px;
+
+text-transform:uppercase;
+
+}
+
+.content-card tbody tr{
+
+transition:.35s;
+
+}
+
+.content-card tbody tr:hover{
+
+background:#f8fbff;
+
+transform:scale(1.01);
+
+}
+
+/* =====================================
+SEARCH BOX
+===================================== */
+
+#carSearch{
+
+height:48px;
+
+border-radius:0 12px 12px 0;
+
+border-left:none;
+
+}
+
+.input-group-text{
+
+border-radius:12px 0 0 12px;
+
+border-right:none;
+
+}
+
+#carSearch:focus{
+
+box-shadow:none;
+
+border-color:#dee2e6;
+
+}
+
+
+/* =====================================
+PREMIUM ACTION BUTTONS
+===================================== */
+
+.action-btn{
+
+width:42px;
+
+height:42px;
+
+display:inline-flex;
+
+align-items:center;
+
+justify-content:center;
+
+border-radius:12px;
+
+color:#fff;
+
+margin-right:6px;
+
+transition:.35s;
+
+border:none;
+
+}
+
+.btn-view{
+
+background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+}
+
+.btn-edit{
+
+background:linear-gradient(135deg,#f59e0b,#fb923c);
+
+}
+
+.btn-delete{
+
+background:linear-gradient(135deg,#ef4444,#dc2626);
+
+}
+
+.action-btn:hover{
+
+transform:translateY(-4px) scale(1.08);
+
+color:#fff;
+
+box-shadow:0 12px 28px rgba(0,0,0,.18);
+
+}
+
+/* =====================================
+BADGES
+===================================== */
+
+.badge{
+
+padding:8px 14px;
+
+border-radius:30px;
+
+font-size:12px;
+
+font-weight:600;
+
+letter-spacing:.4px;
+
+}
+
+
+/* =====================================
+CAR IMAGE
+===================================== */
+
+.car-image{
+
+width:90px;
+
+height:60px;
+
+object-fit:cover;
+
+border-radius:12px;
+
+transition:.35s;
+
+box-shadow:0 8px 18px rgba(0,0,0,.12);
+
+}
+
+.car-image:hover{
+
+transform:scale(1.12);
+
+}
+
+/* =====================================
+ADD CAR FORM
+===================================== */
+
+.premium-form{
+
+border:none;
+
+border-radius:24px;
+
+overflow:hidden;
+
+}
+
+.premium-form .form-control,
+.premium-form .form-select{
+
+height:50px;
+
+border-radius:12px;
+
+box-shadow:none;
+
+}
+
+.premium-form textarea{
+
+border-radius:12px;
+
+box-shadow:none;
+
+}
+
+.premium-form label{
+
+font-weight:600;
+
+margin-bottom:8px;
+
+color:#334155;
+
+}
+
+.premium-form .btn{
+
+padding:12px 28px;
+
+border-radius:12px;
+
+}
+
+/* =====================================
+FORM ANIMATION
+===================================== */
+
+.premium-form{
+
+animation:formFade .6s ease;
+
+}
+
+@keyframes formFade{
+
+from{
+
+opacity:0;
+
+transform:translateY(25px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+.premium-form .form-control:focus,
+.premium-form .form-select:focus{
+
+border-color:#2563eb;
+
+box-shadow:0 0 0 4px rgba(37,99,235,.12);
+
+}
+
+.premium-form button{
+
+min-width:170px;
+
+}
+
+/* =====================================
+EDIT FORM BUTTONS
+===================================== */
+
+.premium-form .btn-lg{
+
+min-width:170px;
+
+border-radius:14px;
+
+}
+
+.premium-form .btn-outline-secondary{
+
+border-width:2px;
+
+}
+
+.premium-form .btn+.btn{
+
+margin-left:10px;
+
+}
+
+
+/* =====================================
+DELETE PAGE
+===================================== */
+
+.delete-warning-icon{
+
+width:110px;
+
+height:110px;
+
+margin:0 auto 25px;
+
+border-radius:50%;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+background:linear-gradient(135deg,#fee2e2,#fecaca);
+
+color:#dc2626;
+
+font-size:52px;
+
+box-shadow:0 15px 35px rgba(220,38,38,.15);
+
+}
+
+/* =====================================
+DELETE BUTTONS
+===================================== */
+
+.content-card .btn-lg{
+
+min-width:170px;
+
+border-radius:14px;
+
+}
+
+.content-card .btn-outline-secondary{
+
+border-width:2px;
+
+}
+
+.content-card .btn+.btn{
+
+margin-left:10px;
+
+}
+
+.table-borderless th{
+
+width:160px;
+
+font-weight:700;
+
+color:#334155;
+
+}
+
+.table-borderless td{
+
+font-weight:600;
+
+}
+
+/* =====================================
+CUSTOMER TABLE
+===================================== */
+
+#customerTable tbody tr{
+
+transition:.35s;
+
+}
+
+#customerTable tbody tr:hover{
+
+transform:translateY(-4px);
+
+box-shadow:0 15px 35px rgba(37,99,235,.12);
+
+}
+
+#customerTable .badge{
+
+font-size:12px;
+
+padding:8px 14px;
+
+border-radius:20px;
+
+}
+
+
+/* =====================================
+EMPLOYEE PHOTO
+===================================== */
+
+.employee-photo{
+
+width:58px;
+
+height:58px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+border:3px solid #fff;
+
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+transition:.35s;
+
+}
+
+.employee-photo:hover{
+
+transform:scale(1.12);
+
 }

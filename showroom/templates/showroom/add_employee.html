@@ -2,30 +2,151 @@
 
 {% block content %}
 
-<div class="container mt-4">
+<style>
+.form-control,
+.form-select,
+textarea{
+    min-height:52px;
+    border-radius:16px;
+    border:1px solid #e5e7eb;
+    box-shadow:none!important;
+    transition:.3s;
+}
 
-    <h2 class="mb-4">Add Employee</h2>
+.form-control:focus,
+.form-select:focus,
+textarea:focus{
+    border-color:#111827;
+    box-shadow:0 0 0 .2rem rgba(17,24,39,.08)!important;
+}
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+.form-label{
+    font-weight:600;
+    color:#111827;
+}
 
-            <form method="POST" enctype="multipart/form-data">
+.card{
+    transition:.35s;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 25px 60px rgba(0,0,0,.12)!important;
+}
+
+.btn{
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+</style>
+
+<div class="container-fluid px-4 py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Add Employee</h2>
+        <p class="text-muted mb-0">
+            Create a new employee profile.
+        </p>
+    </div>
+
+    <a href="{% url 'employee_list' %}" class="btn btn-dark rounded-pill px-4">
+        <i class="fas fa-arrow-left me-2"></i>
+        Back
+    </a>
+</div>
+
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white">
+
+        <div class="card-body p-5">
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="bg-dark text-white rounded-4 p-4 mb-4 shadow-lg">
+                <h4 class="mb-2 fw-bold">Employee Information</h4>
+                <p class="mb-0 opacity-75">
+                    Fill all required employee details below.
+                </p>
+            </div>
+        </div>
+    </div>
+
+            <form method="POST"
+                enctype="multipart/form-data"
+                class="needs-validation"
+                novalidate>
                 {% csrf_token %}
 
-                {{ form.as_p }}
+                            {% if employee.photo %}
+            <div class="text-center mb-5">
 
-                <button type="submit" class="btn btn-primary">
+                <img src="{{ employee.photo.url }}"
+                    alt="{{ employee.name }}"
+                    class="rounded-4 shadow"
+                    style="width:170px;height:170px;object-fit:cover;">
+
+            </div>
+                {% endif %}
+
+                <div class="row g-4 align-items-start">
+
+                    {% for field in form %}
+
+                    <div class="col-lg-6 col-md-6">
+
+                        <label class="form-label fw-semibold text-dark">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                        <small class="text-muted">
+                            {{ field.help_text }}
+                        </small>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                        <div class="alert alert-danger py-2 px-3 mt-2 mb-0 rounded-3">
+                            {{ error }}
+                        </div>
+                        {% endfor %}
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <div class="d-flex justify-content-end gap-3 mt-5">
+
+                <a href="{% url 'employee_list' %}"
+                class="btn btn-light border rounded-pill px-4 py-2">
+                    <i class="fas fa-times me-2"></i>
+                    Cancel
+                </a>
+
+                <button type="submit"
+        class="btn btn-dark rounded-pill px-5 py-3 shadow">
+                    <i class="fas fa-save me-2"></i>
                     Save Employee
                 </button>
 
-                <a href="{% url 'employee_list' %}" class="btn btn-secondary">
-                    Cancel
-                </a>
+                </div>
             </form>
 
         </div>
     </div>
 
 </div>
+
+<script>
+document.querySelectorAll(".form-control, .form-select").forEach(function(el){
+    el.classList.add("shadow-sm");
+});
+</script>
 
 {% endblock %}

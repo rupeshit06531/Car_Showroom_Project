@@ -51,7 +51,7 @@
 
 </head>
 
-<body>
+<body class="premium-main-content">
 
 <div id="loader">
     <div class="loader-car">
@@ -363,8 +363,7 @@ MESSAGES
 PAGE CONTENT
 =========================== -->
 
-<main class="dashboard-content container-fluid px-3 py-4 animate__animated animate__fadeIn">
-
+<main class="container-fluid py-4 premium-page">
 {% block content %}
 
 {% endblock %}
@@ -506,6 +505,50 @@ sidebar.classList.remove("show");
 window.addEventListener("load",()=>{
 
 document.body.classList.add("loaded");
+
+});
+
+</script>
+
+<a href="#" class="floating-dashboard-btn">
+
+    <i class="fas fa-arrow-up"></i>
+
+</a>
+
+<script>
+
+window.addEventListener("scroll",function(){
+
+const btn=document.querySelector(".floating-dashboard-btn");
+
+if(window.scrollY>250){
+
+btn.style.opacity="1";
+
+btn.style.visibility="visible";
+
+}else{
+
+btn.style.opacity="0";
+
+btn.style.visibility="hidden";
+
+}
+
+});
+
+document.querySelector(".floating-dashboard-btn").addEventListener("click",function(e){
+
+e.preventDefault();
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
 
 });
 

@@ -1,143 +1,126 @@
 {% extends "showroom/base.html" %}
 {% load static %}
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --primary:#2563eb;
+    --primary-dark:#1d4ed8;
+    --success:#16a34a;
+    --warning:#f59e0b;
+    --danger:#ef4444;
+    --info:#06b6d4;
+
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --text:#111827;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+
+    --radius:20px;
+    --shadow:0 15px 40px rgba(15,23,42,.08);
+}
+
+body{
+    background:var(--bg);
+    font-family:'Inter',sans-serif;
+    color:var(--text);
+}
+
+.page-header{
+    background:linear-gradient(135deg,#2563eb,#4f46e5);
+    color:#fff;
+    border-radius:24px;
+    padding:40px;
+    margin-bottom:30px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 20px 45px rgba(37,99,235,.25);
+}
+
+.page-header::before{
+    content:"";
+    position:absolute;
+    width:320px;
+    height:320px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    top:-140px;
+    right:-100px;
+}
+
+.page-header::after{
+    content:"";
+    position:absolute;
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    bottom:-100px;
+    left:-70px;
+}
+
+.glass-card{
+    background:var(--card);
+    border:none;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    transition:.3s;
+}
+
+.glass-card:hover{
+    transform:translateY(-6px);
+}
+
+.dashboard-card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    transition:.3s;
+}
+
+.dashboard-card:hover{
+    transform:translateY(-8px);
+}
+
+.section-title{
+    font-size:1.15rem;
+    font-weight:700;
+    color:#111827;
+}
+
+.table{
+    margin-bottom:0;
+}
+
+.table thead th{
+    border:none;
+    background:#f8fafc;
+    font-weight:600;
+}
+
+.table tbody td{
+    vertical-align:middle;
+}
+
+canvas{
+    width:100%!important;
+}
+</style>
+
+
 {% block title %}Dashboard | Car Showroom{% endblock %}
 
 {% block content %}
 
 <div class="container-fluid">
 
-<div class="dashboard-header">
 
-    <div class="row align-items-center">
 
-        <div class="col-lg-8">
-
-            <span class="dashboard-subtitle">
-                Dashboard Overview
-            </span>
-
-            <h2 class="dashboard-title">
-                Welcome Back, {{ user.username }}
-            </h2>
-
-            <p class="dashboard-text">
-                Manage Cars, Customers, Employees and Sales from one place.
-            </p>
-
-        </div>
-
-        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-
-            <a href="{% url 'add_car' %}" class="btn btn-primary btn-lg me-2">
-                <i class="fas fa-plus me-2"></i>
-                Add Car
-            </a>
-
-            <a href="{% url 'add_sale' %}" class="btn btn-success btn-lg">
-                <i class="fas fa-cart-plus me-2"></i>
-                New Sale
-            </a>
-
-        </div>
-
-    </div>
-
-</div>
-
-<div class="page-header mb-4">
-
-    <div class="row g-4 mt-1 mb-4">
-
-        <div class="col-xl-3 col-md-6">
-            <div class="dashboard-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="text-muted">Today's Sales</small>
-                        <h2 class="mt-2">{{ today_sales }}</h2>
-                    </div>
-                    <div class="icon bg-green">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="dashboard-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="text-muted">Today's Revenue</small>
-                        <h2 class="mt-2">₹{{ today_revenue }}</h2>
-                    </div>
-                    <div class="icon bg-orange">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="dashboard-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="text-muted">Low Stock</small>
-                        <h2 class="mt-2">{{ low_stock }}</h2>
-                    </div>
-                    <div class="icon bg-red">
-                        <i class="fas fa-triangle-exclamation"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="dashboard-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="text-muted">Inventory</small>
-                        <h2 class="mt-2">{{ total_stock }}</h2>
-                    </div>
-                    <div class="icon bg-blue">
-                        <i class="fas fa-warehouse"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div>
-
-        <span class="badge bg-primary mb-2 px-3 py-2">
-            Dashboard Overview
-        </span>
-
-        <h2 class="fw-bold mb-2">
-            <i class="fas fa-chart-line text-primary me-2"></i>
-            Car Showroom Dashboard
-        </h2>
-
-        <p class="text-muted mb-0">
-            Monitor Cars, Customers, Sales, Employees and Business Performance.
-        </p>
-
-    </div>
-
-    <div class="text-end">
-
-        <h6 class="mb-1">
-            Welcome,
-            <span class="text-primary">{{ user.username }}</span>
-        </h6>
-
-        <small class="text-muted">
-            {% now "l, d F Y" %}
-        </small>
-
-    </div>
-
-</div>
 
 <!-- =========================
       HERO SECTION
@@ -145,9 +128,102 @@
 
 <section class="hero-section mb-5">
 
+    <div class="row g-4 mb-4">
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card dashboard-card">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted">Today's Sales</small>
+                        <h2 class="fw-bold mt-2 mb-0">{{ today_sales }}</h2>
+                    </div>
+                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center"
+                         style="width:60px;height:60px;">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card dashboard-card">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted">Today's Revenue</small>
+                        <h2 class="fw-bold mt-2 mb-0">₹{{ today_revenue }}</h2>
+                    </div>
+                    <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center"
+                         style="width:60px;height:60px;">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card dashboard-card">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted">Low Stock</small>
+                        <h2 class="fw-bold mt-2 mb-0">{{ low_stock }}</h2>
+                    </div>
+                    <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center"
+                         style="width:60px;height:60px;">
+                        <i class="fas fa-triangle-exclamation"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card dashboard-card">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted">Inventory</small>
+                        <h2 class="fw-bold mt-2 mb-0">{{ total_stock }}</h2>
+                    </div>
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                         style="width:60px;height:60px;">
+                        <i class="fas fa-warehouse"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
     <div class="hero-overlay container-fluid">
 
-        <div class="container">
+        <div class="container-fluid px-4 py-4">
+
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h1 class="fw-bold mb-2">
+                            <i class="fas fa-chart-line me-2"></i>
+                            Car Showroom Dashboard
+                        </h1>
+
+                        <p class="mb-0 opacity-75 fs-5">
+                            Manage Cars, Customers, Sales, Purchases, Suppliers and Employees from one professional dashboard.
+                        </p>
+                    </div>
+
+                    <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                        <span class="badge bg-light text-primary px-4 py-3 fs-6 rounded-pill">
+                            Welcome Back 👋
+                        </span>
+                    </div>
+                </div>
+            </div>
 
             <div class="row align-items-center">
 
@@ -311,132 +387,6 @@
     </div>
 
 </div>
-<!-- =========================
-      DASHBOARD CARDS
-========================= -->
-
-<div class="row g-4 mb-4">
-
-    <div class="col-xl-3 col-md-6">
-
-        <div class="dashboard-card">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div>
-
-                    <small>Total Cars</small>
-
-                    <h2>{{ total_cars }}</h2>
-
-                    <span class="text-success">
-                        <i class="fas fa-arrow-trend-up"></i>
-                        +12%
-                    </span>
-
-                </div>
-
-                <div class="icon bg-blue">
-                    <i class="fas fa-car"></i>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-xl-3 col-md-6">
-
-        <div class="dashboard-card">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div>
-
-                    <small>Customers</small>
-
-                    <h2>{{ total_customers }}</h2>
-
-                    <span class="text-success">
-                        <i class="fas fa-arrow-trend-up"></i>
-                        +18%
-                    </span>
-
-                </div>
-
-                <div class="icon bg-green">
-                    <i class="fas fa-users"></i>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-xl-3 col-md-6">
-
-        <div class="dashboard-card">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div>
-
-                    <small>Total Sales</small>
-
-                    <h2>{{ total_sales }}</h2>
-
-                    <span class="text-success">
-                        <i class="fas fa-arrow-trend-up"></i>
-                        +8%
-                    </span>
-
-                </div>
-
-                <div class="icon bg-orange">
-                    <i class="fas fa-cart-shopping"></i>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-xl-3 col-md-6">
-
-        <div class="dashboard-card">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div>
-
-                    <small>Revenue</small>
-
-                    <h2>₹{{ total_revenue }}</h2>
-
-                    <span class="text-success">
-                        <i class="fas fa-arrow-trend-up"></i>
-                        +25%
-                    </span>
-
-                </div>
-
-                <div class="icon bg-red">
-                    <i class="fas fa-indian-rupee-sign"></i>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- PART 1 END -->
 
 
 <!-- =========================
@@ -539,166 +489,18 @@
 </div>
 
 
+
 <!-- =========================
-      SYSTEM STATUS
+      CHARTS
 ========================= -->
 
-<div class="row g-4 mb-4">
-
-    <div class="col-lg-8">
-
-        <div class="welcome-card">
-
-            <div class="row align-items-center">
-
-                <div class="col-md-8">
-
-                    <h2 class="mb-3">
-                        Welcome Back,
-                        <span class="text-primary">
-                            {{ user.username }}
-                        </span>
-                    </h2>
-
-                    <p class="text-muted mb-4">
-                        Manage your showroom, customers, inventory and sales from one dashboard.
-                    </p>
-
-                    <div class="d-flex flex-wrap gap-2">
-
-                        <span class="badge bg-primary px-3 py-2">
-                            {{ total_cars }} Cars
-                        </span>
-
-                        <span class="badge bg-success px-3 py-2">
-                            {{ total_customers }} Customers
-                        </span>
-
-                        <span class="badge bg-warning text-dark px-3 py-2">
-                            {{ total_sales }} Sales
-                        </span>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-4 text-center">
-
-                    <i class="fas fa-car-side welcome-icon"></i>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-4">
-
-        <div class="today-card">
-
-            <h5 class="mb-3">
-                Today
-            </h5>
-
-            <h2>
-                {% now "d" %}
-            </h2>
-
-            <h6>
-                {% now "F Y" %}
-            </h6>
-
-            <p class="mb-0 text-muted">
-                {% now "l" %}
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-
-<div class="row g-4 mb-4">
-
-    <div class="col-lg-4">
-
-        <div class="status-card">
-
-            <div class="status-icon bg-success">
-                <i class="fas fa-server"></i>
-            </div>
-
-            <div>
-
-                <h5>Server Status</h5>
-
-                <span class="badge bg-success">
-                    Online
-                </span>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-4">
-
-        <div class="status-card">
-
-            <div class="status-icon bg-primary">
-                <i class="fas fa-database"></i>
-            </div>
-
-            <div>
-
-                <h5>Database</h5>
-
-                <span class="badge bg-primary">
-                    Connected
-                </span>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-4">
-
-        <div class="status-card">
-
-            <div class="status-icon bg-warning">
-                <i class="fas fa-shield-halved"></i>
-            </div>
-
-            <div>
-
-                <h5>Security</h5>
-
-                <span class="badge bg-warning text-dark">
-                    Protected
-                </span>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<div class="row g-4 mt-4 dashboard-chart-section">
+<div class="row g-4 mb-5 dashboard-chart-section">
 
     <div class="col-xl-8 col-lg-7">
 
-        <div class="card chart-card h-100">
+        <div class="card dashboard-card h-100">
 
-            <div class="card-header bg-white">
+            <div class="card-header bg-transparent border-0 pt-4 px-4">
 
                 <h5 class="fw-bold mb-0">
 
@@ -710,7 +512,7 @@
 
             </div>
 
-            <div class="card-body">
+            <div class="card-body p-4">
 
                 <div class="chart-box">
                     <canvas id="monthlySalesChart"></canvas>
@@ -728,9 +530,9 @@
 
     <div class="col-xl-4 col-lg-5">
 
-        <div class="card chart-card h-100">
+        <div class="card dashboard-card h-100">
 
-            <div class="card-header bg-white">
+            <div class="card-header bg-transparent border-0 pt-4 px-4">
 
                 <h5 class="fw-bold mb-0">
 
@@ -742,11 +544,194 @@
 
             </div>
 
-            <div class="card-body">
+            <div class="card-body p-4">
 
                 <div class="chart-box">
                     <canvas id="companyChart"></canvas>
                 </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ===========================
+      RECENT ACTIVITY
+=========================== -->
+
+<div class="row g-4 mb-5">
+
+    <div class="col-lg-4">
+
+        <div class="premium-list-card">
+
+            <div class="premium-list-header">
+
+                <h5>
+
+                    <i class="fas fa-clock text-primary me-2"></i>
+
+                    Recent Sales
+
+                </h5>
+
+            </div>
+
+            <div class="premium-list-body">
+
+                {% for sale in recent_sales %}
+
+                <div class="premium-item">
+
+                    <div class="premium-avatar bg-primary">
+
+                        <i class="fas fa-cart-shopping"></i>
+
+                    </div>
+
+                    <div class="flex-grow-1">
+
+                        <strong>{{ sale.customer.name }}</strong>
+
+                        <small>{{ sale.car.name }}</small>
+
+                    </div>
+
+                    <span class="badge bg-success">
+
+                        ₹{{ sale.total_price }}
+
+                    </span>
+
+                </div>
+
+                {% empty %}
+
+                <p class="text-muted mb-0">
+
+                    No Sales
+
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="premium-list-card">
+
+            <div class="premium-list-header">
+
+                <h5>
+
+                    <i class="fas fa-users text-success me-2"></i>
+
+                    Recent Customers
+
+                </h5>
+
+            </div>
+
+            <div class="premium-list-body">
+
+                {% for customer in recent_customers %}
+
+                <div class="premium-item">
+
+                    <div class="premium-avatar bg-success">
+
+                        <i class="fas fa-user"></i>
+
+                    </div>
+
+                    <div class="flex-grow-1">
+
+                        <strong>{{ customer.name }}</strong>
+
+                        <small>{{ customer.mobile }}</small>
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <p class="text-muted mb-0">
+
+                    No Customers
+
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="premium-list-card">
+
+            <div class="premium-list-header">
+
+                <h5>
+
+                    <i class="fas fa-car text-warning me-2"></i>
+
+                    Latest Cars
+
+                </h5>
+
+            </div>
+
+            <div class="premium-list-body">
+
+                {% for car in latest_cars %}
+
+                <div class="premium-item">
+
+                    <div class="premium-avatar bg-warning">
+
+                        <i class="fas fa-car-side"></i>
+
+                    </div>
+
+                    <div class="flex-grow-1">
+
+                        <strong>{{ car.name }}</strong>
+
+                        <small>{{ car.company }}</small>
+
+                    </div>
+
+                    <span class="badge bg-primary">
+
+                        {{ car.stock }}
+
+                    </span>
+
+                </div>
+
+                {% empty %}
+
+                <p class="text-muted mb-0">
+
+                    No Cars
+
+                </p>
+
+                {% endfor %}
 
             </div>
 
@@ -820,191 +805,6 @@
     </div>
 
 </div>
-
-
-<!-- =========================
-      DASHBOARD OVERVIEW
-========================= -->
-
-<div class="dashboard-overview mb-4">
-
-    <div class="row g-4">
-
-        <div class="col-lg-3 col-md-6">
-
-            <div class="overview-card blue">
-
-                <div class="overview-icon">
-                    <i class="fas fa-car"></i>
-                </div>
-
-                <div class="overview-content">
-
-                    <h2>{{ total_cars }}</h2>
-
-                    <span>Total Cars</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-
-            <div class="overview-card green">
-
-                <div class="overview-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-
-                <div class="overview-content">
-
-                    <h2>{{ total_customers }}</h2>
-
-                    <span>Customers</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-
-            <div class="overview-card orange">
-
-                <div class="overview-icon">
-                    <i class="fas fa-cart-shopping"></i>
-                </div>
-
-                <div class="overview-content">
-
-                    <h2>{{ total_sales }}</h2>
-
-                    <span>Sales</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-
-            <div class="overview-card red">
-
-                <div class="overview-icon">
-                    <i class="fas fa-indian-rupee-sign"></i>
-                </div>
-
-                <div class="overview-content">
-
-                    <h2>₹{{ total_revenue }}</h2>
-
-                    <span>Revenue</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- =========================
-      RECENT ACTIVITY
-========================= -->
-
-<div class="row mt-4 dashboard-table-section">
-
-    <div class="col-lg-12">
-
-        <div class="card recent-sales-card">
-
-            <div class="card-header d-flex justify-content-between align-items-center">
-
-                <h5 class="fw-bold mb-0">
-
-                    <i class="fas fa-cart-shopping text-primary me-2"></i>
-
-                    Recent Sales
-
-                </h5>
-
-                <a href="{% url 'sale_list' %}" class="btn btn-primary btn-sm">
-
-                    View All
-
-                </a>
-
-            </div>
-
-            <div class="card-body">
-
-                {% for sale in recent_sales %}
-
-                <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
-
-                    <div class="d-flex align-items-center">
-
-                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
-                            style="width:45px;height:45px;">
-                            <i class="fas fa-user"></i>
-                        </div>
-
-                        <div>
-
-                            <h6 class="mb-0 fw-bold">
-                                {{ sale.customer.name }}
-                            </h6>
-
-                            <small class="text-muted">
-                                {{ sale.car.car_name }}
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                    <div class="text-end">
-
-                        <h6 class="text-success fw-bold mb-0">
-                            ₹{{ sale.sale_price }}
-                        </h6>
-
-                        <small class="text-muted">
-                            {{ sale.invoice_number }}
-                        </small>
-
-                    </div>
-
-                </div>
-
-                {% empty %}
-
-<div class="text-center py-5">
-
-    <i class="fas fa-receipt fa-3x text-muted mb-3"></i>
-
-    <h6 class="text-muted">
-        No Sales Found
-    </h6>
-
-</div>
-
-{% endfor %}
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
 
 
 <!-- =========================
@@ -1164,6 +964,60 @@
 </nav>
 
 {% endif %}
+
+
+<!-- ===========================
+      LIVE DASHBOARD FOOTER
+=========================== -->
+
+<div class="premium-dashboard-footer mt-5">
+
+    <div class="row align-items-center">
+
+        <div class="col-lg-8">
+
+            <h3>
+
+                <i class="fas fa-car-side text-warning me-2"></i>
+
+                Car Showroom Management System
+
+            </h3>
+
+            <p class="mb-0">
+
+                Professional Dashboard • Inventory • Sales • Customers • Employees • Reports
+
+            </p>
+
+        </div>
+
+        <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+
+            <span class="live-dot"></span>
+
+            <span class="fw-semibold">
+
+                LIVE SYSTEM
+
+            </span>
+
+            <br>
+
+            <small>
+
+                Last Updated :
+                {% now "d M Y H:i" %}
+
+            </small>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 
 {% endblock %}
 

@@ -439,12 +439,16 @@ def car_list(request):
     cars = paginator.get_page(page)
 
     return render(
-        request,
-        "showroom/car_list.html",
-        {
-            "cars": cars
-        }
-    )
+    request,
+    "showroom/car_list.html",
+    {
+        "cars": cars,
+        "total_cars": Car.objects.count(),
+        "in_stock": Car.objects.filter(stock__gt=0).count(),
+        "out_stock": Car.objects.filter(stock=0).count(),
+        "total_companies": Car.objects.values("company").distinct().count(),
+    }
+)
 
 
 
@@ -474,8 +478,9 @@ def customer_list(request):
         request,
         "showroom/customer_list.html",
         {
-            "customers": customers
-        }
+    "customers": customers,
+    "total_customers": Customer.objects.count(),
+}
     )
 
 # =========================
@@ -998,12 +1003,12 @@ def edit_employee(request, id):
         form = EmployeeForm(instance=employee)
 
     return render(
-          request,
-        "showroom/add_employee.html",
-       {
-          "form": form,
-           "employee": employee,
-      }
+    request,
+    "showroom/edit_employee.html",
+    {
+        "form": form,
+        "employee": employee,
+    }
 )
 
 # =========================
